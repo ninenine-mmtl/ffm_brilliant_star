@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>U10: People in our street</title>
+    <style>
+        :root { --primary: #4CAF50; --secondary: #FFC107; --bg: #f4f4f9; --text: #333; --locked: #ccc; }
+        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: var(--text); overscroll-behavior: none; }
+        
+        #splash-screen, #login-screen, #main-app, .modal-overlay, .tab-content { display: none; }
+        .myanmar-text { display: none; color: #555; font-size: 0.9em; margin-top: 4px; }
+        
+        #splash-screen.active { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: var(--primary); color: white; text-align: center;}
+        #login-screen.active { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; padding: 20px;}
+        #main-app.active { display: block; padding-top: 60px; padding-bottom: 80px;}
+        .tab-content.active { display: block; padding: 20px; }
+        .modal-overlay.active { display: flex; justify-content: center; align-items: center; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index: 1000;}
+
+        .top-bar { position: fixed; top: 0; width: 100%; height: 50px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; box-sizing: border-box; z-index: 100; }
+        .progress-container { flex-grow: 1; margin-right: 15px; background: #eee; height: 10px; border-radius: 5px; overflow: hidden; position: relative;}
+        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+        .submit-btn { background: var(--locked); color: white; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; pointer-events: none; transition: background 0.3s; }
+        .submit-btn.unlocked { background: var(--primary); animation: flash 2s infinite; }
+        @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        
+        .header-area { padding: 15px; background: white; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+        .header-area h2 { margin: 0 0 5px 0; color: var(--primary); }
+        .header-area p { margin: 0; font-size: 0.85em; color: #666; }
+        .controls { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;}
+        button, select, input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; background: white;}
+        button { cursor: pointer; background: var(--bg); }
+        button:active { transform: scale(0.98); }
+        
+        .tabs { position: sticky; top: 50px; background: white; display: flex; overflow-x: auto; border-bottom: 2px solid #ddd; z-index: 90; }
+        .tab { padding: 12px 20px; font-weight: bold; cursor: pointer; white-space: nowrap; border-bottom: 3px solid transparent; }
+        .tab.active { border-bottom-color: var(--primary); color: var(--primary); }
+        
+        .card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px;}
+        .card img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; background: #eee;}
+        .card-content { flex-grow: 1; }
+        .audio-btn, .mic-btn { font-size: 1.2em; border: none; background: none; box-shadow: none; cursor: pointer; padding: 5px; }
+        
+        .flashcard-container { perspective: 1000px; height: 200px; margin-bottom: 20px; cursor: pointer;}
+        .flashcard { width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; position: relative; }
+        .flashcard.flipped { transform: rotateY(180deg); }
+        .front, .back { width: 100%; height: 100%; position: absolute; backface-visibility: hidden; background: white; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 20px; box-sizing: border-box; text-align: center;}
+        .back { transform: rotateY(180deg); background: #f9f9f9;}
+        .front img { max-height: 100px; margin-bottom: 15px; border-radius: 8px;}
+        
+        .test-category, .grammar-title { font-size: 0.85em; font-weight: bold; color: var(--primary); letter-spacing: 1px; margin-bottom: 5px; display: block; text-transform: uppercase;}
+        .test-q { margin-bottom: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .options label { display: block; padding: 10px; margin: 5px 0; background: #f9f9f9; border-radius: 6px; cursor: pointer; border: 2px solid transparent; }
+        .options input[type="radio"] { margin-right: 10px; }
+        .correct-answer { background: #d4edda !important; border-color: var(--primary) !important; }
+        .wrong-answer { background: #f8d7da !important; border-color: red !important; }
+        .missed-correct { border: 2px dashed var(--primary) !important; }
+        
+        .modal-box { background: white; padding: 25px; border-radius: 12px; text-align: center; max-width: 80%; }
+        
+        #toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 20px; border-radius: 20px; opacity: 0; transition: opacity 0.3s; z-index: 2000; pointer-events: none; text-align: center; max-width: 90%; line-height: 1.4;}
+        #center-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(76, 175, 80, 0.95); color: white; padding: 25px 35px; border-radius: 12px; font-size: 1.2em; font-weight: bold; opacity: 0; transition: opacity 0.3s; z-index: 3000; pointer-events: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center; width: 80%; max-width: 300px; display: flex; flex-direction: column; gap: 10px;}
+        #center-toast.active { opacity: 1; pointer-events: auto; }
+
+        .footer { position: fixed; bottom: 0; width: 100%; background: white; border-top: 1px solid #ddd; padding: 10px; display: flex; justify-content: center; z-index: 100; box-sizing: border-box;}
+        #stt-overlay { background: rgba(0,0,0,0.9); color: white; font-size: 1.5em; flex-direction: column;}
+        .pulse { animation: pulse 1.5s infinite; font-size: 3em; margin-bottom: 20px;}
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen" class="active">
+        <h1>Fun for Movers</h1>
+        <h2>Unit 10: People in our street</h2>
+        <p>Developed by Nine Nine</p>
+        <p>Brilliant Star Private School, Pakokku</p>
+    </div>
+
+    <div id="login-screen">
+        <h2>အမည်ရိုက်ထည့်ပါ</h2>
+        <p>Please type your name.</p>
+        <input type="text" id="student-name-input" placeholder="Your Name" style="margin-bottom: 15px; width: 200px; text-align: center;">
+        <button id="login-btn" style="background: var(--primary); color: white; font-weight: bold; width: 200px;">Start Learning</button>
+    </div>
+
+    <div id="main-app">
+        <div class="top-bar">
+            <span id="progress-text" style="font-weight: bold; margin-right: 10px;">0%</span>
+            <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+            <button class="submit-btn" id="submit-btn">Submit</button>
+        </div>
+
+        <div class="header-area">
+            <h2>Unit 10: People in our street</h2>
+            <p>Developed by Nine Nine - Brilliant Star Private School (Pakokku)</p>
+            <div class="controls">
+                <span style="padding: 8px; background: #eee; border-radius: 6px; font-weight: bold;">Student: <span id="display-name"></span></span>
+                <select id="accent-select">
+                    <option value="en-GB">🇬🇧 British</option>
+                    <option value="en-US">🇺🇸 American</option>
+                </select>
+                <button id="audio-stop">🔇 Stop Audio</button>
+                <button id="reset-btn" style="color: red;">🔄 Reset</button>
+                <select id="unit-nav">
+                    </select>
+                    <button onclick="window.location.href='index.html'" style="background: #2196F3; color: white; font-weight: bold;">🏠 Home</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" data-target="tab-vocab">Vocabulary</div>
+            <div class="tab" data-target="tab-flash">Flashcards</div>
+            <div class="tab" data-target="tab-read">Reading/Grammar</div>
+            <div class="tab" data-target="tab-act">Activities</div>
+            <div class="tab" data-target="tab-test">Official Test</div>
+        </div>
+
+        <div id="tab-vocab" class="tab-content active"></div>
+        
+        <div id="tab-flash" class="tab-content">
+            <div style="text-align: center; margin-bottom: 10px; font-weight: bold;" id="fc-progress">Card 1 of X</div>
+            <div class="flashcard-container" id="flashcard" onclick="flipCard()">
+                <div class="flashcard" id="fc-inner">
+                    <div class="front" id="fc-front"></div>
+                    <div class="back" id="fc-back"></div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <button onclick="prevCard()">⬅️ Prev</button>
+                <button onclick="nextCard()">Next ➡️</button>
+            </div>
+        </div>
+        
+        <div id="tab-read" class="tab-content">
+            <div id="read-cards-container"></div>
+            <div style="text-align:center; margin-top: 30px;">
+                <button id="grammar-understand-btn" onclick="markGrammarUnderstood()" style="background: var(--primary); color: white; padding: 12px 25px; font-weight: bold; border-radius: 8px; font-size: 1.1em; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">I Understand</button>
+                <div id="grammar-understood-msg" style="color: var(--primary); font-weight: bold; font-size: 1.2em; display: none;">✅ Grammar & Reading Understood!</div>
+            </div>
+        </div>
+
+        <div id="tab-act" class="tab-content"></div>
+        <div id="tab-test" class="tab-content"></div>
+
+        <div class="footer">
+            <button id="translate-btn">Translate (Tap 5 times)</button>
+        </div>
+    </div>
+
+    <div id="stt-overlay" class="modal-overlay">
+        <div class="pulse">🎤</div>
+        <div>Listening... Please speak now</div>
+    </div>
+
+    <div id="result-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h2 id="result-stars"></h2>
+            <h3 id="result-score"></h3>
+            <p id="result-msg"></p>
+            <div style="display: flex; justify-content: center; gap: 10px;">
+                <button id="retake-btn" style="background: var(--primary); color: white; margin-top: 15px; font-weight: bold;">Retake Test</button>
+                <button id="close-modal-btn" style="background: #eee; color: #333; margin-top: 15px; font-weight: bold;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+    <div id="center-toast">
+        <span style="font-size: 2em;">✅</span>
+        <span id="center-toast-msg">Sending results to the teacher...</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        const storage = {
+            get: (k) => { try { return localStorage.getItem(k); } catch(e) { return null; } },
+            set: (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} },
+            remove: (k) => { try { localStorage.removeItem(k); } catch(e) {} }
+        };
+
+        const currentUnitDir = "u10";
+        const currentUnitNumber = 10;
+        const unitData = {
+            title: "Unit 10: People in our street",
+            vocab: [
+                { word: "balcony", def: "A platform built on the upstairs outside wall of a building.", mm: "လသာဆောင်" },
+                { word: "stairs", def: "A set of steps leading from one floor of a building to another.", mm: "လှေကား" },
+                { word: "huge", def: "Very, very big.", mm: "ဧရာမ" },
+                { word: "straight", def: "Not curving, curling, or bending.", mm: "ဖြောင့်သော" },
+                { word: "curly", def: "Having curls or a curved shape.", mm: "ကောက်သော" },
+                { word: "blonde", def: "Pale yellow or golden hair color.", mm: "ရွှေရောင်" },
+                { word: "tablet", def: "A small, flat computer controlled by touching the screen.", mm: "တက်ဘလက်" },
+                { word: "pet", def: "An animal kept for pleasure and companionship.", mm: "အိမ်မွေးတိရစ္ဆာန်" },
+                { word: "moustache", def: "Hair that grows above a man's upper lip.", mm: "နှုတ်ခမ်းမွေး" },
+                { word: "beard", def: "Hair that grows on the chin and cheeks of a man's face.", mm: "မုတ်ဆိတ်မွေး" },
+                { word: "chocolate", def: "A sweet brown food made from roasted cacao seeds.", mm: "ချောကလက်" },
+                { word: "glasses", def: "Two small pieces of glass worn to help you see better.", mm: "မျက်မှန်" }
+            ],
+            reading: [
+                { isGrammar: false, title: "Reading: Bus Stop", text: "My son, my brother, my mother and my uncle are waiting in Upunder Road for the number one bus.", mm: "ကျွန်တော့်သား၊ ကျွန်တော့်အစ်ကို၊ ကျွန်တော့်အမေနဲ့ ကျွန်တော့်ဦးလေးတို့ဟာ နံပါတ်တစ် ဘတ်စ်ကားအတွက် အပ်အန်ဒါလမ်းမှာ စောင့်နေကြပါတယ်။" },
+                { isGrammar: false, title: "Reading: Comparisons", text: "Dan's got brown eyes, but Lily's and Sally's eyes are blue and bigger than Dan's. Sally's hair is black. It's shorter than Lily's hair but it's longer than Dan's hair!", mm: "ဒန်တွင် အညိုရောင် မျက်လုံးများရှိသော်လည်း လီလီနှင့် ဆယ်လီတို့၏ မျက်လုံးများမှာ အပြာရောင်ဖြစ်ပြီး ဒန်ထက် ပိုကြီးသည်။ ဆယ်လီ၏ဆံပင်သည် အနက်ရောင်ဖြစ်သည်။ လီလီရဲ့ဆံပင်ထက် ပိုတိုပေမယ့် ဒန်ရဲ့ဆံပင်ထက်တော့ ပိုရှည်ပါတယ်။" },
+                { isGrammar: true, title: "Grammar: Possessive 's", text: "We use 's to show that something belongs to someone.\nExample: Dan's eyes are brown. (The eyes belong to Dan).\nExample: Lily's hair is long. (The hair belongs to Lily).", mm: "ပိုင်ဆိုင်မှုကို ပြသရန် 's ကို အသုံးပြုပါသည်။ ဥပမာ- ဒန်၏မျက်လုံးများသည် အညိုရောင်ဖြစ်သည်။ လီလီ၏ဆံပင်သည် ရှည်သည်။" },
+                { isGrammar: true, title: "Grammar: Have got / Has got", text: "We use 'have got' or 'has got' to describe physical features or possessions.\nExample: She has got (She's got) blue eyes.\nExample: He has not got (hasn't got) a moustache.", mm: "ရုပ်ရည်သွင်ပြင် သို့မဟုတ် ပိုင်ဆိုင်မှုများကို ဖော်ပြရန် 'have got' သို့မဟုတ် 'has got' ကို အသုံးပြုပါသည်။ ဥပမာ- သူမတွင် အပြာရောင်မျက်လုံးများရှိသည်။ သူ၏ နှုတ်ခမ်းမွေးမရှိပါ။" },
+                { isGrammar: true, title: "Grammar: Comparatives", text: "We use adjectives with '-er + than' to compare two things or people.\nRule 1: Add -er (short -> shorter than).\nRule 2: Double the consonant and add -er (big -> bigger than).\nExample: Sally's hair is shorter than Lily's hair.", mm: "အရာနှစ်ခု သို့မဟုတ် လူနှစ်ဦးကို နှိုင်းယှဉ်ရန် 'နာမဝိသေသန + -er + than' ကို အသုံးပြုပါသည်။ ဥပမာ- ဆယ်လီ၏ဆံပင်သည် လီလီ၏ဆံပင်ထက် ပိုတိုသည်။" }
+            ],
+            activities: [
+                { cat: "CONVERSATION PRACTICE", q: "What's she like?", mm: "သူမက ဘယ်လိုပုံစံလဲ။", options: ["She likes chocolate.", "It's her new tablet.", "She's really nice."], ans: 2 },
+                { cat: "CONVERSATION PRACTICE", q: "Has she got any brothers?", mm: "သူမမှာ အစ်ကိုတွေရှိလား။", options: ["Only one, I think.", "She never does that.", "No, it's Charlie."], ans: 0 },
+                { cat: "CONVERSATION PRACTICE", q: "What's her phone number?", mm: "သူမရဲ့ ဖုန်းနံပါတ်က ဘာလဲ။", options: ["Yes, she's in class 13.", "Her phone's really great.", "I don't know, but I can ask her."], ans: 2 },
+                { cat: "TRUE OR FALSE", q: "Mr Fish likes cooking on his stairs.", mm: "မစ္စတာဖစ်ရှ်က လှေကားပေါ်မှာ ဟင်းချက်ရတာကို နှစ်သက်တယ်။", options: ["True", "False"], ans: 1 },
+                { cat: "TRUE OR FALSE", q: "Dan, Lily, and Sally live in Easy Street.", mm: "ဒန်၊ လီလီနှင့် ဆယ်လီတို့သည် အီဇီလမ်းတွင် နေထိုင်ကြသည်။", options: ["True", "False"], ans: 0 }
+            ],
+            test: [
+                { cat: "VOCABULARY", q: "A platform built on the upstairs outside wall of a building is a _ _ _ _ .", mm: "အဆောက်အဦး၏ အပေါ်ထပ် အပြင်ဘက်နံရံတွင် ဆောက်လုပ်ထားသော လသာဆောင်ကို _ _ _ _ ဟုခေါ်သည်။", options: ["balcony", "stairs", "tablet"], ans: 0 },
+                { cat: "VOCABULARY", q: "Hair that grows above a man's upper lip is a _ _ _ _ .", mm: "အမျိုးသားတစ်ဦး၏ အပေါ်နှုတ်ခမ်းအထက်တွင် ပေါက်နေသော အမွေးကို _ _ _ _ ဟုခေါ်သည်။", options: ["beard", "blonde", "moustache"], ans: 2 },
+                { cat: "VOCABULARY", q: "Another word for very, very big is _ _ _ _ .", mm: "အလွန်ကြီးမားသော ကို နောက်တစ်နည်းဖြင့် _ _ _ _ ဟုခေါ်သည်။", options: ["straight", "huge", "curly"], ans: 1 },
+                { cat: "VOCABULARY", q: "Pale yellow or golden hair color is called _ _ _ _ .", mm: "အဝါနုရောင် သို့မဟုတ် ရွှေရောင်ဆံပင်ကို _ _ _ _ ဟုခေါ်သည်။", options: ["blonde", "straight", "chocolate"], ans: 0 },
+                { cat: "VOCABULARY", q: "Two small pieces of glass worn to help you see better are _ _ _ _ .", mm: "ပိုမိုကောင်းမွန်စွာ မြင်နိုင်ရန် တပ်ဆင်ရသော မျက်မှန်ကို _ _ _ _ ဟုခေါ်သည်။", options: ["tablets", "glasses", "stairs"], ans: 1 },
+                { cat: "GRAMMAR: POSSESSIVES", q: "Look at those blue eyes! They are _ _ _ _ eyes.", mm: "ထိုအပြာရောင်မျက်လုံးများကို ကြည့်ပါ! ၎င်းတို့သည် _ _ _ _ ၏ မျက်လုံးများဖြစ်သည်။", options: ["Lilys", "Lily's", "Lily"], ans: 1 },
+                { cat: "GRAMMAR: COMPARATIVES", q: "Sally's hair is black. It's shorter _ _ _ Lily's hair.", mm: "ဆယ်လီ၏ဆံပင်သည် အနက်ရောင်ဖြစ်သည်။ လီလီရဲ့ဆံပင် _ _ _ ပိုတိုပါတယ်။", options: ["then", "that", "than"], ans: 2 },
+                { cat: "GRAMMAR: COMPARATIVES", q: "An elephant is _ _ _ _ than a mouse.", mm: "ဆင်သည် ကြွက်ထက် _ _ _ _ ဖြစ်သည်။", options: ["big", "bigger", "biggest"], ans: 1 },
+                { cat: "GRAMMAR: HAS GOT", q: "My brother _ _ _ _ brown hair and green eyes.", mm: "ကျွန်တော့်အစ်ကိုမှာ အညိုရောင်ဆံပင်နှင့် အစိမ်းရောင်မျက်လုံးများ _ _ _ _ ။", options: ["is got", "have got", "has got"], ans: 2 },
+                { cat: "GRAMMAR: HAS GOT", q: "I _ _ _ _ a new tablet.", mm: "ကျွန်တော့်မှာ တက်ဘလက်အသစ်တစ်လုံး _ _ _ _ ။", options: ["has got", "have got", "am got"], ans: 1 },
+                { cat: "READING COMPREHENSION", q: "Where is Mr Fish cooking?", mm: "မစ္စတာဖစ်ရှ်က ဘယ်မှာ ဟင်းချက်နေတာလဲ။", options: ["On the stairs", "In Easy Street", "On his balcony"], ans: 2 },
+                { cat: "READING COMPREHENSION", q: "Where do Dan and Lily live?", mm: "ဒန်နှင့် လီလီ ဘယ်မှာနေသလဲ။", options: ["Upunder Road", "Easy Street", "Fish Street"], ans: 1 },
+                { cat: "READING COMPREHENSION", q: "Who is waiting for the number one bus?", mm: "နံပါတ်တစ် ဘတ်စ်ကားကို ဘယ်သူစောင့်နေတာလဲ။", options: ["Dan and Lily", "Mr Fish", "My son, brother, mother, and uncle"], ans: 2 },
+                { cat: "READING COMPREHENSION", q: "Whose hair is the shortest?", mm: "ဘယ်သူ့ဆံပင်က အတိုဆုံးလဲ။", options: ["Dan's", "Lily's", "Sally's"], ans: 0 },
+                { cat: "READING COMPREHENSION", q: "Whose eyes are bigger than Dan's?", mm: "ဘယ်သူ့မျက်လုံးက ဒန်ထက် ပိုကြီးသလဲ။", options: ["Lily's and Sally's", "Mr Fish's", "My uncle's"], ans: 0 }
+            ]
+        };
+
+        let state = { 
+            studentName: "", progress: 0, secretActive: false, testAnswers: {}, actAnswers: {}, micScores: {}, cardsFlipped: 0,
+            grammarUnderstood: false,
+            sectionProgress: { vocab: [], read: [], flash: [] },
+            sectionsSent: { vocab: false, read: false, flash: false, act: false, grammar: false, test: false, fullReport: false }
+        };
+        
+        const unitKey = `ffm_${currentUnitDir}`;
+        let synth = window.speechSynthesis;
+        let voices = [];
+        window.speechUtteranceChunk = null; 
+        let currentCardIdx = 0;
+        let translateTaps = 0;
+        let translateTimeout;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            try {
+                loadVoices();
+                if(synth && synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
+
+                document.addEventListener('pointerdown', (e) => {
+                    const tags = ['BUTTON', 'DIV', 'LABEL', 'SELECT'];
+                    if(tags.includes(e.target.tagName) || e.target.closest('.card')) {
+                        if (navigator.vibrate) navigator.vibrate(40);
+                    }
+                });
+
+                const unitNav = document.getElementById('unit-nav');
+                unitNav.innerHTML = '';
+                for (let i = 1; i <= 45; i++) {
+                    let opt = document.createElement('option');
+                    opt.value = i;
+                    opt.innerText = `Unit ${i}`;
+                    if (i === currentUnitNumber) opt.selected = true;
+                    unitNav.appendChild(opt);
+                }
+
+                const urlParams = new URLSearchParams(window.location.search);
+                if(urlParams.has('name')) storage.set('ffm_global_name', urlParams.get('name'));
+                
+                buildUI();
+                setupListeners();
+
+                setTimeout(() => {
+                    document.getElementById('splash-screen').classList.remove('active');
+                    checkLogin();
+                }, 2500);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('splash-screen').classList.remove('active');
+                document.getElementById('login-screen').classList.add('active');
+            }
+        });
+
+        function saveState() { storage.set(unitKey, JSON.stringify(state)); }
+
+        function loadState() {
+            const saved = storage.get(unitKey);
+            if(saved) {
+                const parsed = JSON.parse(saved);
+                state = {...state, ...parsed};
+                
+                if(!state.sectionProgress) state.sectionProgress = { vocab: [], read: [], flash: [] };
+                if(!state.sectionsSent) state.sectionsSent = { vocab: false, read: false, flash: false, act: false, grammar: false, test: false, fullReport: false };
+                if(!state.actAnswers) state.actAnswers = {};
+                
+                if(state.secretActive) toggleSecret(true);
+                
+                if(state.grammarUnderstood) {
+                    document.getElementById('grammar-understand-btn').style.display = 'none';
+                    document.getElementById('grammar-understood-msg').style.display = 'block';
+                }
+                
+                Object.keys(state.testAnswers).forEach(qIdx => {
+                   let rad = document.querySelector(`input[name="q${qIdx}"][value="${state.testAnswers[qIdx]}"]`);
+                   if(rad) rad.checked = true;
+                });
+                Object.keys(state.actAnswers).forEach(qIdx => {
+                   let rad = document.querySelector(`input[name="a${qIdx}"][value="${state.actAnswers[qIdx]}"]`);
+                   if(rad) rad.checked = true;
+                });
+
+                calculateProgress(); 
+            }
+        }
+
+        function calculateProgress() {
+            let vPct = state.sectionProgress.vocab.length / unitData.vocab.length;
+            let rPct = state.sectionProgress.read.length / unitData.reading.length;
+            let fPct = state.sectionProgress.flash.length / unitData.vocab.length;
+            let aPct = Object.keys(state.actAnswers).length / unitData.activities.length;
+            let tPct = Object.keys(state.testAnswers).length / unitData.test.length;
+            let gPct = state.grammarUnderstood ? 1 : 0;
+
+            let avg = (vPct + rPct + fPct + aPct + tPct + gPct) / 6;
+            state.progress = Math.min(100, Math.floor(avg * 100));
+            updateProgressUI();
+            saveState();
+
+            if(state.progress === 100 && !state.sectionsSent.fullReport) {
+                state.sectionsSent.fullReport = true;
+                saveState();
+                sendTelemetryReport(`🏆 100% COURSE COMPLETED! Full Application Report.`);
+            }
+        }
+
+        function updateProgressUI() {
+            document.getElementById('progress-bar').style.width = state.progress + "%";
+            document.getElementById('progress-text').innerText = state.progress + "%";
+            
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if(state.progress >= 50) {
+                submitBtn.style.pointerEvents = 'auto';
+            } else {
+                submitBtn.style.pointerEvents = 'none';
+            }
+
+            if(state.progress >= 100 && Object.keys(state.testAnswers).length === unitData.test.length) {
+                submitBtn.classList.add('unlocked');
+            } else {
+                submitBtn.classList.remove('unlocked');
+            }
+        }
+
+        function markItemDone(section, idx) {
+            if(!state.sectionProgress[section].includes(idx)) {
+                state.sectionProgress[section].push(idx);
+                saveState();
+                calculateProgress();
+                checkSectionCompletion(section);
+            }
+        }
+
+        function markGrammarUnderstood() {
+            state.grammarUnderstood = true;
+            document.getElementById('grammar-understand-btn').style.display = 'none';
+            document.getElementById('grammar-understood-msg').style.display = 'block';
+            
+            if(!state.sectionsSent.grammar) {
+                state.sectionsSent.grammar = true;
+                saveState();
+                calculateProgress();
+                showCenterToast("Grammar Complete!");
+                sendTelemetryReport(`Section Completed: GRAMMAR UNDERSTOOD`);
+            }
+        }
+
+        function checkSectionCompletion(section) {
+            if(state.sectionsSent[section]) return;
+            
+            let isComplete = false;
+            if(section === 'vocab' && state.sectionProgress.vocab.length >= unitData.vocab.length) isComplete = true;
+            if(section === 'read' && state.sectionProgress.read.length >= unitData.reading.length) isComplete = true;
+            if(section === 'flash' && state.sectionProgress.flash.length >= unitData.vocab.length) isComplete = true;
+            if(section === 'act' && Object.keys(state.actAnswers).length >= unitData.activities.length) isComplete = true;
+            
+            if(isComplete) {
+                state.sectionsSent[section] = true;
+                saveState();
+                showCenterToast(`${section.toUpperCase()} Complete! Sending to teacher...`);
+                sendTelemetryReport(`Section Completed: ${section.toUpperCase()}`);
+            }
+        }
+
+        function checkLogin() {
+            const globalName = storage.get('ffm_global_name');
+            if(globalName) {
+                state.studentName = globalName;
+                document.getElementById('display-name').innerText = globalName;
+                document.getElementById('login-screen').classList.remove('active'); 
+                document.getElementById('main-app').classList.add('active');
+                loadState();
+            } else {
+                document.getElementById('login-screen').classList.add('active');
+                document.getElementById('main-app').classList.remove('active');
+            }
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.opacity = 1;
+            setTimeout(() => t.style.opacity = 0, 3000);
+        }
+
+        function showCenterToast(customMsg) {
+            const t = document.getElementById('center-toast');
+            document.getElementById('center-toast-msg').innerText = customMsg || "Sending results to the teacher...";
+            t.classList.add('active');
+            setTimeout(() => t.classList.remove('active'), 3500);
+        }
+
+        function loadVoices() {
+            if (synth) voices = synth.getVoices().filter(v => v.lang.includes('en'));
+        }
+
+        function playTTS(text) {
+            if(!synth) return showToast("Audio not supported.");
+            if(synth.speaking) synth.cancel();
+            
+            let cleanText = text.replace(/<[^>]*>?/gm, ''); 
+            cleanText = cleanText.replace(/([_]\s*)+/g, " blank ").replace(/[!()"\n]/g, " ");
+            
+            const u = new SpeechSynthesisUtterance(cleanText);
+            u.rate = 0.75;
+            
+            const accent = document.getElementById('accent-select').value;
+            const voice = voices.find(v => v.lang === accent && (v.name.includes("Premium") || v.name.includes("Google"))) || voices.find(v => v.lang === accent) || voices[0];
+            if(voice) u.voice = voice;
+            
+            window.speechUtteranceChunk = u; 
+            synth.speak(u);
+        }
+
+        function startDictation(targetWord, idx) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if(!SpeechRecognition) return showToast("Microphone not supported on this browser.");
+            
+            const recognition = new SpeechRecognition();
+            recognition.lang = document.getElementById('accent-select').value;
+            recognition.interimResults = false;
+
+            const overlay = document.getElementById('stt-overlay');
+            overlay.classList.add('active');
+
+            try { recognition.start(); } catch(e) { overlay.classList.remove('active'); return; }
+
+            recognition.onresult = (event) => {
+                const spoken = event.results[0][0].transcript.toLowerCase().replace(/[.,!?]/g, "").trim();
+                let target = targetWord.toLowerCase().replace(/^(a |an |the )/i, "").replace(/[.,!?]/g, "").trim();
+                let score = 0;
+                
+                if(spoken === target) score = 100;
+                else if(spoken.includes(target) || target.includes(spoken)) score = 70;
+                
+                state.micScores[targetWord] = Math.max(state.micScores[targetWord] || 0, score);
+                
+                overlay.classList.remove('active');
+                showToast(`Heard: "${spoken}" | Score: ${score}%`);
+                
+                markItemDone('vocab', idx); 
+            };
+
+            recognition.onerror = () => overlay.classList.remove('active');
+            recognition.onend = () => overlay.classList.remove('active');
+        }
+
+        function buildUI() {
+            const vTab = document.getElementById('tab-vocab');
+            unitData.vocab.forEach((v, i) => {
+                const imgName = v.word.replace(/^(a |an |the )/i, '').replace(/ /g, '').toLowerCase() + '.jpg';
+                const imgPath = `images/${currentUnitDir}/${imgName}`;
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.innerHTML = `
+                    <img src="${imgPath}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23ddd\\'/></svg>'">
+                    <div class="card-content">
+                        <div style="font-weight:bold; font-size:1.2em;">${v.word}</div>
+                        <div style="font-size:0.95em; color:#444; margin-top:4px;">${v.def}</div>
+                        <div class="myanmar-text">${v.mm}</div>
+                    </div>
+                `;
+                const audioBtn = document.createElement('button');
+                audioBtn.className = 'audio-btn'; audioBtn.innerText = '🔊';
+                audioBtn.addEventListener('click', () => playTTS(v.word));
+                
+                const micBtn = document.createElement('button');
+                micBtn.className = 'mic-btn'; micBtn.innerText = '🎤';
+                micBtn.addEventListener('click', () => startDictation(v.word, i));
+                
+                div.appendChild(audioBtn);
+                div.appendChild(micBtn);
+                vTab.appendChild(div);
+            });
+
+            const rContainer = document.getElementById('read-cards-container');
+            unitData.reading.forEach((r, i) => {
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.innerHTML = `
+                    <div class="card-content">
+                        <span class="grammar-title">${r.title}</span>
+                        <div style="white-space: pre-wrap;">${r.text}</div>
+                        <div class="myanmar-text">${r.mm}</div>
+                    </div>
+                `;
+                const audioBtn = document.createElement('button');
+                audioBtn.className = 'audio-btn'; audioBtn.innerText = '🔊';
+                audioBtn.addEventListener('click', () => { markItemDone('read', i); playTTS(r.text); });
+                div.appendChild(audioBtn);
+                rContainer.appendChild(div);
+            });
+
+            const aTab = document.getElementById('tab-act');
+            unitData.activities.forEach((q, i) => {
+                const div = document.createElement('div');
+                div.className = 'test-q';
+                let opts = q.options.map((opt, oi) => `
+                    <label id="lbl-a${i}-${oi}">
+                        <input type="radio" name="a${i}" value="${oi}" onchange="selectActivityAnswer(${i}, ${oi})">
+                        ${opt}
+                    </label>
+                `).join('');
+                div.innerHTML = `
+                    <span class="test-category">${q.cat}</span>
+                    <div style="font-weight:bold; margin-bottom:10px;">${q.q}</div>
+                    <div class="myanmar-text" style="margin-bottom:10px;">${q.mm}</div>
+                    <div class="options">${opts}</div>
+                `;
+                const audioBtn = document.createElement('button');
+                audioBtn.className = 'audio-btn'; audioBtn.innerText = '🔊';
+                audioBtn.style.float = 'right';
+                audioBtn.addEventListener('click', () => playTTS(q.q));
+                div.children[1].appendChild(audioBtn);
+                aTab.appendChild(div);
+            });
+
+            const tTab = document.getElementById('tab-test');
+            unitData.test.forEach((q, i) => {
+                const div = document.createElement('div');
+                div.className = 'test-q';
+                let opts = q.options.map((opt, oi) => `
+                    <label id="lbl-t${i}-${oi}">
+                        <input type="radio" name="q${i}" value="${oi}" onchange="selectTestAnswer(${i}, ${oi})">
+                        ${opt}
+                    </label>
+                `).join('');
+                div.innerHTML = `
+                    <span class="test-category">${q.cat}</span>
+                    <div style="font-weight:bold; margin-bottom:10px;">${q.q}</div>
+                    <div class="myanmar-text" style="margin-bottom:10px;">${q.mm}</div>
+                    <div class="options">${opts}</div>
+                `;
+                const audioBtn = document.createElement('button');
+                audioBtn.className = 'audio-btn'; audioBtn.innerText = '🔊';
+                audioBtn.style.float = 'right';
+                audioBtn.addEventListener('click', () => playTTS(q.q));
+                div.children[1].appendChild(audioBtn);
+                tTab.appendChild(div);
+            });
+
+            updateFlashcard();
+        }
+
+        function updateFlashcard() {
+            const v = unitData.vocab[currentCardIdx];
+            const imgName = v.word.replace(/^(a |an |the )/i, '').replace(/ /g, '').toLowerCase() + '.jpg';
+            document.getElementById('fc-progress').innerText = `Card ${currentCardIdx + 1} of ${unitData.vocab.length}`;
+            document.getElementById('fc-front').innerHTML = `<img src="images/${currentUnitDir}/${imgName}" onerror="this.style.display='none'"><br><strong style="font-size:1.5em;">${v.word}</strong>`;
+            document.getElementById('fc-back').innerHTML = `<strong style="font-size:1.5em;">${v.word}</strong><br><br><span style="font-size:1.1em; color:#444;">${v.def}</span><br><br><span class="myanmar-text" style="${state.secretActive?'display:block;':''} font-size:1.2em;">${v.mm}</span>`;
+            document.getElementById('fc-inner').classList.remove('flipped');
+        }
+        function flipCard() { 
+            document.getElementById('fc-inner').classList.toggle('flipped'); 
+            markItemDone('flash', currentCardIdx);
+        }
+        function prevCard() { if(currentCardIdx > 0) { currentCardIdx--; updateFlashcard(); } }
+        function nextCard() { if(currentCardIdx < unitData.vocab.length - 1) { currentCardIdx++; updateFlashcard(); } }
+
+        function setupListeners() {
+            document.getElementById('login-btn').addEventListener('click', () => {
+                const name = document.getElementById('student-name-input').value.trim();
+                if(name) {
+                    storage.set('ffm_global_name', name);
+                    checkLogin();
+                }
+            });
+
+            document.querySelectorAll('.tab').forEach(t => {
+                t.addEventListener('click', (e) => {
+                    document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                    document.getElementById(e.currentTarget.dataset.target).classList.add('active');
+                });
+            });
+
+            document.getElementById('audio-stop').addEventListener('click', () => { if(synth) synth.cancel(); });
+            
+            document.getElementById('reset-btn').addEventListener('click', () => {
+                storage.remove(unitKey);
+                storage.remove('ffm_global_name');
+                location.reload();
+            });
+
+            document.getElementById('translate-btn').addEventListener('click', () => {
+                if(state.secretActive) return toggleSecret(false);
+                translateTaps++;
+                clearTimeout(translateTimeout);
+                if(translateTaps < 5) {
+                    showToast("Try to understand the context in English first! Keep tapping if you really need the translation. 🧠");
+                    translateTimeout = setTimeout(() => translateTaps = 0, 3000);
+                } else {
+                    toggleSecret(true);
+                    translateTaps = 0;
+                    playTTS("Secret translation unlocked. But remember, try your best to think in English first.");
+                    showToast("Translation Unlocked 🔓");
+                }
+            });
+
+            document.getElementById('submit-btn').addEventListener('click', submitTest);
+            
+            document.getElementById('retake-btn').addEventListener('click', () => {
+                document.getElementById('result-modal').classList.remove('active');
+                state.testAnswers = {}; 
+                state.sectionsSent.test = false; 
+                state.sectionsSent.fullReport = false;
+                saveState();
+                calculateProgress();
+                document.querySelectorAll('input[name^="q"]').forEach(r => { r.checked = false; r.disabled = false; });
+                document.querySelectorAll('label[id^="lbl-t"]').forEach(l => l.className = '');
+            });
+            
+            document.getElementById('close-modal-btn').addEventListener('click', () => {
+                document.getElementById('result-modal').classList.remove('active');
+            });
+
+            document.getElementById('unit-nav').addEventListener('change', (e) => {
+                window.location.href = `ffmu${e.target.value}.html`;
+            });
+        }
+
+        function toggleSecret(isActive) {
+            state.secretActive = isActive;
+            document.querySelectorAll('.myanmar-text').forEach(el => el.style.display = isActive ? 'block' : 'none');
+            saveState();
+        }
+
+        function selectActivityAnswer(qIdx, optIdx) {
+            state.actAnswers[qIdx] = optIdx;
+            saveState();
+            calculateProgress();
+            checkSectionCompletion('act');
+        }
+
+        function selectTestAnswer(qIdx, optIdx) {
+            state.testAnswers[qIdx] = optIdx;
+            saveState();
+            calculateProgress();
+            
+            if(Object.keys(state.testAnswers).length === unitData.test.length) {
+                setTimeout(submitTest, 800); 
+            }
+        }
+
+        function submitTest() {
+            if(Object.keys(state.testAnswers).length < unitData.test.length) return;
+
+            let score = 0;
+            unitData.test.forEach((q, i) => {
+                const chosen = state.testAnswers[i];
+                document.querySelectorAll(`input[name="q${i}"]`).forEach(r => r.disabled = true);
+                
+                const chosenLbl = document.getElementById(`lbl-t${i}-${chosen}`);
+                const correctLbl = document.getElementById(`lbl-t${i}-${q.ans}`);
+
+                if(chosen === q.ans) {
+                    score++;
+                    chosenLbl.classList.add('correct-answer');
+                } else {
+                    chosenLbl.classList.add('wrong-answer');
+                    correctLbl.classList.add('missed-correct');
+                }
+            });
+
+            const pct = Math.round((score / unitData.test.length) * 100);
+            document.getElementById('result-stars').innerText = pct >= 90 ? "⭐⭐⭐" : pct >= 70 ? "⭐⭐" : pct >= 40 ? "⭐" : "0 Stars";
+            document.getElementById('result-score').innerText = `${score} / ${unitData.test.length} (${pct}%)`;
+            document.getElementById('result-modal').classList.add('active');
+
+            if(pct >= 90 && typeof confetti === 'function') confetti({particleCount: 150, spread: 70, origin: {y: 0.6}});
+            
+            if(!state.sectionsSent.test) {
+                state.sectionsSent.test = true;
+                saveState();
+                showCenterToast("Sending test score...");
+                sendTelemetryReport(`Section Completed: OFFICIAL TEST (Score: ${pct}%)`);
+                calculateProgress(); 
+            }
+        }
+
+        function sendTelemetryReport(eventContext) {
+            const report = `*App Event:* ${eventContext}\n*Unit:* ${unitData.title}\n*Student:* ${state.studentName}\n*Time:* ${new Date().toLocaleString()}\n*App Progress:* ${state.progress}%\n*Grammar Section:* ${state.grammarUnderstood ? 'Understood' : 'Pending'}\n*Translator Used:* ${state.secretActive ? 'Yes' : 'No'}`;
+            
+            fetch(`https://api.telegram.org/bot8679862681:AAFdjX5cpI-7Hpb1SOTijRWDxdfgCrq_RbY/sendMessage`, {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: '5200770390', text: report, parse_mode: 'Markdown' })
+            }).catch(e => console.error("Telegram fetch failed", e));
+        }
+    </script>
+</body>
+</html>

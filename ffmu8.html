@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>U8: The hottest and coldest places</title>
+    <style>
+        :root { --primary: #4CAF50; --secondary: #FFC107; --bg: #f4f4f9; --text: #333; --locked: #ccc; }
+        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: var(--text); overscroll-behavior: none; }
+        
+        #splash-screen, #login-screen, #main-app, .modal-overlay, .tab-content { display: none; }
+        .myanmar-text { display: none; color: #555; font-size: 0.9em; margin-top: 4px; }
+        
+        #splash-screen.active { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: var(--primary); color: white; text-align: center;}
+        #login-screen.active { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; padding: 20px;}
+        #main-app.active { display: block; padding-top: 60px; padding-bottom: 80px;}
+        .tab-content.active { display: block; padding: 20px; }
+        .modal-overlay.active { display: flex; justify-content: center; align-items: center; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index: 1000;}
+
+        .top-bar { position: fixed; top: 0; width: 100%; height: 50px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; box-sizing: border-box; z-index: 100; }
+        .progress-container { flex-grow: 1; margin-right: 15px; background: #eee; height: 10px; border-radius: 5px; overflow: hidden; position: relative;}
+        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+        .submit-btn { background: var(--locked); color: white; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; pointer-events: none; transition: background 0.3s; }
+        .submit-btn.unlocked { background: var(--primary); animation: flash 2s infinite; }
+        @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        
+        .header-area { padding: 15px; background: white; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+        .header-area h2 { margin: 0 0 5px 0; color: var(--primary); }
+        .header-area p { margin: 0; font-size: 0.85em; color: #666; }
+        .controls { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;}
+        button, select, input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; background: white;}
+        button { cursor: pointer; background: var(--bg); }
+        button:active { transform: scale(0.98); }
+        
+        .tabs { position: sticky; top: 50px; background: white; display: flex; overflow-x: auto; border-bottom: 2px solid #ddd; z-index: 90; }
+        .tab { padding: 12px 20px; font-weight: bold; cursor: pointer; white-space: nowrap; border-bottom: 3px solid transparent; }
+        .tab.active { border-bottom-color: var(--primary); color: var(--primary); }
+        
+        .card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px;}
+        .card img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; background: #eee;}
+        .card-content { flex-grow: 1; }
+        .audio-btn, .mic-btn { font-size: 1.2em; border: none; background: none; box-shadow: none; cursor: pointer; padding: 5px; }
+        
+        .flashcard-container { perspective: 1000px; height: 200px; margin-bottom: 20px; cursor: pointer;}
+        .flashcard { width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; position: relative; }
+        .flashcard.flipped { transform: rotateY(180deg); }
+        .front, .back { width: 100%; height: 100%; position: absolute; backface-visibility: hidden; background: white; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 20px; box-sizing: border-box; text-align: center;}
+        .back { transform: rotateY(180deg); background: #f9f9f9;}
+        .front img { max-height: 100px; margin-bottom: 15px; border-radius: 8px;}
+        
+        .test-category, .grammar-title { font-size: 0.85em; font-weight: bold; color: var(--primary); letter-spacing: 1px; margin-bottom: 5px; display: block; text-transform: uppercase;}
+        .test-q { margin-bottom: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .options label { display: block; padding: 10px; margin: 5px 0; background: #f9f9f9; border-radius: 6px; cursor: pointer; border: 2px solid transparent; }
+        .options input[type="radio"] { margin-right: 10px; }
+        .correct-answer { background: #d4edda !important; border-color: var(--primary) !important; }
+        .wrong-answer { background: #f8d7da !important; border-color: red !important; }
+        .missed-correct { border: 2px dashed var(--primary) !important; }
+        
+        .modal-box { background: white; padding: 25px; border-radius: 12px; text-align: center; max-width: 80%; }
+        
+        #toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 20px; border-radius: 20px; opacity: 0; transition: opacity 0.3s; z-index: 2000; pointer-events: none; text-align: center; max-width: 90%; line-height: 1.4;}
+        #center-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(76, 175, 80, 0.95); color: white; padding: 25px 35px; border-radius: 12px; font-size: 1.2em; font-weight: bold; opacity: 0; transition: opacity 0.3s; z-index: 3000; pointer-events: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center; width: 80%; max-width: 300px; display: flex; flex-direction: column; gap: 10px;}
+        #center-toast.active { opacity: 1; pointer-events: auto; }
+
+        .footer { position: fixed; bottom: 0; width: 100%; background: white; border-top: 1px solid #ddd; padding: 10px; display: flex; justify-content: center; z-index: 100; box-sizing: border-box;}
+        #stt-overlay { background: rgba(0,0,0,0.9); color: white; font-size: 1.5em; flex-direction: column;}
+        .pulse { animation: pulse 1.5s infinite; font-size: 3em; margin-bottom: 20px;}
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen" class="active">
+        <h1>Fun for Movers</h1>
+        <h2>Unit 8: The hottest and coldest places</h2>
+        <p>Developed by Nine Nine</p>
+        <p>Brilliant Star Private School, Pakokku</p>
+    </div>
+
+    <div id="login-screen">
+        <h2>အမည်ရိုက်ထည့်ပါ</h2>
+        <p>Please type your name.</p>
+        <input type="text" id="student-name-input" placeholder="Your Name" style="margin-bottom: 15px; width: 200px; text-align: center;">
+        <button id="login-btn" style="background: var(--primary); color: white; font-weight: bold; width: 200px;">Start Learning</button>
+    </div>
+
+    <div id="main-app">
+        <div class="top-bar">
+            <span id="progress-text" style="font-weight: bold; margin-right: 10px;">0%</span>
+            <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+            <button class="submit-btn" id="submit-btn">Submit</button>
+        </div>
+
+        <div class="header-area">
+            <h2>Unit 8: The hottest and coldest places</h2>
+            <p>Developed by Nine Nine - Brilliant Star Private School (Pakokku)</p>
+            <div class="controls">
+                <span style="padding: 8px; background: #eee; border-radius: 6px; font-weight: bold;">Student: <span id="display-name"></span></span>
+                <select id="accent-select">
+                    <option value="en-GB">🇬🇧 British</option>
+                    <option value="en-US">🇺🇸 American</option>
+                </select>
+                <button id="audio-stop">🔇 Stop Audio</button>
+                <button id="reset-btn" style="color: red;">🔄 Reset</button>
+                <select id="unit-nav">
+                    </select>
+                    <button onclick="window.location.href='index.html'" style="background: #2196F3; color: white; font-weight: bold;">🏠 Home</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" data-target="tab-vocab">Vocabulary</div>
+            <div class="tab" data-target="tab-flash">Flashcards</div>
+            <div class="tab" data-target="tab-read">Reading/Grammar</div>
+            <div class="tab" data-target="tab-act">Activities</div>
+            <div class="tab" data-target="tab-test">Official Test</div>
+        </div>
+
+        <div id="tab-vocab" class="tab-content active"></div>
+        
+        <div id="tab-flash" class="tab-content">
+            <div style="text-align: center; margin-bottom: 10px; font-weight: bold;" id="fc-progress">Card 1 of X</div>
+            <div class="flashcard-container" id="flashcard" onclick="flipCard()">
+                <div class="flashcard" id="fc-inner">
+                    <div class="front" id="fc-front"></div>
+                    <div class="back" id="fc-back"></div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <button onclick="prevCard()">⬅️ Prev</button>
+                <button onclick="nextCard()">Next ➡️</button>
+            </div>
+        </div>
+        
+        <div id="tab-read" class="tab-content">
+            <div id="read-cards-container"></div>
+            <div style="text-align:center; margin-top: 30px;">
+                <button id="grammar-understand-btn" onclick="markGrammarUnderstood()" style="background: var(--primary); color: white; padding: 12px 25px; font-weight: bold; border-radius: 8px; font-size: 1.1em; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">I Understand</button>
+                <div id="grammar-understood-msg" style="color: var(--primary); font-weight: bold; font-size: 1.2em; display: none;">✅ Grammar & Reading Understood!</div>
+            </div>
+        </div>
+
+        <div id="tab-act" class="tab-content"></div>
+        <div id="tab-test" class="tab-content"></div>
+
+        <div class="footer">
+            <button id="translate-btn">Translate (Tap 5 times)</button>
+        </div>
+    </div>
+
+    <div id="stt-overlay" class="modal-overlay">
+        <div class="pulse">🎤</div>
+        <div>Listening... Please speak now</div>
+    </div>
+
+    <div id="result-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h2 id="result-stars"></h2>
+            <h3 id="result-score"></h3>
+            <p id="result-msg"></p>
+            <div style="display: flex; justify-content: center; gap: 10px;">
+                <button id="retake-btn" style="background: var(--primary); color: white; margin-top: 15px; font-weight: bold;">Retake Test</button>
+                <button id="close-modal-btn" style="background: #eee; color: #333; margin-top: 15px; font-weight: bold;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+    <div id="center-toast">
+        <span style="font-size: 2em;">✅</span>
+        <span id="center-toast-msg">Sending results to the teacher...</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        const storage = {
+            get: (k) => { try { return localStorage.getItem(k); } catch(e) { return null; } },
+            set: (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} },
+            remove: (k) => { try { localStorage.removeItem(k); } catch(e) {} }
+        };
+
+        const currentUnitDir = "u8";
+        const currentUnitNumber = 8;
+        const unitData = {
+            title: "Unit 8: The hottest and coldest places",
+            vocab: [
+                { word: "Rain", mm: "မိုး", def: "Water that falls from the clouds in drops." },
+                { word: "Snow", mm: "နှင်း", def: "Soft, white pieces of frozen water that fall from the sky." },
+                { word: "Wind", mm: "လေ", def: "Air that moves." },
+                { word: "Rainbow", mm: "သက်တံ့", def: "An arch of colors seen in the sky when rain and sun come together." },
+                { word: "Sun", mm: "နေ", def: "The big hot star our Earth goes around." },
+                { word: "Moon", mm: "လ", def: "The object that shines in the sky at night." },
+                { word: "Driest", mm: "အခြောက်သွေ့ဆုံး", def: "Having the least amount of water or rain." },
+                { word: "Coldest", mm: "အအေးဆုံး", def: "Having the lowest temperature." },
+                { word: "Sunniest", mm: "နေသာဆုံး", def: "Having the most sunshine." },
+                { word: "Wettest", mm: "အစိုစွတ်ဆုံး", def: "Having the most water or rain." },
+                { word: "Windiest", mm: "လေတိုက်ဆုံး", def: "Having the most wind." },
+                { word: "Hottest", mm: "အပူဆုံး", def: "Having the highest temperature." },
+                { word: "Tallest", mm: "အမြင့်ဆုံး", def: "Measuring a great distance from bottom to top." },
+                { word: "Strongest", mm: "အသန်မာဆုံး", def: "Having powerful muscles or influence." },
+                { word: "Cleverest", mm: "အလိမ္မာဆုံး", def: "Showing intelligence or ingenuity." },
+                { word: "Grey", mm: "မီးခိုးရောင်", def: "A color between black and white." },
+                { word: "Dry", mm: "ခြောက်သွေ့သော", def: "Not wet." },
+                { word: "Wet", mm: "စိုစွတ်သော", def: "Not dry." },
+                { word: "Hot", mm: "ပူသော", def: "Not cold." },
+                { word: "Cold", mm: "အေးသော", def: "Not hot." },
+                { word: "Sunny", mm: "နေသာသော", def: "A state of having much sun." },
+                { word: "Cloudy", mm: "တိမ်ထူသော", def: "A state of having many clouds." },
+                { word: "Windy", mm: "လေတိုက်သော", def: "A state of having much wind." },
+                { word: "Strong", mm: "သန်မာသော", def: "A state of having much power." },
+                { word: "Fly", mm: "ပျံသန်းသည်", def: "To move through the air." },
+                { word: "Sailing", mm: "ရွက်လွှင့်ခြင်း", def: "The action of moving in a boat with sails." },
+                { word: "Fall", mm: "ပြုတ်ကျသည်", def: "To move down quickly." },
+                { word: "Come", mm: "လာသည်", def: "To arrive at a place." },
+                { word: "Sleep", mm: "အိပ်စက်သည်", def: "To rest with eyes closed." },
+                { word: "Eat", mm: "စားသည်", def: "To put food into the mouth and swallow." },
+                { word: "Wake up", mm: "နိုးထသည်", def: "To stop sleeping." },
+                { word: "Change", mm: "ပြောင်းလဲသည်", def: "To make different." },
+                { word: "Is raining", mm: "မိုးရွာနေသည်", def: "Continuous state of rain falling now." },
+                { word: "Is snowing", mm: "နှင်းကျနေသည်", def: "Continuous state of snow falling now." },
+                { word: "Rained", mm: "မိုးရွာခဲ့သည်", def: "Action of rain falling yesterday." },
+                { word: "Snowed", mm: "နှင်းကျခဲ့သည်", def: "Action of snow falling yesterday." },
+                { word: "Bears", mm: "ဝက်ဝံများ", def: "Large powerful mammals." },
+                { word: "Birds", mm: "ငှက်များ", def: "Feathered animals." },
+                { word: "Snowshoe rabbits", mm: "နှင်းခဲယုန်များ", def: "Rabbits that live in snow and change color." },
+                { word: "Penguins", mm: "ပင်ဂွင်းငှက်များ", def: "Flightless sea birds." },
+                { word: "Polar bears", mm: "ဝင်ရိုးစွန်း ဝက်ဝံများ", def: "Bears living in extremely cold northern places." },
+                { word: "Elephants", mm: "ဆင်များ", def: "Large mammals with a trunk." },
+                { word: "Hippos", mm: "ရေမြင်းများ", def: "Large river mammals." },
+                { word: "Snakes", mm: "မြွေများ", def: "Limbless reptiles." },
+                { word: "Giraffes", mm: "သစ်ကုလားအုတ်များ", def: "Tall mammals with a long neck." }
+            ],
+            reading: [
+                { isGrammar: true, title: "Grammar: Superlatives & Weather", text: "Superlatives: hot ➔ hottest, cold ➔ coldest, wet ➔ wettest, dry ➔ driest.\n\nPresent State: It is sunny / cloudy / windy / hot / cold today.\nPast State: It was sunny / cloudy / windy / hot / cold yesterday.\n\nAction (Present): It is raining / snowing today.\nAction (Past): It rained / snowed yesterday.", mm: "အသာလွန်ဆုံးပြ စကားလုံးများ - ပူသော ➔ အပူဆုံး၊ အေးသော ➔ အအေးဆုံး၊ စိုစွတ်သော ➔ အစိုစွတ်ဆုံး၊ ခြောက်သွေ့သော ➔ အခြောက်သွေ့ဆုံး\n\nယနေ့ နေသာသည် / တိမ်ထူသည် / လေတိုက်သည် / ပူသည် / အေးသည်။\nမနေ့က နေသာခဲ့သည် / တိမ်ထူခဲ့သည် / လေတိုက်ခဲ့သည် / ပူခဲ့သည် / အေးခဲ့သည်။\n\nယနေ့ မိုးရွာနေသည် / နှင်းကျနေသည်။\nမနေ့က မိုးရွာခဲ့သည် / နှင်းကျခဲ့သည်။" },
+                { isGrammar: false, title: "Reading: Weather Riddles", text: "RAIN: I come from grey clouds. I can change things from dry to wet.\nSNOW: I'm white. I only fall on really, really cold days.\nWIND: I make the leaves fall from trees. You want me when you go sailing!\nRAINBOW: Look carefully to see my seven colours. You only see me when the sun's behind you!\nSUN: I'm hot, big and round. When you see me, you can see stars, too.\nMOON: I come out when you go to bed. No, you can't see me at night!", mm: "မိုး- ငါမီးခိုးရောင် တိမ်တွေဆီက လာတယ်။ ငါက ခြောက်သွေ့နေတာကို စိုစွတ်အောင် ပြောင်းပေးနိုင်တယ်။\nနှင်း- ငါက အဖြူရောင်ပါ။ ငါက အလွန်အေးတဲ့ နေ့တွေမှာပဲ ကျတယ်။\nလေ- ငါက သစ်ပင်တွေက အရွက်တွေကို ကြွေစေတယ်။ ရွက်လွှင့်တဲ့အခါ ငါ့ကို လိုချင်ကြတယ်။\nသက်တံ- ငါ့ရဲ့ အရောင်ခုနစ်မျိုးကို သေချာကြည့်ပါ။ မင်းနောက်မှာ နေရှိမှပဲ ငါ့ကို မြင်ရမှာပါ!\nနေ- ငါက ပူပြီး ကြီးမားကာ ဝိုင်းစက်တယ်။ မင်းငါ့ကို မြင်ရတဲ့အခါ ကြယ်တွေကိုလည်း မြင်နိုင်တယ်။\nလ- မင်းအိပ်ရာဝင်ချိန်မှာ ငါထွက်လာတယ်။ မဟုတ်ဘူး၊ ညဘက်မှာ ငါ့ကို မမြင်နိုင်ဘူး!" },
+                { isGrammar: false, title: "Reading: Animals in the Cold", text: "Polar bears, brown bears, and snowshoe rabbits can change their fur color in cold places.\n\nBrown bears sleep when it is very cold and don't wake up or eat.\n\nSome birds fly to hotter countries when the weather gets cold.", mm: "ဝင်ရိုးစွန်းဝက်ဝံများ၊ အညိုရောင်ဝက်ဝံများနှင့် နှင်းခဲယုန်များသည် အေးသောနေရာများတွင် ၎င်းတို့၏ အမွေးအရောင်ကို ပြောင်းလဲနိုင်သည်။\n\nအညိုရောင်ဝက်ဝံများသည် အလွန်အေးသောအခါ အိပ်စက်ကြပြီး နိုးလာခြင်း သို့မဟုတ် အစာစားခြင်း မရှိပါ။\n\nရာသီဥတုအေးလာသောအခါ တချို့ငှက်များသည် ပိုပူသောနိုင်ငံများသို့ ပျံသန်းသွားကြသည်။" }
+            ],
+            activities: [
+                { cat: "RIDDLE MATCHING", q: "What matches: 'I come from grey clouds.' and 'I can change things from dry to wet.'?", mm: "ဘာနဲ့တူသလဲ- 'ငါမီးခိုးရောင် တိမ်တွေဆီက လာတယ်။' နှင့် 'ငါက ခြောက်သွေ့နေတာကို စိုစွတ်အောင် ပြောင်းပေးနိုင်တယ်။'?", options: ["Wind", "Rain", "Snow", "Rainbow"], ans: 1 },
+                { cat: "RIDDLE MATCHING", q: "What matches: 'I'm white.' and 'I only fall on really, really cold days.'?", mm: "ဘာနဲ့တူသလဲ- 'ငါက အဖြူရောင်ပါ။' နှင့် 'ငါက အလွန်အေးတဲ့ နေ့တွေမှာပဲ ကျတယ်။'?", options: ["Snow", "Rain", "Sun", "Moon"], ans: 0 },
+                { cat: "RIDDLE MATCHING", q: "What matches: 'Look carefully to see my seven colours.' and 'You only see me when the sun's behind you!'?", mm: "ဘာနဲ့တူသလဲ- 'ငါ့ရဲ့ အရောင်ခုနစ်မျိုးကို သေချာကြည့်ပါ။' နှင့် 'မင်းနောက်မှာ နေရှိမှပဲ ငါ့ကို မြင်ရမှာပါ!'?", options: ["Sun", "Moon", "Rain", "Rainbow"], ans: 3 },
+                { cat: "RIDDLE MATCHING", q: "What matches: 'I make the leaves fall from trees.' and 'You want me when you go sailing!'?", mm: "ဘာနဲ့တူသလဲ- 'ငါက သစ်ပင်တွေက အရွက်တွေကို ကြွေစေတယ်။' နှင့် 'ရွက်လွှင့်တဲ့အခါ ငါ့ကို လိုချင်ကြတယ်။'?", options: ["Snow", "Rain", "Wind", "Rainbow"], ans: 2 },
+                { cat: "IDENTIFY STRUCTURE", q: "Is this a state or an action? 'Brown bears sleep when weather is cold.'", mm: "ဒါက အခြေအနေလား လုပ်ဆောင်ချက်လား? 'Brown bears sleep when weather is cold.'", options: ["state", "action", "both", "neither"], ans: 1 },
+                { cat: "IDENTIFY STRUCTURE", q: "Is this a state or an action? 'We don't see many animals in coldest parts of the world.'", mm: "ဒါက အခြေအနေလား လုပ်ဆောင်ချက်လား? 'We don't see many animals in coldest parts of the world.'", options: ["state", "action", "both", "neither"], ans: 0 },
+                { cat: "TRAIT IDENTIFICATION", q: "Which animal is shown as the tallest?", mm: "ဘယ်တိရစ္ဆာန်ကို အရပ်အရှည်ဆုံးလို့ ပြသထားသလဲ?", options: ["elephant", "giraffe", "bear", "rabbit"], ans: 1 },
+                { cat: "TRAIT IDENTIFICATION", q: "Which animal is shown as the strongest?", mm: "ဘယ်တိရစ္ဆာန်ကို အသန်မာဆုံးလို့ ပြသထားသလဲ?", options: ["hippo", "elephant", "snake", "bear"], ans: 1 },
+                { cat: "TRAIT IDENTIFICATION", q: "Which animal is shown as the cleverest?", mm: "ဘယ်တိရစ္ဆာန်ကို အလိမ္မာဆုံးလို့ ပြသထားသလဲ?", options: ["rabbit", "bird", "snake", "bear"], ans: 0 },
+                { cat: "TRAIT IDENTIFICATION", q: "Which is taller according to F?", mm: "F အရ ဘယ်ဟာက ပိုမြင့်သလဲ?", options: ["bear", "bird", "giraffe", "rabbit"], ans: 2 }
+            ],
+            test: [
+                { cat: "SENTENCE COMPLETION", q: "There's lots of ice in Antarctica. It's the _______ place in the world.", mm: "အန္တာတိကမှာ ရေခဲတွေ အများကြီးရှိတယ်။ ဒါက ကမ္ဘာပေါ်မှာ _______ နေရာဖြစ်တယ်။", options: ["hottest", "windiest", "coldest", "sunniest"], ans: 2 },
+                { cat: "SENTENCE COMPLETION", q: "Africa is the _______ part of the world.", mm: "အာဖရိကက ကမ္ဘာပေါ်မှာ _______ အစိတ်အပိုင်းဖြစ်တယ်။", options: ["coldest", "hottest", "wettest", "driest"], ans: 1 },
+                { cat: "SENTENCE COMPLETION", q: "In Arizona, it's always dry and sunny! It's the _______ place in the USA.", mm: "အရီဇိုးနားမှာ အမြဲခြောက်သွေ့ပြီး နေသာတယ်။ ဒါက အမေရိကန်မှာ _______ နေရာဖြစ်တယ်။", options: ["wettest", "windiest", "sunniest", "driest"], ans: 3 },
+                { cat: "GRAMMAR CHECK", q: "Which word from the box fits: 'The _______ town is in India. It rains there a lot!'?", mm: "ဘယ်စကားလုံးက ကိုက်ညီသလဲ- 'The _______ town is in India. It rains there a lot!'?", options: ["hottest", "windiest", "coldest", "wettest"], ans: 3 },
+                { cat: "GRAMMAR CHECK", q: "Which word from the box fits: 'The _______ place is Antarctica, too. The wind there is really strong!'?", mm: "ဘယ်စကားလုံးက ကိုက်ညီသလဲ- 'The _______ place is Antarctica, too. The wind there is really strong!'?", options: ["windiest", "coldest", "hottest", "driest"], ans: 0 },
+                { cat: "STRUCTURE COMPLETION", q: "It ______ windy today.", mm: "ဒီနေ့ လေ ______ တယ်။", options: ["is", "was", "has", "were"], ans: 0 },
+                { cat: "STRUCTURE COMPLETION", q: "It ______ cloudy yesterday.", mm: "မနေ့က တိမ် ______ တယ်။", options: ["is", "was", "has", "were"], ans: 1 },
+                { cat: "STRUCTURE COMPLETION", q: "It is ______ today.", mm: "ဒီနေ့ ______ နေတယ်။", options: ["raining", "snowing", "is raining", "rained"], ans: 0 },
+                { cat: "STRUCTURE COMPLETION", q: "It ______ yesterday.", mm: "မနေ့က ______ ခဲ့တယ်။", options: ["rained", "snowed", "is raining", "raining"], ans: 0 },
+                { cat: "READING COMPREHENSION", q: "How are polar bears described in the text?", mm: "စာသားထဲမှာ ဝင်ရိုးစွန်းဝက်ဝံတွေကို ဘယ်လိုဖော်ပြထားသလဲ?", options: ["brown", "intelligent", "white", "sleep in winter"], ans: 2 },
+                { cat: "READING COMPREHENSION", q: "What do brown bears do when the weather is very cold?", mm: "ရာသီဥတု အရမ်းအေးတဲ့အခါ အညိုရောင်ဝက်ဝံတွေ ဘာလုပ်သလဲ?", options: ["fly away", "sleep", "eat a lot", "change color"], ans: 1 },
+                { cat: "READING COMPREHENSION", q: "Why do some birds fly to other countries?", mm: "ဘာကြောင့် တချို့ငှက်တွေက တခြားနိုင်ငံတွေကို ပျံသန်းကြတာလဲ?", options: ["to sleep", "to eat", "weather gets cold", "to change color"], ans: 2 },
+                { cat: "READING COMPREHENSION", q: "What is special about snowshoe rabbits in the cold?", mm: "နှင်းခဲယုန်တွေ အအေးထဲမှာ ဘာထူးခြားသလဲ?", options: ["sleep long", "fly away", "change color to white", "eat food"], ans: 2 },
+                { cat: "READING COMPREHENSION", q: "When weather gets cold, some birds fly... Where?", mm: "ရာသီဥတုအေးလာရင် တချို့ငှက်တွေက ပျံသန်းကြတယ်... ဘယ်ကိုလဲ?", options: ["in colder countries", "by colder countries", "at hotter countries", "to hotter countries"], ans: 3 },
+                { cat: "TRAIT IDENTIFICATION", q: "Which is smaller according to F?", mm: "F အရ ဘယ်ဟာက ပိုသေးသလဲ?", options: ["elephant", "rabbit", "hippo", "bird"], ans: 3 }
+            ]
+        };
+
+        let state = { 
+            studentName: "", progress: 0, secretActive: false, testAnswers: {}, actAnswers: {}, micScores: {}, cardsFlipped: 0,
+            grammarUnderstood: false,
+            sectionProgress: { vocab: [], read: [], flash: [] },
+            sectionsSent: { vocab: false, read: false, flash: false, act: false, grammar: false, test: false, fullReport: false }
+        };
+        
+        const unitKey = `ffm_unit8`;
+        let synth = window.speechSynthesis;
+        let voices = [];
+        window.speechUtteranceChunk = null; 
+        let currentCardIdx = 0;
+        let translateTaps = 0;
+        let translateTimeout;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            try {
+                loadVoices();
+                if(synth && synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
+
+                document.addEventListener('pointerdown', (e) => {
+                    const tags = ['BUTTON', 'DIV', 'LABEL', 'SELECT'];
+                    if(tags.includes(e.target.tagName) || e.target.closest('.card')) {
+                        if (navigator.vibrate) navigator.vibrate(40);
+                    }
+                });
+
+                const unitNav = document.getElementById('unit-nav');
+                unitNav.innerHTML = '';
+                for (let i = 1; i <= 45; i++) {
+                    let opt = document.createElement('option');
+                    opt.value = i;
+                    opt.innerText = `Unit ${i}`;
+                    if (i === currentUnitNumber) opt.selected = true;
+                    unitNav.appendChild(opt);
+                }
+
+                const urlParams = new URLSearchParams(window.location.search);
+                if(urlParams.has('name')) storage.set('ffm_global_name', urlParams.get('name'));
+                
+                buildUI();
+                setupListeners();
+
+                setTimeout(() => {
+                    document.getElementById('splash-screen').classList.remove('active');
+                    checkLogin();
+                }, 2500);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('splash-screen').classList.remove('active');
+                document.getElementById('login-screen').classList.add('active');
+            }
+        });
+
+        function saveState() { storage.set(unitKey, JSON.stringify(state)); }
+
+        function loadState() {
+            const saved = storage.get(unitKey);
+            if(saved) {
+                const parsed = JSON.parse(saved);
+                state = {...state, ...parsed};
+                
+                if(!state.sectionProgress) state.sectionProgress = { vocab: [], read: [], flash: [] };
+                if(!state.sectionsSent) state.sectionsSent = { vocab: false, read: false, flash: false, act: false, grammar: false, test: false, fullReport: false };
+                if(!state.actAnswers) state.actAnswers = {};
+                
+                if(state.secretActive) toggleSecret(true);
+                
+                if(state.grammarUnderstood) {
+                    document.getElementById('grammar-understand-btn').style.display = 'none';
+                    document.getElementById('grammar-understood-msg').style.display = 'block';
+                }
+                
+                Object.keys(state.testAnswers).forEach(qIdx => {
+                   let rad = document.querySelector(`input[name="q${qIdx}"][value="${state.testAnswers[qIdx]}"]`);
+                   if(rad) rad.checked = true;
+                });
+                Object.keys(state.actAnswers).forEach(qIdx => {
+                   let rad = document.querySelector(`input[name="a${qIdx}"][value="${state.actAnswers[qIdx]}"]`);
+                   if(rad) rad.checked = true;
+                });
+
+                calculateProgress(); 
+            }
+        }
+
+        function calculateProgress() {
+            let vPct = state.sectionProgress.vocab.length / unitData.vocab.length;
+            let rPct = state.sectionProgress.read.length / unitData.reading.length;
+            let fPct = state.sectionProgress.flash.length / unitData.vocab.length;
+            let aPct = Object.keys(state.actAnswers).length / unitData.activities.length;
+            let tPct = Object.keys(state.testAnswers).length / unitData.test.length;
+            let gPct = state.grammarUnderstood ? 1 : 0;
+
+            let avg = (vPct + rPct + fPct + aPct + tPct + gPct) / 6;
+            state.progress = Math.min(100, Math.floor(avg * 100));
+            updateProgressUI();
+            saveState();
+
+            if(state.progress === 100 && !state.sectionsSent.fullReport) {
+                state.sectionsSent.fullReport = true;
+                saveState();
+                sendTelemetryReport(`🏆 100% COURSE COMPLETED! Full Application Report.`);
+            }
+        }
+
+        function updateProgressUI() {
+            document.getElementById('progress-bar').style.width = state.progress + "%";
+            document.getElementById('progress-text').innerText = state.progress + "%";
+            
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if(state.progress >= 50) {
+                submitBtn.style.pointerEvents = 'auto';
+            } else {
+                submitBtn.style.pointerEvents = 'none';
+            }
+
+            if(state.progress >= 100 && Object.keys(state.testAnswers).length === unitData.test.length) {
+                submitBtn.classList.add('unlocked');
+            } else {
+                submitBtn.classList.remove('unlocked');
+            }
+        }
+
+        function markItemDone(section, idx) {
+            if(!state.sectionProgress[section].includes(idx)) {
+                state.sectionProgress[section].push(idx);
+                saveState();
+                calculateProgress();
+                checkSectionCompletion(section);
+            }
+        }
+
+        function markGrammarUnderstood() {
+            state.grammarUnderstood = true;
+            document.getElementById('grammar-understand-btn').style.display = 'none';
+            document.getElementById('grammar-understood-msg').style.display = 'block';
+            
+            if(!state.sectionsSent.grammar) {
+                state.sectionsSent.grammar = true;
+                saveState();
+                calculateProgress();
+                showCenterToast("Grammar Complete!");
+                sendTelemetryReport(`Section Completed: GRAMMAR UNDERSTOOD`);
+            }
+        }
+
+        function checkSectionCompletion(section) {
+            if(state.sectionsSent[section]) return;
+            
+            let isComplete = false;
+            if(section === 'vocab' && state.sectionProgress.vocab.length >= unitData.vocab.length) isComplete = true;
+            if(section === 'read' && state.sectionProgress.read.length >= unitData.reading.length) isComplete = true;
+            if(section === 'flash' && state.sectionProgress.flash.length >= unitData.vocab.length) isComplete = true;
+            if(section === 'act' && Object.keys(state.actAnswers).length >= unitData.activities.length) isComplete = true;
+            
+            if(isComplete) {
+                state.sectionsSent[section] = true;
+                saveState();
+                showCenterToast(`${section.toUpperCase()} Complete! Sending to teacher...`);
+                sendTelemetryReport(`Section Completed: ${section.toUpperCase()}`);
+            }
+        }
+
+        function checkLogin() {
+            const globalName = storage.get('ffm_global_name');
+            if(globalName) {
+                state.studentName = globalName;
+                document.getElementById('display-name').innerText = globalName;
+                document.getElementById('login-screen').classList.remove('active'); 
+                document.getElementById('main-app').classList.add('active');
+                loadState();
+            } else {
+                document.getElementById('login-screen').classList.add('active');
+                document.getElementById('main-app').classList.remove('active');
+            }
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.opacity = 1;
+            setTimeout(() => t.style.opacity = 0, 3000);
+        }
+
+        function showCenterToast(customMsg) {
+            const t = document.getElementById('center-toast');
+            document.getElementById('center-toast-msg').innerText = customMsg || "Sending results to the teacher...";
+            t.classList.add('active');
+            setTimeout(() => t.classList.remove('active'), 3500);
+        }
+
+        function loadVoices() {
+            if (synth) voices = synth.getVoices().filter(v => v.lang.includes('en'));
+        }
+
+        function playTTS(text) {
+            if(!synth) return showToast("Audio not supported.");
+            if(synth.speaking) synth.cancel();
+            
+            let cleanText = text.replace(/<[^>]*>?/gm, ''); 
+            cleanText = cleanText.replace(/([_]\s*)+/g, " blank ").replace(/[!()"\n]/g, " ");
+            
+            const u = new SpeechSynthesisUtterance(cleanText);
+            u.rate = 0.75;
+            
+            const accent = document.getElementById('accent-select').value;
+            const voice = voices.find(v => v.lang === accent && (v.name.includes("Premium") || v.name.includes("Google"))) || voices.find(v => v.lang === accent) || voices[0];
+            if(voice) u.voice = voice;
+            
+            window.speechUtteranceChunk = u; 
+            synth.speak(u);
+        }
+
+        function startDictation(targetWord, idx) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if(!SpeechRecognition) return showToast("Microphone not supported on this browser.");
+            
+            const recognition = new SpeechRecognition();
+            recognition.lang = document.getElementById('accent-select').value;
+            recognition.interimResults = false;
+
+            const overlay = document.getElementById('stt-overlay');
+            overlay.classList.add('active');
+
+            try { recognition.start(); } catch(e) { overlay.classList.remove('active'); return; }
+
+            recognition.onresult = (event) => {
+                const spoken = event.results[0][0].transcript.toLowerCase().replace(/[.,!?]/g, "").trim();
+                let target = targetWord.toLowerCase().replace(/^(a |an |the )/i, "").replace(/[.,!?]/g, "").trim();
+                let score = 0;
+                
+                if(spoken === target) score = 100;
+                else if(spoken.includes(target) || target.includes(spoken)) score = 70;
+                
+                state.micScores[targetWord] = Math.max(state.micScores[targetWord] || 0, score);
+                
+                overlay.classList.remove('active');
+                showToast(`Heard: "${spoken}" | Score: ${score}%`);
+                
+                markItemDone('vocab', idx); 
+            };
+
+            recognition.onerror = () => overlay.classList.remove('active');
+            recognition.onend = () => overlay.classList.remove('active');
+        }
+
+        function buildUI() {
+            const vTab = document.getElementById('tab-vocab');
+            unitData.vocab.forEach((v, i) => {
+                const imgName = v.word.replace(/^(a |an |the )/i, '').replace(/ /g, '').toLowerCase() + '.jpg';
+                const imgPath = `images/${currentUnitDir}/${imgName}`;
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.innerHTML = `
+                    <img src="${imgPath}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23ddd\\'/></svg>'">
+                    <div class="card-content">
+                        <div style="font-weight:bold; font-size:1.2em;">${v.word}</div>
+                        <div style="font-size:0.95em; color:#444; margin-top:4px;">${v.def}</div>
+                        <div class="myanmar-text">${v.mm}</div>
+                    </div>
+                `;
+                const audioBtn = document.createElement('button');
+                audioBtn.className = 'audio-btn'; audioBtn.innerText = '🔊';
+                audioBtn.addEventListener('click', () => playTTS(v.word));
+                
+                const micBtn = document.createElement('button');
+                micBtn.className = 'mic-btn'; micBtn.innerText = '🎤';
+                micBtn.addEventListener('click', () => startDictation(v.word, i));
+                
+                div.appendChild(audioBtn);
+                div.appendChild(micBtn);
+                vTab.appendChild(div);
+            });
+
+            const rContainer = document.getElementById('read-cards-container');
+            unitData.reading.forEach((r, i) => {
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.innerHTML = `
+                    <div class="card-content">
+                        <span class="grammar-title">${r.title}</span>
+                        <div style="white-space: pre-wrap;">${r.text}</div>
+                        <div class="myanmar-text">${r.mm}</div>
+                    </div>
+                `;
+                const audioBtn = document.createElement('button');
+                audioBtn.className = 'audio-btn'; audioBtn.innerText = '🔊';
+                audioBtn.addEventListener('click', () => { markItemDone('read', i); playTTS(r.text); });
+                div.appendChild(audioBtn);
+                rContainer.appendChild(div);
+            });
+
+            const aTab = document.getElementById('tab-act');
+            unitData.activities.forEach((q, i) => {
+                const div = document.createElement('div');
+                div.className = 'test-q';
+                let opts = q.options.map((opt, oi) => `
+                    <label id="lbl-a${i}-${oi}">
+                        <input type="radio" name="a${i}" value="${oi}" onchange="selectActivityAnswer(${i}, ${oi})">
+                        ${opt}
+                    </label>
+                `).join('');
+                div.innerHTML = `
+                    <span class="test-category">${q.cat}</span>
+                    <div style="font-weight:bold; margin-bottom:10px;">${q.q}</div>
+                    <div class="myanmar-text" style="margin-bottom:10px;">${q.mm}</div>
+                    <div class="options">${opts}</div>
+                `;
+                const audioBtn = document.createElement('button');
+                audioBtn.className = 'audio-btn'; audioBtn.innerText = '🔊';
+                audioBtn.style.float = 'right';
+                audioBtn.addEventListener('click', () => playTTS(q.q));
+                div.children[1].appendChild(audioBtn);
+                aTab.appendChild(div);
+            });
+
+            const tTab = document.getElementById('tab-test');
+            unitData.test.forEach((q, i) => {
+                const div = document.createElement('div');
+                div.className = 'test-q';
+                let opts = q.options.map((opt, oi) => `
+                    <label id="lbl-t${i}-${oi}">
+                        <input type="radio" name="q${i}" value="${oi}" onchange="selectTestAnswer(${i}, ${oi})">
+                        ${opt}
+                    </label>
+                `).join('');
+                div.innerHTML = `
+                    <span class="test-category">${q.cat}</span>
+                    <div style="font-weight:bold; margin-bottom:10px;">${q.q}</div>
+                    <div class="myanmar-text" style="margin-bottom:10px;">${q.mm}</div>
+                    <div class="options">${opts}</div>
+                `;
+                const audioBtn = document.createElement('button');
+                audioBtn.className = 'audio-btn'; audioBtn.innerText = '🔊';
+                audioBtn.style.float = 'right';
+                audioBtn.addEventListener('click', () => playTTS(q.q));
+                div.children[1].appendChild(audioBtn);
+                tTab.appendChild(div);
+            });
+
+            updateFlashcard();
+        }
+
+        function updateFlashcard() {
+            const v = unitData.vocab[currentCardIdx];
+            const imgName = v.word.replace(/^(a |an |the )/i, '').replace(/ /g, '').toLowerCase() + '.jpg';
+            document.getElementById('fc-progress').innerText = `Card ${currentCardIdx + 1} of ${unitData.vocab.length}`;
+            document.getElementById('fc-front').innerHTML = `<img src="images/${currentUnitDir}/${imgName}" onerror="this.style.display='none'"><br><strong style="font-size:1.5em;">${v.word}</strong>`;
+            document.getElementById('fc-back').innerHTML = `<strong style="font-size:1.5em;">${v.word}</strong><br><br><span style="font-size:1.1em; color:#444;">${v.def}</span><br><br><span class="myanmar-text" style="${state.secretActive?'display:block;':''} font-size:1.2em;">${v.mm}</span>`;
+            document.getElementById('fc-inner').classList.remove('flipped');
+        }
+        function flipCard() { 
+            document.getElementById('fc-inner').classList.toggle('flipped'); 
+            markItemDone('flash', currentCardIdx);
+        }
+        function prevCard() { if(currentCardIdx > 0) { currentCardIdx--; updateFlashcard(); } }
+        function nextCard() { if(currentCardIdx < unitData.vocab.length - 1) { currentCardIdx++; updateFlashcard(); } }
+
+        function setupListeners() {
+            document.getElementById('login-btn').addEventListener('click', () => {
+                const name = document.getElementById('student-name-input').value.trim();
+                if(name) {
+                    storage.set('ffm_global_name', name);
+                    checkLogin();
+                }
+            });
+
+            document.querySelectorAll('.tab').forEach(t => {
+                t.addEventListener('click', (e) => {
+                    document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                    document.getElementById(e.currentTarget.dataset.target).classList.add('active');
+                });
+            });
+
+            document.getElementById('audio-stop').addEventListener('click', () => { if(synth) synth.cancel(); });
+            
+            document.getElementById('reset-btn').addEventListener('click', () => {
+                storage.remove(unitKey);
+                storage.remove('ffm_global_name');
+                location.reload();
+            });
+
+            document.getElementById('translate-btn').addEventListener('click', () => {
+                if(state.secretActive) return toggleSecret(false);
+                translateTaps++;
+                clearTimeout(translateTimeout);
+                if(translateTaps < 5) {
+                    showToast("Try to understand the context in English first! Keep tapping if you really need the translation. 🧠");
+                    translateTimeout = setTimeout(() => translateTaps = 0, 3000);
+                } else {
+                    toggleSecret(true);
+                    translateTaps = 0;
+                    playTTS("Secret translation unlocked. But remember, try your best to think in English first.");
+                    showToast("Translation Unlocked 🔓");
+                }
+            });
+
+            document.getElementById('submit-btn').addEventListener('click', submitTest);
+            
+            document.getElementById('retake-btn').addEventListener('click', () => {
+                document.getElementById('result-modal').classList.remove('active');
+                state.testAnswers = {}; 
+                state.sectionsSent.test = false; 
+                state.sectionsSent.fullReport = false;
+                saveState();
+                calculateProgress();
+                document.querySelectorAll('input[name^="q"]').forEach(r => { r.checked = false; r.disabled = false; });
+                document.querySelectorAll('label[id^="lbl-t"]').forEach(l => l.className = '');
+            });
+            
+            document.getElementById('close-modal-btn').addEventListener('click', () => {
+                document.getElementById('result-modal').classList.remove('active');
+            });
+
+            document.getElementById('unit-nav').addEventListener('change', (e) => {
+                window.location.href = `ffmu${e.target.value}.html`;
+            });
+        }
+
+        function toggleSecret(isActive) {
+            state.secretActive = isActive;
+            document.querySelectorAll('.myanmar-text').forEach(el => el.style.display = isActive ? 'block' : 'none');
+            saveState();
+        }
+
+        function selectActivityAnswer(qIdx, optIdx) {
+            state.actAnswers[qIdx] = optIdx;
+            saveState();
+            calculateProgress();
+            checkSectionCompletion('act');
+        }
+
+        function selectTestAnswer(qIdx, optIdx) {
+            state.testAnswers[qIdx] = optIdx;
+            saveState();
+            calculateProgress();
+            
+            if(Object.keys(state.testAnswers).length === unitData.test.length) {
+                setTimeout(submitTest, 800); 
+            }
+        }
+
+        function submitTest() {
+            if(Object.keys(state.testAnswers).length < unitData.test.length) return;
+
+            let score = 0;
+            unitData.test.forEach((q, i) => {
+                const chosen = state.testAnswers[i];
+                document.querySelectorAll(`input[name="q${i}"]`).forEach(r => r.disabled = true);
+                
+                const chosenLbl = document.getElementById(`lbl-t${i}-${chosen}`);
+                const correctLbl = document.getElementById(`lbl-t${i}-${q.ans}`);
+
+                if(chosen === q.ans) {
+                    score++;
+                    chosenLbl.classList.add('correct-answer');
+                } else {
+                    chosenLbl.classList.add('wrong-answer');
+                    correctLbl.classList.add('missed-correct');
+                }
+            });
+
+            const pct = Math.round((score / unitData.test.length) * 100);
+            document.getElementById('result-stars').innerText = pct >= 90 ? "⭐⭐⭐" : pct >= 70 ? "⭐⭐" : pct >= 40 ? "⭐" : "0 Stars";
+            document.getElementById('result-score').innerText = `${score} / ${unitData.test.length} (${pct}%)`;
+            document.getElementById('result-modal').classList.add('active');
+
+            if(pct >= 90 && typeof confetti === 'function') confetti({particleCount: 150, spread: 70, origin: {y: 0.6}});
+            
+            if(!state.sectionsSent.test) {
+                state.sectionsSent.test = true;
+                saveState();
+                showCenterToast("Sending test score...");
+                sendTelemetryReport(`Section Completed: OFFICIAL TEST (Score: ${pct}%)`);
+                calculateProgress(); 
+            }
+        }
+
+        function sendTelemetryReport(eventContext) {
+            const report = `*App Event:* ${eventContext}\n*Unit:* ${unitData.title}\n*Student:* ${state.studentName}\n*Time:* ${new Date().toLocaleString()}\n*App Progress:* ${state.progress}%\n*Grammar Section:* ${state.grammarUnderstood ? 'Understood' : 'Pending'}\n*Translator Used:* ${state.secretActive ? 'Yes' : 'No'}`;
+            
+            fetch(`https://api.telegram.org/bot8679862681:AAFdjX5cpI-7Hpb1SOTijRWDxdfgCrq_RbY/sendMessage`, {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: '5200770390', text: report, parse_mode: 'Markdown' })
+            }).catch(e => console.error("Telegram fetch failed", e));
+        }
+    </script>
+</body>
+</html>
