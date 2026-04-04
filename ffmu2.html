@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>U10: People in our street</title>
+    <title>U2: Animals, animals ...</title>
     <style>
         :root { --primary: #4CAF50; --secondary: #FFC107; --bg: #f4f4f9; --text: #333; --locked: #ccc; }
         body, html { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: var(--text); overscroll-behavior: none; }
@@ -11,7 +11,7 @@
         #splash-screen, #login-screen, #main-app, .modal-overlay, .tab-content { display: none; }
         .myanmar-text { display: none; color: #555; font-size: 0.9em; margin-top: 4px; }
         
-        #splash-screen.active { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: var(--primary); color: white; text-align: center; padding: 20px;}
+        #splash-screen.active { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: var(--primary); color: white; text-align: center;}
         #login-screen.active { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; padding: 20px;}
         #main-app.active { display: block; padding-top: 60px; padding-bottom: 80px;}
         .tab-content.active { display: block; padding: 20px; }
@@ -24,10 +24,10 @@
         .submit-btn.unlocked { background: var(--primary); animation: flash 2s infinite; cursor: pointer; pointer-events: auto; }
         @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
         
-        .header-area { padding: 15px; background: white; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center;}
+        .header-area { padding: 15px; background: white; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
         .header-area h2 { margin: 0 0 5px 0; color: var(--primary); }
         .header-area p { margin: 0; font-size: 0.85em; color: #666; }
-        .controls { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; justify-content: center;}
+        .controls { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;}
         button, select, input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; background: white;}
         button { cursor: pointer; background: var(--bg); }
         button:active { transform: scale(0.98); }
@@ -81,7 +81,7 @@
     <div id="splash-screen" class="active">
         <img src="logo.png" alt="School Logo" style="width: 70px; height: 70px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
         <h1>Fun for Movers</h1>
-        <h2>Unit 10: People in our street</h2>
+        <h2>Unit 2: Animals, animals ...</h2>
         <p>Developed by Nine Nine</p>
         <p>Brilliant Star Private School (IPS Pakokku)</p>
     </div>
@@ -101,9 +101,9 @@
         </div>
 
         <div class="header-area">
-            <h2>Unit 10: People in our street</h2>
+            <h2>Unit 2: Animals, animals ...</h2>
             <p>Developed by Nine Nine - Brilliant Star Private School (Pakokku)</p>
-            <img src="logo.png" alt="School Logo" style="width: 70px; height: 70px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-top: 10px;">
+            <img src="logo.png" alt="School Logo" style="width: 70px; height: 70px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
             <div class="controls">
                 <span style="padding: 8px; background: #eee; border-radius: 6px; font-weight: bold;">Student: <span id="display-name"></span></span>
                 <select id="accent-select">
@@ -198,55 +198,53 @@
         let usedImageUrls = new Set();
         let audioCache = {};
 
-        const currentUnitDir = "u10";
-        const currentUnitNumber = 10;
-        
+        const currentUnitNumber = 2;
         const unitData = {
-            title: "Unit 10: People in our street",
+            title: "Unit 2: Animals, animals ...",
             vocab: [
-                { word: "balcony", def: "A platform built on the upstairs outside wall of a building.", mm: "လသာဆောင်", query: "apartment balcony" },
-                { word: "stairs", def: "A set of steps leading from one floor of a building to another.", mm: "လှေကား", query: "stairs steps" },
-                { word: "huge", def: "Very, very big.", mm: "ဧရာမ", query: "huge giant big" },
-                { word: "straight", def: "Not curving, curling, or bending.", mm: "ဖြောင့်သော", query: "straight line" },
-                { word: "curly", def: "Having curls or a curved shape.", mm: "ကောက်သော", query: "curly hair" },
-                { word: "blonde", def: "Pale yellow or golden hair color.", mm: "ရွှေရောင်", query: "blonde hair" },
-                { word: "tablet", def: "A small, flat computer controlled by touching the screen.", mm: "တက်ဘလက်", query: "tablet computer screen" },
-                { word: "pet", def: "An animal kept for pleasure and companionship.", mm: "အိမ်မွေးတိရစ္ဆာန်", query: "cute pet animal" },
-                { word: "moustache", def: "Hair that grows above a man's upper lip.", mm: "နှုတ်ခမ်းမွေး", query: "man moustache face" },
-                { word: "beard", def: "Hair that grows on the chin and cheeks of a man's face.", mm: "မုတ်ဆိတ်မွေး", query: "man beard face" },
-                { word: "chocolate", def: "A sweet brown food made from roasted cacao seeds.", mm: "ချောကလက်", query: "chocolate bar sweet" },
-                { word: "glasses", def: "Two small pieces of glass worn to help you see better.", mm: "မျက်မှန်", query: "reading glasses spectacles" }
+                { word: "bear", def: "A large, heavy, wild animal with thick fur.", mm: "ဝက်ဝံ", query: "bear animal illustration" },
+                { word: "rabbit", def: "A small animal with long ears and soft fur.", mm: "ယုန်", query: "rabbit illustration" },
+                { word: "kangaroo", def: "An Australian animal that jumps on its strong back legs.", mm: "သားပိုက်ကောင်", query: "kangaroo illustration" },
+                { word: "fly", def: "A small flying insect with two wings.", mm: "ယင်ကောင်", query: "fly insect illustration" },
+                { word: "dolphin", def: "A highly intelligent sea mammal.", mm: "လင်းပိုင်", query: "dolphin illustration" },
+                { word: "panda", def: "A large black and white bear from China.", mm: "ပန်ဒါဝက်ဝံ", query: "panda illustration" },
+                { word: "parrot", def: "A brightly colored bird that can sometimes copy human speech.", mm: "ကြက်တူရွေး", query: "parrot illustration" },
+                { word: "lion", def: "A large wild cat known as the king of the jungle.", mm: "ခြင်္သေ့", query: "lion illustration" },
+                { word: "lizard", def: "A reptile with a long body, four legs, and a long tail.", mm: "အိမ်မြှောင် / ပုတ်သင်ညို", query: "lizard illustration" },
+                { word: "penguin", def: "A black and white bird that cannot fly but swims well.", mm: "ပင်ဂွင်း", query: "penguin illustration" },
+                { word: "snail", def: "A small animal with a soft body and a spiral shell.", mm: "ခရု", query: "snail illustration" },
+                { word: "jellyfish", def: "A sea animal with a soft, clear body and stinging tentacles.", mm: "ရေခူ", query: "jellyfish illustration" },
+                { word: "zebra", def: "An African wild animal that looks like a horse with black and white stripes.", mm: "မြင်းကျား", query: "zebra illustration" },
+                { word: "donkey", def: "An animal like a small horse with long ears.", mm: "မြည်း", query: "donkey illustration" },
+                { word: "polar bear", def: "A large white bear that lives in the Arctic.", mm: "ဝင်ရိုးစွန်းဝက်ဝံ", query: "polar bear illustration" }
             ],
             reading: [
-                { isGrammar: false, title: "Reading: Bus Stop", text: "My son, my brother, my mother and my uncle are waiting in Upunder Road for the number one bus.", mm: "ကျွန်တော့်သား၊ ကျွန်တော့်အစ်ကို၊ ကျွန်တော့်အမေနဲ့ ကျွန်တော့်ဦးလေးတို့ဟာ နံပါတ်တစ် ဘတ်စ်ကားအတွက် အပ်အန်ဒါလမ်းမှာ စောင့်နေကြပါတယ်။" },
-                { isGrammar: false, title: "Reading: Comparisons", text: "Dan's got brown eyes, but Lily's and Sally's eyes are blue and bigger than Dan's. Sally's hair is black. It's shorter than Lily's hair but it's longer than Dan's hair!", mm: "ဒန်တွင် အညိုရောင် မျက်လုံးများရှိသော်လည်း လီလီနှင့် ဆယ်လီတို့၏ မျက်လုံးများမှာ အပြာရောင်ဖြစ်ပြီး ဒန်ထက် ပိုကြီးသည်။ ဆယ်လီ၏ဆံပင်သည် အနက်ရောင်ဖြစ်သည်။ လီလီရဲ့ဆံပင်ထက် ပိုတိုပေမယ့် ဒန်ရဲ့ဆံပင်ထက်တော့ ပိုရှည်ပါတယ်။" },
-                { isGrammar: true, title: "Grammar: Possessive 's", text: "We use 's to show that something belongs to someone.\nExample: Dan's eyes are brown. (The eyes belong to Dan).\nExample: Lily's hair is long. (The hair belongs to Lily).", mm: "ပိုင်ဆိုင်မှုကို ပြသရန် 's ကို အသုံးပြုပါသည်။ ဥပမာ- ဒန်၏မျက်လုံးများသည် အညိုရောင်ဖြစ်သည်။ လီလီ၏ဆံပင်သည် ရှည်သည်။" },
-                { isGrammar: true, title: "Grammar: Have got / Has got", text: "We use 'have got' or 'has got' to describe physical features or possessions.\nExample: She has got (She's got) blue eyes.\nExample: He has not got (hasn't got) a moustache.", mm: "ရုပ်ရည်သွင်ပြင် သို့မဟုတ် ပိုင်ဆိုင်မှုများကို ဖော်ပြရန် 'have got' သို့မဟုတ် 'has got' ကို အသုံးပြုပါသည်။ ဥပမာ- သူမတွင် အပြာရောင်မျက်လုံးများရှိသည်။ သူ၏ နှုတ်ခမ်းမွေးမရှိပါ။" },
-                { isGrammar: true, title: "Grammar: Comparatives", text: "We use adjectives with '-er + than' to compare two things or people.\nRule 1: Add -er (short -> shorter than).\nRule 2: Double the consonant and add -er (big -> bigger than).\nExample: Sally's hair is shorter than Lily's hair.", mm: "အရာနှစ်ခု သို့မဟုတ် လူနှစ်ဦးကို နှိုင်းယှဉ်ရန် 'နာမဝိသေသန + -er + than' ကို အသုံးပြုပါသည်။ ဥပမာ- ဆယ်လီ၏ဆံပင်သည် လီလီ၏ဆံပင်ထက် ပိုတိုသည်။" }
+                { isGrammar: false, title: "Reading: Crocodile Facts", text: "Crocodiles live in rivers and sometimes in the sea. They open their eyes when they are swimming. Crocodiles can swim and walk. They have lots of teeth and they eat birds, fish, and other animals. It is not safe to go swimming with a crocodile! A baby crocodile is inside its egg for about 12 weeks.", mm: "မိကျောင်းများသည် မြစ်များနှင့် တစ်ခါတစ်ရံ ပင်လယ်ထဲတွင် နေထိုင်ကြသည်။ ရေကူးနေစဉ် မျက်စိဖွင့်ထားကြသည်။ မိကျောင်းများသည် ရေကူးနိုင်ပြီး လမ်းလျှောက်နိုင်သည်။ ၎င်းတို့တွင် သွားများစွာရှိပြီး ငှက်များ၊ ငါးများနှင့် အခြားတိရစ္ဆာန်များကို စားကြသည်။ မိကျောင်းနှင့်အတူ ရေကူးရန် အန္တရာယ်မကင်းပါ! မိကျောင်းပေါက်လေးသည် ဥထဲတွင် ၁၂ ပတ်ခန့် နေရသည်။" },
+                { isGrammar: true, title: "Grammar: Rhyming Words", text: "Some words sound the same at the end. We call these rhyming words.\nExample: 'cat' sounds like 'hat'.\nExample: 'bee' sounds like 'me'.\nKnowing rhyming words helps you spell and pronounce new words correctly.", mm: "အချို့သော စကားလုံးများသည် အသံထွက်တူညီစွာ ဆုံးကြသည်။ ၎င်းတို့ကို ကာရန်ညီသော စကားလုံးများဟု ခေါ်သည်။\nဥပမာ - 'cat' သည် 'hat' နှင့် အသံထွက်တူသည်။ 'bee' သည် 'me' နှင့် အသံထွက်တူသည်။\nကာရန်ညီသော စကားလုံးများကို သိရှိခြင်းက စာလုံးပေါင်းရန်နှင့် စကားလုံးအသစ်များကို မှန်ကန်စွာ အသံထွက်ရန် ကူညီပေးသည်။" }
             ],
             activities: [
-                { cat: "CONVERSATION PRACTICE", q: "What's she like?", mm: "သူမက ဘယ်လိုပုံစံလဲ။", options: ["She likes chocolate.", "It's her new tablet.", "She's really nice."], ans: 2 },
-                { cat: "CONVERSATION PRACTICE", q: "Has she got any brothers?", mm: "သူမမှာ အစ်ကိုတွေရှိလား။", options: ["Only one, I think.", "She never does that.", "No, it's Charlie."], ans: 0 },
-                { cat: "CONVERSATION PRACTICE", q: "What's her phone number?", mm: "သူမရဲ့ ဖုန်းနံပါတ်က ဘာလဲ။", options: ["Yes, she's in class 13.", "Her phone's really great.", "I don't know, but I can ask her."], ans: 2 },
-                { cat: "TRUE OR FALSE", q: "Mr Fish likes cooking on his stairs.", mm: "မစ္စတာဖစ်ရှ်က လှေကားပေါ်မှာ ဟင်းချက်ရတာကို နှစ်သက်တယ်။", options: ["True", "False"], ans: 1 },
-                { cat: "TRUE OR FALSE", q: "Dan, Lily, and Sally live in Easy Street.", mm: "ဒန်၊ လီလီနှင့် ဆယ်လီတို့သည် အီဇီလမ်းတွင် နေထိုင်ကြသည်။", options: ["True", "False"], ans: 0 }
+                { cat: "CROCODILE FACTS", q: "Do crocodiles open their eyes when they are swimming?", mm: "မိကျောင်းများသည် ရေကူးနေစဉ် မျက်စိဖွင့်ထားကြပါသလား။", options: ["Yes", "No"], ans: 0 },
+                { cat: "CROCODILE FACTS", q: "Is it safe to go swimming with a crocodile?", mm: "မိကျောင်းနှင့်အတူ ရေကူးရန် ဘေးကင်းပါသလား။", options: ["Yes", "No"], ans: 1 },
+                { cat: "RHYMING ANIMALS", q: "It's small, black and yellow and it can fly. It sounds like 'me'.", mm: "၎င်းသည် သေးငယ်ပြီး အမည်းနှင့် အဝါရောင်ရှိကာ ပျံသန်းနိုင်သည်။ 'me' နှင့် အသံထွက်တူသည်။", options: ["bee", "flea", "tree"], ans: 0 },
+                { cat: "RHYMING ANIMALS", q: "It's always hungry and it has a little beard. It sounds like 'boat'.", mm: "၎င်းသည် အမြဲတမ်း ဆာလောင်နေပြီး မုတ်ဆိတ်မွေးငယ် ရှိသည်။ 'boat' နှင့် အသံထွက်တူသည်။", options: ["coat", "goat", "float"], ans: 1 },
+                { cat: "RHYMING ANIMALS", q: "It lives in the sea. I'm frightened of it! It sounds like 'park'.", mm: "၎င်းသည် ပင်လယ်ထဲတွင် နေထိုင်သည်။ ကျွန်တော် ၎င်းကို ကြောက်သည်! 'park' နှင့် အသံထွက်တူသည်။", options: ["dark", "shark", "bark"], ans: 1 }
             ],
             test: [
-                { cat: "VOCABULARY", q: "A platform built on the upstairs outside wall of a building is a _ _ _ _ .", mm: "အဆောက်အဦး၏ အပေါ်ထပ် အပြင်ဘက်နံရံတွင် ဆောက်လုပ်ထားသော လသာဆောင်ကို _ _ _ _ ဟုခေါ်သည်။", options: ["balcony", "stairs", "tablet"], ans: 0 },
-                { cat: "VOCABULARY", q: "Hair that grows above a man's upper lip is a _ _ _ _ .", mm: "အမျိုးသားတစ်ဦး၏ အပေါ်နှုတ်ခမ်းအထက်တွင် ပေါက်နေသော အမွေးကို _ _ _ _ ဟုခေါ်သည်။", options: ["beard", "blonde", "moustache"], ans: 2 },
-                { cat: "VOCABULARY", q: "Another word for very, very big is _ _ _ _ .", mm: "အလွန်ကြီးမားသော ကို နောက်တစ်နည်းဖြင့် _ _ _ _ ဟုခေါ်သည်။", options: ["straight", "huge", "curly"], ans: 1 },
-                { cat: "VOCABULARY", q: "Pale yellow or golden hair color is called _ _ _ _ .", mm: "အဝါနုရောင် သို့မဟုတ် ရွှေရောင်ဆံပင်ကို _ _ _ _ ဟုခေါ်သည်။", options: ["blonde", "straight", "chocolate"], ans: 0 },
-                { cat: "VOCABULARY", q: "Two small pieces of glass worn to help you see better are _ _ _ _ .", mm: "ပိုမိုကောင်းမွန်စွာ မြင်နိုင်ရန် တပ်ဆင်ရသော မျက်မှန်ကို _ _ _ _ ဟုခေါ်သည်။", options: ["tablets", "glasses", "stairs"], ans: 1 },
-                { cat: "GRAMMAR: POSSESSIVES", q: "Look at those blue eyes! They are _ _ _ _ eyes.", mm: "ထိုအပြာရောင်မျက်လုံးများကို ကြည့်ပါ! ၎င်းတို့သည် _ _ _ _ ၏ မျက်လုံးများဖြစ်သည်။", options: ["Lilys", "Lily's", "Lily"], ans: 1 },
-                { cat: "GRAMMAR: COMPARATIVES", q: "Sally's hair is black. It's shorter _ _ _ Lily's hair.", mm: "ဆယ်လီ၏ဆံပင်သည် အနက်ရောင်ဖြစ်သည်။ လီလီရဲ့ဆံပင် _ _ _ ပိုတိုပါတယ်။", options: ["then", "that", "than"], ans: 2 },
-                { cat: "GRAMMAR: COMPARATIVES", q: "An elephant is _ _ _ _ than a mouse.", mm: "ဆင်သည် ကြွက်ထက် _ _ _ _ ဖြစ်သည်။", options: ["big", "bigger", "biggest"], ans: 1 },
-                { cat: "GRAMMAR: HAS GOT", q: "My brother _ _ _ _ brown hair and green eyes.", mm: "ကျွန်တော့်အစ်ကိုမှာ အညိုရောင်ဆံပင်နှင့် အစိမ်းရောင်မျက်လုံးများ _ _ _ _ ။", options: ["is got", "have got", "has got"], ans: 2 },
-                { cat: "GRAMMAR: HAS GOT", q: "I _ _ _ _ a new tablet.", mm: "ကျွန်တော့်မှာ တက်ဘလက်အသစ်တစ်လုံး _ _ _ _ ။", options: ["has got", "have got", "am got"], ans: 1 },
-                { cat: "READING COMPREHENSION", q: "Where is Mr Fish cooking?", mm: "မစ္စတာဖစ်ရှ်က ဘယ်မှာ ဟင်းချက်နေတာလဲ။", options: ["On the stairs", "In Easy Street", "On his balcony"], ans: 2 },
-                { cat: "READING COMPREHENSION", q: "Where do Dan and Lily live?", mm: "ဒန်နှင့် လီလီ ဘယ်မှာနေသလဲ။", options: ["Upunder Road", "Easy Street", "Fish Street"], ans: 1 },
-                { cat: "READING COMPREHENSION", q: "Who is waiting for the number one bus?", mm: "နံပါတ်တစ် ဘတ်စ်ကားကို ဘယ်သူစောင့်နေတာလဲ။", options: ["Dan and Lily", "Mr Fish", "My son, brother, mother, and uncle"], ans: 2 },
-                { cat: "READING COMPREHENSION", q: "Whose hair is the shortest?", mm: "ဘယ်သူ့ဆံပင်က အတိုဆုံးလဲ။", options: ["Dan's", "Lily's", "Sally's"], ans: 0 },
-                { cat: "READING COMPREHENSION", q: "Whose eyes are bigger than Dan's?", mm: "ဘယ်သူ့မျက်လုံးက ဒန်ထက် ပိုကြီးသလဲ။", options: ["Lily's and Sally's", "Mr Fish's", "My uncle's"], ans: 0 }
+                { cat: "CROCODILE FACTS", q: "Crocodiles have lots of _ _ _ _ .", mm: "မိကျောင်းများတွင် _ _ _ _ များစွာရှိသည်။", options: ["legs", "teeth", "hair"], ans: 1 },
+                { cat: "CROCODILE FACTS", q: "Can crocodiles walk?", mm: "မိကျောင်းများသည် လမ်းလျှောက်နိုင်သလား။", options: ["No, they can't", "Only in the water", "Yes, they can"], ans: 2 },
+                { cat: "CROCODILE FACTS", q: "Where do crocodiles live?", mm: "မိကျောင်းများသည် မည်သည့်နေရာတွင် နေထိုင်ကြသနည်း။", options: ["In rivers and the sea", "In trees", "In the desert"], ans: 0 },
+                { cat: "RHYMING WORDS", q: "It's very small and it eats cheese. It sounds like 'house'.", mm: "၎င်းသည် အလွန်သေးငယ်ပြီး ဒိန်ခဲကို စားသည်။ 'house' နှင့် အသံထွက်တူသည်။", options: ["mouse", "louse", "blouse"], ans: 0 },
+                { cat: "RHYMING WORDS", q: "It's green and it jumps very well. It sounds like 'dog'.", mm: "၎င်းသည် အစိမ်းရောင်ဖြစ်ပြီး အလွန်ကောင်းစွာ ခုန်နိုင်သည်။ 'dog' နှင့် အသံထွက်တူသည်။", options: ["log", "frog", "bog"], ans: 1 },
+                { cat: "RHYMING WORDS", q: "It eats grass. It sounds like 'now'.", mm: "၎င်းသည် မြက်ကို စားသည်။ 'now' နှင့် အသံထွက်တူသည်။", options: ["cow", "how", "bow"], ans: 0 },
+                { cat: "RHYMING WORDS", q: "It sings and sometimes lives in a cage. It sounds like 'word'.", mm: "၎င်းသည် သီချင်းဆိုပြီး တစ်ခါတစ်ရံ လှောင်အိမ်ထဲတွင် နေထိုင်သည်။ 'word' နှင့် အသံထွက်တူသည်။", options: ["bird", "herd", "third"], ans: 0 },
+                { cat: "RHYMING WORDS", q: "It has no legs and makes a noise like 'sssss'. It sounds like 'cake'.", mm: "၎င်းတွင် ခြေထောက်မရှိဘဲ 'sssss' ဟူသော အသံကို ပြုလုပ်သည်။ 'cake' နှင့် အသံထွက်တူသည်။", options: ["lake", "snake", "fake"], ans: 1 },
+                { cat: "RHYMING WORDS", q: "It's really big and it swims in the sea. It sounds like 'tail'.", mm: "၎င်းသည် အလွန်ကြီးမားပြီး ပင်လယ်ထဲတွင် ရေကူးသည်။ 'tail' နှင့် အသံထွက်တူသည်။", options: ["whale", "sail", "nail"], ans: 0 },
+                { cat: "RHYMING WORDS", q: "It flies at night. It sounds like 'Pat'.", mm: "၎င်းသည် ညဘက်တွင် ပျံသန်းသည်။ 'Pat' နှင့် အသံထွက်တူသည်။", options: ["cat", "hat", "bat"], ans: 2 },
+                { cat: "VOCABULARY", q: "A black and white bird that cannot fly but swims well.", mm: "ပျံသန်း၍မရသော်လည်း ရေကူးကောင်းသော အမည်းနှင့် အဖြူရောင် ငှက်။", options: ["parrot", "penguin", "polar bear"], ans: 1 },
+                { cat: "VOCABULARY", q: "A small animal with a soft body and a spiral shell.", mm: "ခန္ဓာကိုယ်ပျော့ပျောင်းပြီး ခရုပတ်ပုံ အခွံပါသော တိရစ္ဆာန်ငယ်။", options: ["snail", "jellyfish", "lizard"], ans: 0 },
+                { cat: "VOCABULARY", q: "An African wild animal that looks like a horse with black and white stripes.", mm: "အမည်းနှင့် အဖြူရောင် အစင်းကြောင်းများပါသော မြင်းနှင့်တူသည့် အာဖရိက တောရိုင်းတိရစ္ဆာန်။", options: ["donkey", "kangaroo", "zebra"], ans: 2 },
+                { cat: "GRAMMAR", q: "Which word rhymes with 'hat'?", mm: "'hat' နှင့် မည်သည့်စကားလုံး ကာရန်ညီသနည်း။", options: ["cat", "dog", "car"], ans: 0 },
+                { cat: "GRAMMAR", q: "Which word rhymes with 'park'?", mm: "'park' နှင့် မည်သည့်စကားလုံး ကာရန်ညီသနည်း။", options: ["bark", "star", "shark"], ans: 2 }
             ]
         };
 
@@ -264,7 +262,6 @@
         window.speechUtteranceChunk = null; 
         let currentCardIdx = 0;
         let translateTaps = 0;
-        let translateTimeout;
 
         document.addEventListener("DOMContentLoaded", () => {
             try {
@@ -272,7 +269,7 @@
                 if(synth && synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
 
                 document.addEventListener('pointerdown', (e) => {
-                    const tags = ['BUTTON', 'DIV', 'LABEL', 'SELECT', 'INPUT'];
+                    const tags = ['BUTTON', 'DIV', 'LABEL', 'SELECT'];
                     if(tags.includes(e.target.tagName) || e.target.closest('.card')) {
                         if (navigator.vibrate) navigator.vibrate(40);
                     }
@@ -342,7 +339,7 @@
 
         async function preloadAudio() {
             for (let v of unitData.vocab) {
-                let cleanWord = v.word.replace(/^(a |an |the )/i, '').replace(/<[^>]*>?/gm, '').trim().toLowerCase();
+                let cleanWord = v.word.toLowerCase().replace(/<[^>]*>?/gm, '').trim();
                 if (!audioCache[cleanWord]) {
                     try {
                         let res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`);
@@ -359,7 +356,6 @@
             }
         }
 
-        // --- 3-STAGE HYBRID IMAGE ENGINE ---
         async function fetchImages() {
             let cachedData = storage.get(`ffm_img_cache_${currentUnitNumber}`);
             if(cachedData) {
@@ -374,12 +370,10 @@
             for (let v of unitData.vocab) {
                 if(imageCache[v.word]) continue; 
                 try {
-                    let preciseQuery = v.query || v.word.replace(/^(a |an |the )/i, '');
-                    let broadQuery = v.word.replace(/^(a |an |the )/i, '');
+                    let baseQuery = v.query || v.word;
                     let validHits = [];
 
-                    // STAGE 1: Pixabay Illustration
-                    let pixRes = await fetch(`https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${encodeURIComponent(preciseQuery)}&image_type=illustration&per_page=30&safesearch=true`);
+                    let pixRes = await fetch(`https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${encodeURIComponent(baseQuery)}&image_type=illustration&per_page=30&safesearch=true`);
                     if(pixRes.ok) {
                         let pData = await pixRes.json();
                         if(pData.hits && pData.hits.length > 0) {
@@ -387,21 +381,8 @@
                         }
                     }
 
-                    // STAGE 2: Pixabay Real Photos
                     if(validHits.length < 3) {
-                        let pixPhotoRes = await fetch(`https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${encodeURIComponent(broadQuery)}&image_type=photo&per_page=20&safesearch=true`);
-                        if(pixPhotoRes.ok) {
-                            let pData2 = await pixPhotoRes.json();
-                            if(pData2.hits && pData2.hits.length > 0) {
-                                let fallbackHits = pData2.hits.map(h => h.webformatURL).filter(url => !usedImageUrls.has(url));
-                                validHits = [...validHits, ...fallbackHits];
-                            }
-                        }
-                    }
-
-                    // STAGE 3: Pexels Real Photos
-                    if(validHits.length < 3) {
-                        let pexRes = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(broadQuery)}&per_page=20`, {
+                        let pexRes = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(baseQuery)}&per_page=30`, {
                             headers: { Authorization: PEXELS_KEY }
                         });
                         if(pexRes.ok) {
@@ -413,64 +394,21 @@
                         }
                     }
 
-                    // RESOLUTION & LOCAL INJECTION
-                    let strippedWord = v.word.replace(/^(a |an |the )/i, '').replace(/\s/g, '').toLowerCase();
-                    let localImgUrl = `images/${currentUnitDir}/${strippedWord}.jpg`;
-                    
                     if(validHits.length > 0) {
                         let finalImages = validHits.slice(0, 10);
-                        // Inject Local Image as Index 0
-                        imageCache[v.word] = [localImgUrl, ...finalImages];
+                        imageCache[v.word] = finalImages;
                         finalImages.forEach(url => usedImageUrls.add(url));
+                        finalImages.forEach(url => { const preloadImg = new Image(); preloadImg.src = url; });
                     } else {
-                        imageCache[v.word] = [localImgUrl, SAFE_NO_IMG_SVG];
+                        imageCache[v.word] = [SAFE_NO_IMG_SVG];
                     }
                 } catch(e) {
-                    let strippedWord = v.word.replace(/^(a |an |the )/i, '').replace(/\s/g, '').toLowerCase();
-                    let localImgUrl = `images/${currentUnitDir}/${strippedWord}.jpg`;
-                    imageCache[v.word] = [localImgUrl, SAFE_NO_IMG_SVG];
+                    imageCache[v.word] = [SAFE_NO_IMG_SVG];
                 }
                 updateAllImages();
             }
             storage.set(`ffm_img_cache_${currentUnitNumber}`, JSON.stringify(imageCache));
         }
-
-        // --- SAFE BROKEN LINK DELETER ---
-        window.handleImageError = function(word, imgEl) {
-            imgEl.onerror = null; // Instantly kill the listener to prevent infinite loops
-            
-            let currentPref = (state.imgPrefs && state.imgPrefs[word]) || 0;
-            if (imageCache[word] && imageCache[word].length > 1) {
-                // Delete the broken link from memory safely
-                imageCache[word].splice(currentPref, 1);
-                storage.set(`ffm_img_cache_${currentUnitNumber}`, JSON.stringify(imageCache));
-                
-                if (currentPref >= imageCache[word].length) {
-                    state.imgPrefs[word] = 0;
-                    saveState();
-                }
-                
-                // Directly update just this image's src without triggering a global re-render
-                let nextSrc = imageCache[word][state.imgPrefs[word] || 0];
-                imgEl.dataset.currentSrc = nextSrc;
-                imgEl.src = nextSrc;
-                
-                // Update flashcard safely if it is actively showing this word
-                if (document.getElementById('tab-flash').classList.contains('active')) {
-                    const v = unitData.vocab[currentCardIdx];
-                    if (v && v.word === word) {
-                        const fcImg = document.getElementById(`fc-img-${currentCardIdx}`);
-                        if (fcImg && fcImg !== imgEl) {
-                            fcImg.dataset.currentSrc = nextSrc;
-                            fcImg.src = nextSrc;
-                        }
-                    }
-                }
-            } else {
-                // Stop any further infinite loops and fallback to safe SVG
-                imgEl.src = SAFE_NO_IMG_SVG;
-            }
-        };
 
         function cycleImage(word, event) {
             if(event) event.stopPropagation();
@@ -488,15 +426,7 @@
                 if(imgEl && imageCache[v.word]) {
                     let pref = (state.imgPrefs && state.imgPrefs[v.word]) || 0;
                     if(pref >= imageCache[v.word].length) pref = 0;
-                    
-                    let targetSrc = imageCache[v.word][pref];
-                    
-                    // Only update if it's different to prevent unnecessary reloading
-                    if (imgEl.dataset.currentSrc !== targetSrc) {
-                        imgEl.dataset.currentSrc = targetSrc;
-                        imgEl.onerror = function() { window.handleImageError(v.word, this); };
-                        imgEl.src = targetSrc;
-                    }
+                    imgEl.src = imageCache[v.word][pref];
                 }
             });
             if(document.getElementById('tab-flash').classList.contains('active')) {
@@ -619,20 +549,19 @@
             
             let cleanText = text.replace(/<[^>]*>?/gm, '').replace(/([_]\s*)+/g, " blank ").replace(/[!()"\n]/g, " ").trim();
             
-            if (!cleanText.includes(" ") || cleanText.split(" ").length <= 3) {
+            if (!cleanText.includes(" ")) {
                 try {
-                    let fetchKey = cleanText.replace(/^(a |an |the )/i, '').trim().toLowerCase();
-                    if (audioCache[fetchKey]) { 
-                        new Audio(audioCache[fetchKey]).play(); 
+                    if (audioCache[cleanText]) { 
+                        new Audio(audioCache[cleanText]).play(); 
                         return; 
                     }
                     
-                    showToast("⏳ Downloading audio...");
-                    let response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${fetchKey}`);
+                    showToast("⏳ Downloading the audio, please wait...");
+                    let response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${cleanText}`);
                     let data = await response.json();
                     let audioUrl = data[0].phonetics.find(p => p.audio !== "")?.audio;
                     if (audioUrl) { 
-                        audioCache[fetchKey] = audioUrl; 
+                        audioCache[cleanText] = audioUrl; 
                         new Audio(audioUrl).play(); 
                         return; 
                     }
@@ -646,7 +575,7 @@
             if(voice) u.voice = voice;
             
             let watchdog = setTimeout(() => { 
-                if (!synth.speaking) showToast("⚠️ System Voice failed. Please install 'Speech Services by Google'."); 
+                if (!synth.speaking) showToast("⚠️ System Voice failed. Please install 'Speech Services by Google' from Play Store."); 
             }, 500);
             u.onstart = () => clearTimeout(watchdog);
             
@@ -656,7 +585,7 @@
 
         function startDictation(targetWord, idx) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if(!SpeechRecognition) return showToast("⚠️ Mic blocked! Use Chrome or host on a server.");
+            if(!SpeechRecognition) return showToast("⚠️ Mic blocked! Use Google Chrome or host on a server.");
             
             const recognition = new SpeechRecognition();
             recognition.lang = document.getElementById('accent-select').value;
@@ -699,7 +628,7 @@
                 div.innerHTML = `
                     <div class="img-container">
                         <img id="img-vocab-${i}" src="${SAFE_LOADING_SVG}">
-                        <button class="cycle-btn" onclick="cycleImage('${v.word.replace(/'/g, "\\'")}', event)">🔄</button>
+                        <button class="cycle-btn" onclick="cycleImage('${v.word}', event)">🔄</button>
                     </div>
                     <div class="card-content">
                         <div style="font-weight:bold; font-size:1.2em;">${v.word}</div>
@@ -802,8 +731,8 @@
             document.getElementById('fc-progress').innerText = `Card ${currentCardIdx + 1} of ${unitData.vocab.length}`;
             document.getElementById('fc-front').innerHTML = `
                 <div class="fc-img-container">
-                    <img id="fc-img-${currentCardIdx}" data-current-src="${imgSrc}" src="${imgSrc}" onerror="window.handleImageError('${v.word.replace(/'/g, "\\'")}', this)">
-                    <button class="fc-cycle-btn" onclick="cycleImage('${v.word.replace(/'/g, "\\'")}', event)">🔄</button>
+                    <img src="${imgSrc}">
+                    <button class="fc-cycle-btn" onclick="cycleImage('${v.word}', event)">🔄</button>
                 </div>
                 <strong style="font-size:1.8em;">${v.word}</strong>`;
             document.getElementById('fc-back').innerHTML = `<strong style="font-size:1.5em;">${v.word}</strong><br><br><span style="font-size:1.1em; color:#444;">${v.def}</span><br><br><span class="myanmar-text" style="${state.secretActive?'display:block;':''} font-size:1.2em;">${v.mm}</span>`;

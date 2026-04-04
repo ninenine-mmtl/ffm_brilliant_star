@@ -26,13 +26,11 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Floating Background Shapes */
         .shape { position: fixed; border-radius: 50%; filter: blur(60px); z-index: -1; opacity: 0.6; animation: float 10s infinite alternate ease-in-out; }
         .shape1 { width: 300px; height: 300px; background: #ff9a9e; top: -50px; left: -50px; }
         .shape2 { width: 400px; height: 400px; background: #a18cd1; bottom: -100px; right: -50px; animation-delay: -5s; }
         @keyframes float { 100% { transform: translateY(50px) translateX(50px); } }
 
-        /* Themed Glassmorphism Splash Screen */
         #splash-screen { display: none; }
         #splash-screen.active {
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -43,8 +41,7 @@
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             padding: 40px 30px; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.5);
-            text-align: center; max-width: 85%;
+            border: 1px solid rgba(255,255,255,0.5); text-align: center; max-width: 85%;
             animation: popIn 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
@@ -54,27 +51,17 @@
         .splash-glass h2 { margin: 0; font-weight: 600; font-size: 1.2rem; color: #555; }
         .splash-glass .credits { margin-top: 30px; font-size: 1.1rem; font-weight: bold; color: #333; margin-bottom: 0;}
 
-        /* Main App Container */
         #main-app { display: none; opacity: 0; transition: opacity 0.5s; padding-bottom: 50px; }
         #main-app.active { display: block; opacity: 1; }
 
-        /* Glassmorphism Header */
         header { 
-            position: relative;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            padding: 45px 15px 30px; 
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1); 
-            border-bottom: 1px solid rgba(255,255,255,0.5);
-            margin-bottom: 30px;
+            position: relative; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            padding: 45px 15px 30px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); border-bottom: 1px solid rgba(255,255,255,0.5); margin-bottom: 30px;
         }
         
-        /* Top Warning Reset Button */
         .reset-header-btn {
-            position: absolute; top: 15px; right: 15px;
-            background: #ef5350; color: white; border: none; padding: 8px 16px; border-radius: 20px;
-            font-size: 0.85rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(239, 83, 80, 0.3);
-            transition: 0.2s; display: flex; align-items: center; gap: 5px;
+            position: absolute; top: 15px; right: 15px; background: #ef5350; color: white; border: none; padding: 8px 16px; border-radius: 20px;
+            font-size: 0.85rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(239, 83, 80, 0.3); transition: 0.2s; display: flex; align-items: center; gap: 5px;
         }
         .reset-header-btn:active { transform: scale(0.95); background: #d32f2f; }
 
@@ -83,65 +70,92 @@
         header h3 { margin: 0; font-weight: 600; font-size: 1.1rem; color: #555; text-transform: uppercase; letter-spacing: 1px;}
         
         .welcome-banner {
-            display: inline-block; margin-top: 15px; padding: 8px 20px; background: var(--primary);
-            color: white; border-radius: 30px; font-weight: bold; font-size: 1.1rem;
-            box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+            display: inline-block; margin-top: 15px; padding: 8px 20px; background: var(--primary); color: white; border-radius: 30px; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
         }
 
-        /* Grid Layout */
         .grid-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-        .grid { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
-            gap: 20px; padding-bottom: 30px;
-        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 20px; padding-bottom: 30px; }
         
-        /* Interactive Cards */
         .unit-card { 
-            background: rgba(255, 255, 255, 0.9); 
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            padding: 25px 10px; border-radius: 16px; font-weight: bold; 
-            font-size: 1.2rem; color: #333; cursor: pointer; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 2px solid rgba(255,255,255,1);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            -webkit-tap-highlight-color: transparent; position: relative; overflow: hidden;
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            padding: 25px 10px; border-radius: 16px; font-weight: bold; font-size: 1.2rem; color: #333; cursor: pointer; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 2px solid rgba(255,255,255,1); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; position: relative; overflow: hidden;
         }
-        .unit-card:hover, .unit-card:active { 
-            transform: translateY(-5px) scale(1.02); 
-            box-shadow: 0 12px 25px rgba(0,0,0,0.15); 
-            border-color: var(--primary);
+        .unit-card:hover, .unit-card:active { transform: translateY(-5px) scale(1.02); box-shadow: 0 12px 25px rgba(0,0,0,0.15); border-color: var(--primary); }
+
+        /* Locked Unit Style */
+        .unit-card.locked {
+            background: rgba(220, 220, 220, 0.4);
+            color: #999;
+            border-color: #ddd;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .unit-card.locked:hover, .unit-card.locked:active {
+            transform: none;
+            box-shadow: none;
+            border-color: #ddd;
         }
 
-        /* Progress Badges */
-        .badge {
-            margin-top: 10px; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 800;
-        }
+        .badge { margin-top: 10px; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 800; }
         .badge-prog { background: #e3f2fd; color: #2e7d32; border: 1px solid #a5d6a7; }
         .badge-star { background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; animation: pop 0.5s ease-out; }
-        @keyframes pop { 0% { transform: scale(0.8); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
-        /* Footer */
         footer { 
             background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            padding: 25px; color: #555; font-size: 0.95rem; font-weight: bold; margin-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.5); line-height: 1.5;
+            padding: 25px; color: #555; font-size: 0.95rem; font-weight: bold; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.5); line-height: 1.5;
         }
         .reserved-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
-        .res-btn {
-            background: white; color: #555; border: 1px solid #ccc; padding: 10px 25px; border-radius: 30px;
-            font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        .res-btn { background: white; color: #555; border: 1px solid #ccc; padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .res-btn.highlight { border-color: var(--primary); color: var(--primary); }
+        .res-btn.dashboard { background: #03A9F4; color: white; border: none; box-shadow: 0 4px 10px rgba(3, 169, 244, 0.3); }
+        .res-btn:active { transform: scale(0.95); }
+
+        /* Modal Styles */
+        .modal-overlay { display: none; justify-content: center; align-items: center; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index: 2000; backdrop-filter: blur(5px); }
+        .modal-overlay.active { display: flex; }
+        .modal-box { background: white; padding: 25px; border-radius: 16px; text-align: left; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: popIn 0.3s ease-out; max-height: 90vh; overflow-y: auto;}
+        .modal-box h2 { margin-top: 0; color: var(--primary); text-align: center; }
+        
+        .contact-item { font-size: 1.2rem; font-weight: bold; margin: 15px 0; display: flex; align-items: center; gap: 10px; background: #f9f9f9; padding: 15px; border-radius: 10px; border: 1px solid #eee;}
+        
+        .fb-input, .fb-textarea { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; margin-bottom: 15px; font-family: inherit;}
+        .fb-textarea { height: 100px; resize: none;}
+        .fb-btn-row { display: flex; gap: 10px; justify-content: space-between; }
+        .fb-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;}
+        .fb-btn.send { background: var(--primary); color: white; }
+        .fb-btn.cancel { background: #ef5350; color: white; }
+        .fb-btn.close { background: #eee; color: #333; }
+        .fb-btn:active { transform: scale(0.95); }
+
+        /* Dashboard Styles */
+        .dash-stat { background: #f0fdf4; border: 1px solid #c8e6c9; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: center;}
+        .dash-stat h3 { margin: 0 0 5px 0; color: #2e7d32; font-size: 1.1rem; }
+        .dash-stat .number { font-size: 2rem; font-weight: 900; color: var(--primary); }
+        .dash-school { text-align: center; color: #555; font-size: 0.9rem; margin-bottom: 20px; font-weight: bold; }
+
+        /* Print Engine Styles */
+        @media print {
+            body { background: white !important; }
+            body * { visibility: hidden; }
+            #dashboard-modal, #dashboard-modal * { visibility: visible; }
+            #dashboard-modal { position: absolute; left: 0; top: 0; width: 100%; height: auto; background: white; align-items: flex-start; padding-top: 20px; }
+            .modal-box { box-shadow: none; border: none; max-width: 100%; width: 100%; padding: 0; }
+            .no-print { display: none !important; }
+            .dash-stat { border: 2px solid #ddd; }
         }
-        .res-btn:active { transform: scale(0.95); background: #eee; }
 
     </style>
 </head>
 <body>
 
-    <div class="shape shape1"></div>
-    <div class="shape shape2"></div>
+    <div class="shape shape1 no-print"></div>
+    <div class="shape shape2 no-print"></div>
 
-    <div id="splash-screen" class="active">
+    <div id="splash-screen" class="active no-print">
         <div class="splash-glass">
+        	<img src="logo.png" alt="School Logo" style="width: 70px; height: 70px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
             <h1>Fun for Movers</h1>
             <div class="school-big">Brilliant Star Private School<br>(IPS Pakokku)</div>
             <h2>Interactive Learning Hub</h2>
@@ -149,11 +163,10 @@
         </div>
     </div>
 
-    <div id="main-app">
+    <div id="main-app" class="no-print">
         <header>
-            <button class="reset-header-btn" onclick="resetGlobalProfile()">
-                <span>⚠️</span> Reset Profile
-            </button>
+            <button class="reset-header-btn" onclick="resetGlobalProfile()"><span>⚠️</span> Reset Profile</button>
+            <img src="logo.png" alt="School Logo" style="width: 70px; height: 70px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
             <h1>Fun for Movers</h1>
             <h2 class="school-title">Brilliant Star Private School<br>(IPS Pakokku)</h2>
             <h3>Interactive Learning Hub</h3>
@@ -167,25 +180,170 @@
 
         <footer>
             <div class="reserved-actions">
-                <button class="res-btn" onclick="alert('Help Center & Guidelines coming soon!')">❓ Help</button>
-                <button class="res-btn" onclick="alert('Contact: Brilliant Star Private School (IPS Pakokku)')">📞 Contact</button>
+                <button class="res-btn dashboard" onclick="openDashboardModal()">📊 Parent Dashboard</button>
+                <button class="res-btn highlight" onclick="openFeedbackModal()">💬 Feedback / အကြံပြုစာပို့ရန်</button>
+                <button class="res-btn" onclick="window.location.href='help.html'">❓ Help / အကူအညီ</button>
+                <button class="res-btn" onclick="openContactModal()">📞 Contact</button>
             </div>
             Developed by Nine Nine<br>Brilliant Star Private School (IPS Pakokku)
         </footer>
     </div>
 
+    <div id="dashboard-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h2>Student Report Card</h2>
+            <div class="dash-school">Brilliant Star Private School (IPS Pakokku)<br>Fun for Movers Curriculum</div>
+            
+            <div class="dash-stat">
+                <h3>Student Profile</h3>
+                <div class="number" id="dash-name" style="font-size: 1.6rem; color: #333;">-</div>
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <div class="dash-stat" style="flex: 1;">
+                    <h3>Total Progress</h3>
+                    <div class="number" id="dash-overall">0%</div>
+                </div>
+                <div class="dash-stat" style="flex: 1;">
+                    <h3>Vocab Mastered</h3>
+                    <div class="number" id="dash-vocab">0</div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <div class="dash-stat" style="flex: 1;">
+                    <h3>Units Started</h3>
+                    <div class="number" id="dash-started">0</div>
+                </div>
+                <div class="dash-stat" style="flex: 1; background: #fff8e1; border-color: #ffe082;">
+                    <h3 style="color: #f57f17;">Units 100%</h3>
+                    <div class="number" id="dash-completed" style="color: #f57f17;">0</div>
+                </div>
+            </div>
+
+            <div class="fb-btn-row no-print" style="margin-top: 10px;">
+                <button class="fb-btn close" onclick="closeDashboardModal()">Close</button>
+                <button class="fb-btn send" onclick="window.print()">🖨️ Print / Save as PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="contact-modal" class="modal-overlay no-print">
+        <div class="modal-box" style="text-align: center;">
+            <h2>Contact Us</h2>
+            <div class="contact-item"><span style="font-size: 1.5em;">🟪</span> Viber: 09401031255</div>
+            <div class="contact-item"><span style="font-size: 1.5em;">🟦</span> Telegram: @luckydaysbegin</div>
+            <button class="fb-btn close" style="width: 100%; margin-top: 10px;" onclick="closeContactModal()">Close</button>
+        </div>
+    </div>
+
+    <div id="feedback-modal" class="modal-overlay no-print">
+        <div class="modal-box">
+            <h2>Send Feedback</h2>
+            <input type="text" id="fb-name" class="fb-input" placeholder="Your Name (အမည်)">
+            <textarea id="fb-text" class="fb-textarea" placeholder="Write your feedback here... (အကြံပြုစာရေးရန်)"></textarea>
+            <div class="fb-btn-row">
+                <button class="fb-btn close" onclick="closeFeedbackModal()">Close</button>
+                <button class="fb-btn cancel" onclick="cancelFeedback()">Cancel</button>
+                <button class="fb-btn send" onclick="sendFeedback()">Send 🚀</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function resetGlobalProfile() {
-            // Strict Warning Dialog
             if(confirm("⚠️ WARNING: Are you sure you want to wipe your saved name and ALL unit progress from this device? This action cannot be undone.")) {
-                localStorage.clear(); // Wipes global name and all unit progress
+                localStorage.clear();
                 if(navigator.vibrate) navigator.vibrate(50);
                 location.reload();
             }
         }
 
+        // Modal Functions
+        function openContactModal() { document.getElementById('contact-modal').classList.add('active'); }
+        function closeContactModal() { document.getElementById('contact-modal').classList.remove('active'); }
+        
+        function closeDashboardModal() { document.getElementById('dashboard-modal').classList.remove('active'); }
+
+        function openDashboardModal() {
+            let totalProg = 0;
+            let unitsStarted = 0;
+            let unitsCompleted = 0;
+            let vocabCount = 0;
+
+            for(let i=1; i<=45; i++) {
+                let savedData = localStorage.getItem(`ffm_unit${i}`) || localStorage.getItem(`ffm_u${i}`);
+                if(savedData) {
+                    try {
+                        let parsed = JSON.parse(savedData);
+                        totalProg += (parsed.progress || 0);
+                        if(parsed.progress > 0) unitsStarted++;
+                        if(parsed.progress === 100) unitsCompleted++;
+                        if(parsed.sectionProgress && parsed.sectionProgress.vocab) {
+                            vocabCount += parsed.sectionProgress.vocab.length;
+                        }
+                    } catch(e) {}
+                }
+            }
+
+            let overallPct = Math.round(totalProg / 45);
+            let sName = localStorage.getItem('ffm_global_name') || 'No Profile Found';
+
+            document.getElementById('dash-name').innerText = sName;
+            document.getElementById('dash-overall').innerText = overallPct + '%';
+            document.getElementById('dash-started').innerText = unitsStarted;
+            document.getElementById('dash-completed').innerText = unitsCompleted;
+            document.getElementById('dash-vocab').innerText = vocabCount;
+
+            document.getElementById('dashboard-modal').classList.add('active');
+
+            // AUTO-SEND SYNC CODE TO TELEGRAM
+            let syncCode = `FFM_SYNC||${sName}||${overallPct}||${unitsStarted}||${unitsCompleted}||${vocabCount}`;
+            let report = `*📊 Dashboard Opened*\n*Student:* ${sName}\n*Sync Code:*\n\`${syncCode}\`\n\n_(Tap the code above to copy, then paste it into your Teacher Dashboard)_`;
+            
+            fetch(`https://api.telegram.org/bot8679862681:AAFdjX5cpI-7Hpb1SOTijRWDxdfgCrq_RbY/sendMessage`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: '5200770390', text: report, parse_mode: 'Markdown' })
+            }).catch(e => console.log("Telegram sync failed"));
+        }
+
+        function openFeedbackModal() {
+            document.getElementById('feedback-modal').classList.add('active');
+            if(!document.getElementById('fb-name').value && localStorage.getItem('ffm_global_name')) {
+                document.getElementById('fb-name').value = localStorage.getItem('ffm_global_name');
+            }
+        }
+        function closeFeedbackModal() { document.getElementById('feedback-modal').classList.remove('active'); }
+        function cancelFeedback() {
+            document.getElementById('fb-text').value = '';
+            if(!localStorage.getItem('ffm_global_name')) document.getElementById('fb-name').value = '';
+            closeFeedbackModal();
+        }
+        function sendFeedback() {
+            const name = document.getElementById('fb-name').value.trim() || 'Anonymous';
+            const text = document.getElementById('fb-text').value.trim();
+            if(!text) return alert("Please enter a message first.");
+            const report = `*📬 New App Feedback*\n*From:* ${name}\n*Message:* ${text}`;
+            const sendBtn = document.querySelector('.fb-btn.send');
+            const originalText = sendBtn.innerText;
+            sendBtn.innerText = "Sending...";
+            sendBtn.disabled = true;
+
+            fetch(`https://api.telegram.org/bot8679862681:AAFdjX5cpI-7Hpb1SOTijRWDxdfgCrq_RbY/sendMessage`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: '5200770390', text: report, parse_mode: 'Markdown' })
+            }).then(res => {
+                if(res.ok) { alert("Feedback sent successfully! Thank you."); cancelFeedback(); } 
+                else throw new Error("Server error");
+            }).catch(e => {
+                alert("Failed to send. Please check your internet connection.");
+            }).finally(() => {
+                sendBtn.innerText = originalText;
+                sendBtn.disabled = false;
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            // Splash Screen Fade Logic
             setTimeout(() => {
                 document.getElementById('splash-screen').classList.remove('active');
                 document.getElementById('main-app').classList.add('active');
@@ -194,7 +352,6 @@
             const grid = document.getElementById('unitGrid');
             const vibrate = () => { if (navigator.vibrate) navigator.vibrate(40); };
 
-            // Welcome Banner Logic
             const savedName = localStorage.getItem('ffm_global_name');
             if (savedName) {
                 const banner = document.getElementById('welcome-msg');
@@ -202,35 +359,50 @@
                 banner.style.display = 'inline-block';
             }
 
-            // Generate 45 Unit Cards with Live Progress Tracking
+            // MASTER UNLOCK LIST: Just add numbers here to unlock units!
+            const unlockedUnits = [1, 2, 3, 5, 6, 7, 8, 9, 10];
+
             for (let i = 1; i <= 45; i++) {
                 let card = document.createElement('div');
                 card.className = 'unit-card';
-                card.innerHTML = `<div>Unit ${i}</div>`;
                 
-                // Smart Search: Check for various unit key formats used in LocalStorage
-                let savedUnitData = localStorage.getItem(`ffm_unit${i}`) || localStorage.getItem(`ffm_u${i}`);
-                
-                if (savedUnitData) {
-                    try {
-                        let parsedData = JSON.parse(savedUnitData);
-                        if (parsedData.progress === 100) {
-                            card.innerHTML += `<div class="badge badge-star">⭐ 100%</div>`;
-                            card.style.borderColor = "#FFC107";
-                            card.style.background = "rgba(255, 252, 230, 0.9)";
-                        } else if (parsedData.progress > 0) {
-                            card.innerHTML += `<div class="badge badge-prog">${parsedData.progress}%</div>`;
-                        }
-                    } catch(e) {
-                        console.log("Error parsing unit data for progress display.");
+                // If the unit is NOT in the unlocked list, add the 'locked' style and a padlock icon
+                if (!unlockedUnits.includes(i)) {
+                    card.classList.add('locked');
+                    card.innerHTML = `<div>Unit ${i}</div><div style="font-size: 0.8em; margin-top: 5px;">🔒 Locked</div>`;
+                    
+                    // Shake animation when they try to click a locked unit
+                    card.addEventListener('click', () => {
+                        vibrate();
+                        card.style.transform = "translateX(5px)";
+                        setTimeout(() => card.style.transform = "translateX(-5px)", 100);
+                        setTimeout(() => card.style.transform = "translateX(0)", 200);
+                    });
+                } 
+                // If the unit IS unlocked, build it normally
+                else {
+                    card.innerHTML = `<div>Unit ${i}</div>`;
+                    let savedUnitData = localStorage.getItem(`ffm_unit${i}`) || localStorage.getItem(`ffm_u${i}`);
+                    
+                    if (savedUnitData) {
+                        try {
+                            let parsedData = JSON.parse(savedUnitData);
+                            if (parsedData.progress === 100) {
+                                card.innerHTML += `<div class="badge badge-star">⭐ 100%</div>`;
+                                card.style.borderColor = "#FFC107";
+                                card.style.background = "rgba(255, 252, 230, 0.9)";
+                            } else if (parsedData.progress > 0) {
+                                card.innerHTML += `<div class="badge badge-prog">${parsedData.progress}%</div>`;
+                            }
+                        } catch(e) {}
                     }
-                }
 
-                // Click to navigate
-                card.addEventListener('click', () => {
-                    vibrate();
-                    window.location.href = `ffmu${i}.html`;
-                });
+                    // Only allow navigation if unlocked
+                    card.addEventListener('click', () => {
+                        vibrate();
+                        window.location.href = `ffmu${i}.html`;
+                    });
+                }
                 
                 grid.appendChild(card);
             }

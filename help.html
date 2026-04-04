@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTS Guide - Oliver Nine</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: auto; padding: 20px; background: #f4f4f9; }
+        .btn-home { display: inline-block; padding: 10px 20px; background: #007bff; color: #fff; text-decoration: none; border-radius: 5px; margin-bottom: 20px; font-weight: bold; }
+        .step { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h2 { color: #d9534f; border-bottom: 2px solid #eee; padding-bottom: 5px; font-size: 1.2em; }
+        img { max-width: 100%; border-radius: 5px; margin-top: 15px; border: 1px solid #ddd; display: block; margin-bottom: 10px; }
+        .method-box { background: #fdfdfe; border: 1px dashed #bbb; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .note { background: #fff3cd; padding: 10px; border-left: 5px solid #ffc107; margin-top: 10px; font-size: 0.9em; }
+        .check-item { margin: 10px 0; padding-left: 25px; position: relative; list-style: none; }
+        .check-item::before { content: "✅"; position: absolute; left: 0; }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="btn-home">🏠 Home သို့ပြန်သွားရန်</a>
+
+    <h1>Chrome TTS Setup Guide</h1>
+    <p>Chrome browser တွင် အသံဖတ်မရပါက အောက်ပါအတိုင်း ပြင်ဆင်ပါ။</p>
+
+    <div class="step">
+        <h2>၁။ Google Speech Services သွင်းခြင်း</h2>
+        <p>Play Store တွင် <strong>"Speech Recognition and Synthesis from Google"</strong> ကိုရှာပြီး Install သို့မဟုတ် Update လုပ်ပါ။</p>
+        <img src="install_google_speech.jpg" alt="Step 1: Installing Google Speech">
+    </div>
+
+    <div class="step">
+        <h2>၂။ Text-to-speech Menu ရှာဖွေခြင်း</h2>
+        <p>အောက်ပါနည်းလမ်း (၂) မျိုးထဲမှ အဆင်ပြေရာကို သုံးနိုင်ပါသည်။</p>
+        
+        <div class="method-box">
+            <strong>နည်းလမ်း (က): Search အသုံးပြုခြင်း</strong><br>
+            Settings အပေါ်ဆုံး Search bar တွင် <code>text to speech</code> ဟုရိုက်ရှာပါ။
+        </div>
+
+        <div class="method-box">
+            <strong>နည်းလမ်း (ခ): Manual ရှာဖွေခြင်း</strong><br>
+            Go to: <strong>Settings > Additional Settings > Languages & input > Text-to-speech output</strong>.
+        </div>
+        <img src="finding_settings.jpg" alt="Step 2: Finding Settings Menu">
+    </div>
+
+    <div class="step">
+        <h2>၃။ Preferred Engine ရွေးချယ်ခြင်း</h2>
+        <p><strong>Preferred Engine</strong> ကိုနှိပ်ပြီး "Google Speech Services" ကိုရွေးပါ။</p>
+        
+        <div class="note">
+            ⚠️ <strong>သတိပြုရန်:</strong> ရွေးချယ်ပြီးပါက <strong>Recent Apps</strong> ထဲမှ Settings ကိုအပြီးပိတ် (Remove) လိုက်ပါ။ ပြီးမှ ပြန်ဖွင့်ဝင်ကြည့်လျှင် Google Preferred ဖြစ်နေသည်ကို မြင်ရပါမည်။
+        </div>
+        <img src="8230.jpg" alt="Step 3: Preferred Engine Selection">
+    </div>
+
+    <div class="step">
+        <h2>၄။ Voice Data နှင့် Language သတ်မှတ်ခြင်း</h2>
+        <p>Preferred engine ဘေးရှိ <strong>Arrow (>)</strong> ကိုနှိပ်ပြီး <strong>Install voice data</strong> ထဲသို့ဝင်ပါ။</p>
+        
+        <img src="step4_1_click_arrow.jpg" alt="Click the Arrow >">
+        
+        <p><strong>UK</strong> နှင့် <strong>US</strong> English Voice pack (၂) ခုလုံးကို Download ဆွဲထားပါ။</p>
+        
+        <img src="step4_2_download_packs.jpg" alt="Download UK and US packs">
+
+        <p>ဒေါင်းလုဒ်ပြီးပါက <strong>Language</strong> setting တွင် <strong>English (United Kingdom)</strong> ကိုသာ ရွေးချယ်ပေးပါ။</p>
+        
+        <img src="step4_3_choose_uk.jpg" alt="Select English (United Kingdom)">
+    </div>
+
+    <hr>
+    <h3>အားလုံးပြီးပါက စစ်ဆေးရန်:</h3>
+    <ul>
+        <li class="check-item">Google Speech Services ကို Install လုပ်ပြီးပြီ။</li>
+        <li class="check-item">Preferred Engine ကို Google ဟု ရွေးပြီးပြီ။</li>
+        <li class="check-item">Language ကို English (UK) ဟု ပြောင်းပြီးပြီ။</li>
+    </ul>
+
+    <br>
+    <a href="index.html" class="btn-home">🏠 Home သို့ပြန်သွားရန်</a>
+
+</body>
+</html>

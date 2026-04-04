@@ -21,7 +21,7 @@
         .progress-container { flex-grow: 1; margin-right: 15px; background: #eee; height: 10px; border-radius: 5px; overflow: hidden; position: relative;}
         .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
         .submit-btn { background: var(--locked); color: white; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; pointer-events: none; transition: background 0.3s; }
-        .submit-btn.unlocked { background: var(--primary); animation: flash 2s infinite; }
+        .submit-btn.unlocked { background: var(--primary); animation: flash 2s infinite; cursor: pointer; pointer-events: auto; }
         @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
         
         .header-area { padding: 15px; background: white; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
@@ -37,17 +37,26 @@
         .tab.active { border-bottom-color: var(--primary); color: var(--primary); }
         
         .card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px;}
-        .card img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; background: #eee;}
         .card-content { flex-grow: 1; }
         .audio-btn, .mic-btn { font-size: 1.2em; border: none; background: none; box-shadow: none; cursor: pointer; padding: 5px; }
-        
-        .flashcard-container { perspective: 1000px; height: 200px; margin-bottom: 20px; cursor: pointer;}
+
+        /* Intelligent Image Engine UI */
+        .img-container { position: relative; width: 90px; height: 90px; flex-shrink: 0; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; background: #eee; }
+        .cycle-btn { position: absolute; bottom: -5px; right: -5px; background: white; border: 1px solid #ddd; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); padding: 0;}
+        .cycle-btn:active { transform: scale(0.9); }
+
+        .flashcard-container { perspective: 1000px; height: 280px; margin-bottom: 20px; cursor: pointer;}
         .flashcard { width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; position: relative; }
         .flashcard.flipped { transform: rotateY(180deg); }
         .front, .back { width: 100%; height: 100%; position: absolute; backface-visibility: hidden; background: white; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 20px; box-sizing: border-box; text-align: center;}
         .back { transform: rotateY(180deg); background: #f9f9f9;}
-        .front img { max-height: 100px; margin-bottom: 15px; border-radius: 8px;}
         
+        .fc-img-container { position: relative; width: 100%; height: 180px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;}
+        .fc-img-container img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; }
+        .fc-cycle-btn { position: absolute; bottom: -10px; right: 10px; background: white; border: 1px solid #ddd; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 10; padding: 0;}
+        .fc-cycle-btn:active { transform: scale(0.9); }
+
         .test-category, .grammar-title { font-size: 0.85em; font-weight: bold; color: var(--primary); letter-spacing: 1px; margin-bottom: 5px; display: block; text-transform: uppercase;}
         .test-q { margin-bottom: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .options label { display: block; padding: 10px; margin: 5px 0; background: #f9f9f9; border-radius: 6px; cursor: pointer; border: 2px solid transparent; }
@@ -71,10 +80,11 @@
 <body>
 
     <div id="splash-screen" class="active">
+    	<img src="logo.png" alt="School Logo" style="width: 70px; height: 70px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
         <h1>Fun for Movers</h1>
         <h2>Unit 5: The woman in the red dress</h2>
         <p>Developed by Nine Nine</p>
-        <p>Brilliant Star Private School, Pakokku</p>
+        <p>Brilliant Star Private School (IPS Pakokku)</p>
     </div>
 
     <div id="login-screen">
@@ -93,7 +103,8 @@
 
         <div class="header-area">
             <h2>Unit 5: The woman in the red dress</h2>
-            <p>Developed by Nine Nine - Brilliant Star Private School (Pakokku)</p>
+            <p>Brilliant Star Private School (IPS Pakokku)</p>
+            <img src="logo.png" alt="School Logo" style="width: 70px; height: 70px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
             <div class="controls">
                 <span style="padding: 8px; background: #eee; border-radius: 6px; font-weight: bold;">Student: <span id="display-name"></span></span>
                 <select id="accent-select">
@@ -102,9 +113,8 @@
                 </select>
                 <button id="audio-stop">🔇 Stop Audio</button>
                 <button id="reset-btn" style="color: red;">🔄 Reset</button>
-                <select id="unit-nav">
-                    </select>
-                    <button onclick="window.location.href='index.html'" style="background: #2196F3; color: white; font-weight: bold;">🏠 Home</button>
+                <select id="unit-nav"></select>
+                <button onclick="window.location.href='index.html'" style="background: #2196F3; color: white; font-weight: bold;">🏠 Home</button>
             </div>
         </div>
 
@@ -179,7 +189,17 @@
             remove: (k) => { try { localStorage.removeItem(k); } catch(e) {} }
         };
 
-        const currentUnitDir = "u5";
+        // --- DUAL API KEYS ---
+        const PIXABAY_KEY = "55157903-ac6667cf77ed7dd0cb27b5e9f";
+        const PEXELS_KEY = "FsvT8UOtmg706qLKfDWGcBlEVC0LHX9F7Xt7fCkbRZX7LVIeme5FBd4o"; 
+
+        const SAFE_LOADING_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='12' fill='%23555'%3ELoading...%3C/text%3E%3C/svg%3E";
+        const SAFE_NO_IMG_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Crect width='100%25' height='100%25' fill='%23ffcccc'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='12' fill='%23d32f2f'%3ENo Img%3C/text%3E%3C/svg%3E";
+
+        let imageCache = {}; 
+        let usedImageUrls = new Set();
+        let audioCache = {};
+
         const currentUnitNumber = 5;
         const unitData = {
             title: "Unit 5: The woman in the red dress",
@@ -233,16 +253,16 @@
             studentName: "", progress: 0, secretActive: false, testAnswers: {}, actAnswers: {}, micScores: {}, cardsFlipped: 0,
             grammarUnderstood: false,
             sectionProgress: { vocab: [], read: [], flash: [] },
-            sectionsSent: { vocab: false, read: false, flash: false, act: false, grammar: false, test: false, fullReport: false }
+            sectionsSent: { vocab: false, read: false, flash: false, act: false, grammar: false, test: false, fullReport: false },
+            imgPrefs: {}
         };
         
-        const unitKey = `ffm_${currentUnitDir}`;
+        const unitKey = `ffm_unit${currentUnitNumber}`;
         let synth = window.speechSynthesis;
         let voices = [];
         window.speechUtteranceChunk = null; 
         let currentCardIdx = 0;
         let translateTaps = 0;
-        let translateTimeout;
 
         document.addEventListener("DOMContentLoaded", () => {
             try {
@@ -256,7 +276,6 @@
                     }
                 });
 
-                // Populate 45 Units Dynamically
                 const unitNav = document.getElementById('unit-nav');
                 unitNav.innerHTML = '';
                 for (let i = 1; i <= 45; i++) {
@@ -276,6 +295,9 @@
                 setTimeout(() => {
                     document.getElementById('splash-screen').classList.remove('active');
                     checkLogin();
+                    // Launch background preloaders
+                    fetchImages();
+                    preloadAudio();
                 }, 2500);
             } catch (err) {
                 console.error(err);
@@ -295,6 +317,7 @@
                 if(!state.sectionProgress) state.sectionProgress = { vocab: [], read: [], flash: [] };
                 if(!state.sectionsSent) state.sectionsSent = { vocab: false, read: false, flash: false, act: false, grammar: false, test: false, fullReport: false };
                 if(!state.actAnswers) state.actAnswers = {};
+                if(!state.imgPrefs) state.imgPrefs = {};
                 
                 if(state.secretActive) toggleSecret(true);
                 
@@ -316,6 +339,108 @@
             }
         }
 
+        // --- BACKGROUND AUDIO PRELOADER ---
+        async function preloadAudio() {
+            for (let v of unitData.vocab) {
+                let cleanWord = v.word.toLowerCase().replace(/<[^>]*>?/gm, '').trim();
+                if (!audioCache[cleanWord]) {
+                    try {
+                        let res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`);
+                        let data = await res.json();
+                        let audioUrl = data[0]?.phonetics.find(p => p.audio !== "")?.audio;
+                        if (audioUrl) {
+                            audioCache[cleanWord] = audioUrl;
+                            const preloader = new Audio();
+                            preloader.src = audioUrl;
+                            preloader.preload = "auto";
+                        }
+                    } catch(e) {}
+                }
+            }
+        }
+
+        // --- THE DUAL API IMAGE ENGINE (PIXABAY + PEXELS + CACHE) ---
+        async function fetchImages() {
+            let cachedData = storage.get(`ffm_img_cache_${currentUnitNumber}`);
+            if(cachedData) {
+                try {
+                    imageCache = JSON.parse(cachedData);
+                    Object.values(imageCache).forEach(arr => arr.forEach(url => usedImageUrls.add(url)));
+                    updateAllImages();
+                    return; 
+                } catch(e){}
+            }
+
+            for (let v of unitData.vocab) {
+                if(imageCache[v.word]) continue; 
+                try {
+                    let baseQuery = v.query || v.word;
+                    let validHits = [];
+
+                    // PASS 1: PIXABAY
+                    let pixRes = await fetch(`https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${encodeURIComponent(baseQuery)}&image_type=illustration&per_page=30&safesearch=true`);
+                    if(pixRes.ok) {
+                        let pData = await pixRes.json();
+                        if(pData.hits && pData.hits.length > 0) {
+                            validHits = pData.hits.map(h => h.webformatURL).filter(url => !usedImageUrls.has(url));
+                        }
+                    }
+
+                    // PASS 2: PEXELS FALLBACK
+                    if(validHits.length < 3) {
+                        let pexRes = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(baseQuery)}&per_page=30`, {
+                            headers: { Authorization: PEXELS_KEY }
+                        });
+                        if(pexRes.ok) {
+                            let pexData = await pexRes.json();
+                            if(pexData.photos && pexData.photos.length > 0) {
+                                let fallbackHits = pexData.photos.map(p => p.src.medium).filter(url => !usedImageUrls.has(url));
+                                validHits = [...validHits, ...fallbackHits];
+                            }
+                        }
+                    }
+
+                    // RESOLUTION
+                    if(validHits.length > 0) {
+                        let finalImages = validHits.slice(0, 10);
+                        imageCache[v.word] = finalImages;
+                        finalImages.forEach(url => usedImageUrls.add(url));
+                        finalImages.forEach(url => { const preloadImg = new Image(); preloadImg.src = url; });
+                    } else {
+                        imageCache[v.word] = [SAFE_NO_IMG_SVG];
+                    }
+                } catch(e) {
+                    imageCache[v.word] = [SAFE_NO_IMG_SVG];
+                }
+                updateAllImages();
+            }
+            storage.set(`ffm_img_cache_${currentUnitNumber}`, JSON.stringify(imageCache));
+        }
+
+        function cycleImage(word, event) {
+            if(event) event.stopPropagation();
+            if(!state.imgPrefs) state.imgPrefs = {};
+            if(!imageCache[word] || imageCache[word].length <= 1) return;
+            
+            state.imgPrefs[word] = ((state.imgPrefs[word] || 0) + 1) % imageCache[word].length;
+            saveState();
+            updateAllImages();
+        }
+
+        function updateAllImages() {
+            unitData.vocab.forEach((v, i) => {
+                let imgEl = document.getElementById(`img-vocab-${i}`);
+                if(imgEl && imageCache[v.word]) {
+                    let pref = (state.imgPrefs && state.imgPrefs[v.word]) || 0;
+                    if(pref >= imageCache[v.word].length) pref = 0;
+                    imgEl.src = imageCache[v.word][pref];
+                }
+            });
+            if(document.getElementById('tab-flash').classList.contains('active')) {
+                updateFlashcard();
+            }
+        }
+
         function calculateProgress() {
             let vPct = state.sectionProgress.vocab.length / unitData.vocab.length;
             let rPct = state.sectionProgress.read.length / unitData.reading.length;
@@ -332,7 +457,25 @@
             if(state.progress === 100 && !state.sectionsSent.fullReport) {
                 state.sectionsSent.fullReport = true;
                 saveState();
-                sendTelemetryReport(`🏆 100% COURSE COMPLETED! Full Application Report.`);
+                
+                // Dashboard Telemetry Sync Logic
+                let totalProg = 0; let unitsStarted = 0; let unitsCompleted = 0; let vocabCount = 0;
+                for(let i=1; i<=45; i++) {
+                    let s = localStorage.getItem(`ffm_unit${i}`) || localStorage.getItem(`ffm_u${i}`);
+                    if(s) {
+                        try {
+                            let p = JSON.parse(s);
+                            totalProg += (p.progress || 0);
+                            if(p.progress > 0) unitsStarted++;
+                            if(p.progress === 100) unitsCompleted++;
+                            if(p.sectionProgress && p.sectionProgress.vocab) vocabCount += p.sectionProgress.vocab.length;
+                        } catch(e){}
+                    }
+                }
+                let overallPct = Math.round(totalProg / 45);
+                let syncCode = `FFM_SYNC||${state.studentName}||${overallPct}||${unitsStarted}||${unitsCompleted}||${vocabCount}`;
+                
+                sendTelemetryReport(`🏆 100% COURSE COMPLETED!\\n*Sync Code:*\\n\`${syncCode}\``);
             }
         }
 
@@ -341,26 +484,17 @@
             document.getElementById('progress-text').innerText = state.progress + "%";
             
             const submitBtn = document.getElementById('submit-btn');
-            
-            if(state.progress >= 50) {
-                submitBtn.style.pointerEvents = 'auto';
-            } else {
-                submitBtn.style.pointerEvents = 'none';
-            }
+            if(state.progress >= 50) submitBtn.style.pointerEvents = 'auto';
+            else submitBtn.style.pointerEvents = 'none';
 
-            if(state.progress >= 100 && Object.keys(state.testAnswers).length === unitData.test.length) {
-                submitBtn.classList.add('unlocked');
-            } else {
-                submitBtn.classList.remove('unlocked');
-            }
+            if(state.progress >= 100 && Object.keys(state.testAnswers).length === unitData.test.length) submitBtn.classList.add('unlocked');
+            else submitBtn.classList.remove('unlocked');
         }
 
         function markItemDone(section, idx) {
             if(!state.sectionProgress[section].includes(idx)) {
                 state.sectionProgress[section].push(idx);
-                saveState();
-                calculateProgress();
-                checkSectionCompletion(section);
+                saveState(); calculateProgress(); checkSectionCompletion(section);
             }
         }
 
@@ -368,19 +502,15 @@
             state.grammarUnderstood = true;
             document.getElementById('grammar-understand-btn').style.display = 'none';
             document.getElementById('grammar-understood-msg').style.display = 'block';
-            
             if(!state.sectionsSent.grammar) {
                 state.sectionsSent.grammar = true;
-                saveState();
-                calculateProgress();
-                showCenterToast("Grammar Complete!");
+                saveState(); calculateProgress(); showCenterToast("Grammar Complete!");
                 sendTelemetryReport(`Section Completed: GRAMMAR UNDERSTOOD`);
             }
         }
 
         function checkSectionCompletion(section) {
             if(state.sectionsSent[section]) return;
-            
             let isComplete = false;
             if(section === 'vocab' && state.sectionProgress.vocab.length >= unitData.vocab.length) isComplete = true;
             if(section === 'read' && state.sectionProgress.read.length >= unitData.reading.length) isComplete = true;
@@ -389,8 +519,7 @@
             
             if(isComplete) {
                 state.sectionsSent[section] = true;
-                saveState();
-                showCenterToast(`${section.toUpperCase()} Complete! Sending to teacher...`);
+                saveState(); showCenterToast(`${section.toUpperCase()} Complete! Sending to teacher...`);
                 sendTelemetryReport(`Section Completed: ${section.toUpperCase()}`);
             }
         }
@@ -398,11 +527,9 @@
         function checkLogin() {
             const globalName = storage.get('ffm_global_name');
             if(globalName) {
-                state.studentName = globalName;
-                document.getElementById('display-name').innerText = globalName;
+                state.studentName = globalName; document.getElementById('display-name').innerText = globalName;
                 document.getElementById('login-screen').classList.remove('active'); 
-                document.getElementById('main-app').classList.add('active');
-                loadState();
+                document.getElementById('main-app').classList.add('active'); loadState();
             } else {
                 document.getElementById('login-screen').classList.add('active');
                 document.getElementById('main-app').classList.remove('active');
@@ -411,8 +538,7 @@
 
         function showToast(msg) {
             const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.style.opacity = 1;
+            t.innerText = msg; t.style.opacity = 1;
             setTimeout(() => t.style.opacity = 0, 3000);
         }
 
@@ -423,23 +549,48 @@
             setTimeout(() => t.classList.remove('active'), 3500);
         }
 
-        function loadVoices() {
-            if (synth) voices = synth.getVoices().filter(v => v.lang.includes('en'));
-        }
+        function loadVoices() { if (synth) voices = synth.getVoices().filter(v => v.lang.includes('en')); }
 
-        function playTTS(text) {
+        // --- THE HYBRID AUDIO BRIDGE WITH LOADING TOAST ---
+        async function playTTS(text) {
             if(!synth) return showToast("Audio not supported.");
             if(synth.speaking) synth.cancel();
             
-            let cleanText = text.replace(/<[^>]*>?/gm, ''); 
-            cleanText = cleanText.replace(/([_]\s*)+/g, " blank ").replace(/[!()"\n]/g, " ");
+            let cleanText = text.replace(/<[^>]*>?/gm, '').replace(/([_]\s*)+/g, " blank ").replace(/[!()"\n]/g, " ").trim();
             
+            if (!cleanText.includes(" ")) {
+                try {
+                    // Check if background preloader has finished
+                    if (audioCache[cleanText]) { 
+                        new Audio(audioCache[cleanText]).play(); 
+                        return; 
+                    }
+                    
+                    // If not finished preloading, show toast to user
+                    showToast("⏳ Downloading the audio, please wait...");
+                    
+                    let response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${cleanText}`);
+                    let data = await response.json();
+                    let audioUrl = data[0].phonetics.find(p => p.audio !== "")?.audio;
+                    if (audioUrl) { 
+                        audioCache[cleanText] = audioUrl; 
+                        new Audio(audioUrl).play(); 
+                        return; 
+                    }
+                } catch (e) {} 
+            }
+
+            // Fallback to System TTS if Dictionary API fails or if it's a long sentence
             const u = new SpeechSynthesisUtterance(cleanText);
             u.rate = 0.75;
-            
             const accent = document.getElementById('accent-select').value;
             const voice = voices.find(v => v.lang === accent && (v.name.includes("Premium") || v.name.includes("Google"))) || voices.find(v => v.lang === accent) || voices[0];
             if(voice) u.voice = voice;
+            
+            let watchdog = setTimeout(() => { 
+                if (!synth.speaking) showToast("⚠️ System Voice failed. Please install 'Speech Services by Google' from Play Store."); 
+            }, 500);
+            u.onstart = () => clearTimeout(watchdog);
             
             window.speechUtteranceChunk = u; 
             synth.speak(u);
@@ -447,7 +598,7 @@
 
         function startDictation(targetWord, idx) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if(!SpeechRecognition) return showToast("Microphone not supported on this browser.");
+            if(!SpeechRecognition) return showToast("⚠️ Mic blocked! Use Google Chrome or host on a server.");
             
             const recognition = new SpeechRecognition();
             recognition.lang = document.getElementById('accent-select').value;
@@ -460,7 +611,7 @@
 
             recognition.onresult = (event) => {
                 const spoken = event.results[0][0].transcript.toLowerCase().replace(/[.,!?]/g, "").trim();
-                const target = targetWord.toLowerCase().trim();
+                const target = targetWord.toLowerCase().replace(/^(a |an |the )/i, "").replace(/[.,!?]/g, "").trim();
                 let score = 0;
                 
                 if(spoken === target) score = 100;
@@ -470,22 +621,28 @@
                 
                 overlay.classList.remove('active');
                 showToast(`Heard: "${spoken}" | Score: ${score}%`);
-                
                 markItemDone('vocab', idx); 
             };
 
-            recognition.onerror = () => overlay.classList.remove('active');
+            recognition.onerror = (e) => {
+                overlay.classList.remove('active');
+                if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+                     showToast("⚠️ Microphone access denied. Check your browser permissions.");
+                }
+            };
             recognition.onend = () => overlay.classList.remove('active');
         }
 
         function buildUI() {
             const vTab = document.getElementById('tab-vocab');
             unitData.vocab.forEach((v, i) => {
-                const imgPath = `images/${currentUnitDir}/${v.word.replace(/\s/g, '').toLowerCase()}.jpg`;
                 const div = document.createElement('div');
                 div.className = 'card';
                 div.innerHTML = `
-                    <img src="${imgPath}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23ddd\\'/></svg>'">
+                    <div class="img-container">
+                        <img id="img-vocab-${i}" src="${SAFE_LOADING_SVG}">
+                        <button class="cycle-btn" onclick="cycleImage('${v.word}', event)">🔄</button>
+                    </div>
                     <div class="card-content">
                         <div style="font-weight:bold; font-size:1.2em;">${v.word}</div>
                         <div style="font-size:0.95em; color:#444; margin-top:4px;">${v.def}</div>
@@ -576,11 +733,25 @@
 
         function updateFlashcard() {
             const v = unitData.vocab[currentCardIdx];
+            
+            let imgSrc = SAFE_LOADING_SVG;
+            if(imageCache[v.word]) {
+                let pref = (state.imgPrefs && state.imgPrefs[v.word]) || 0;
+                if(pref >= imageCache[v.word].length) pref = 0;
+                imgSrc = imageCache[v.word][pref];
+            }
+
             document.getElementById('fc-progress').innerText = `Card ${currentCardIdx + 1} of ${unitData.vocab.length}`;
-            document.getElementById('fc-front').innerHTML = `<img src="images/${currentUnitDir}/${v.word.replace(/\s/g, '').toLowerCase()}.jpg" onerror="this.style.display='none'"><br><strong style="font-size:1.5em;">${v.word}</strong>`;
+            document.getElementById('fc-front').innerHTML = `
+                <div class="fc-img-container">
+                    <img src="${imgSrc}">
+                    <button class="fc-cycle-btn" onclick="cycleImage('${v.word}', event)">🔄</button>
+                </div>
+                <strong style="font-size:1.8em;">${v.word}</strong>`;
             document.getElementById('fc-back').innerHTML = `<strong style="font-size:1.5em;">${v.word}</strong><br><br><span style="font-size:1.1em; color:#444;">${v.def}</span><br><br><span class="myanmar-text" style="${state.secretActive?'display:block;':''} font-size:1.2em;">${v.mm}</span>`;
             document.getElementById('fc-inner').classList.remove('flipped');
         }
+        
         function flipCard() { 
             document.getElementById('fc-inner').classList.toggle('flipped'); 
             markItemDone('flash', currentCardIdx);
@@ -602,6 +773,7 @@
                     document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
                     e.currentTarget.classList.add('active');
                     document.getElementById(e.currentTarget.dataset.target).classList.add('active');
+                    if(e.currentTarget.dataset.target === 'tab-flash') updateFlashcard(); 
                 });
             });
 
@@ -616,6 +788,7 @@
             document.getElementById('translate-btn').addEventListener('click', () => {
                 if(state.secretActive) return toggleSecret(false);
                 translateTaps++;
+                let translateTimeout;
                 clearTimeout(translateTimeout);
                 if(translateTaps < 5) {
                     showToast("Try to understand the context in English first! Keep tapping if you really need the translation. 🧠");
@@ -623,7 +796,7 @@
                 } else {
                     toggleSecret(true);
                     translateTaps = 0;
-                    playTTS("Secret translation unlocked. But remember, try your best to think in English first.");
+                    playTTS("Secret translation unlocked.");
                     showToast("Translation Unlocked 🔓");
                 }
             });
@@ -658,19 +831,13 @@
 
         function selectActivityAnswer(qIdx, optIdx) {
             state.actAnswers[qIdx] = optIdx;
-            saveState();
-            calculateProgress();
-            checkSectionCompletion('act');
+            saveState(); calculateProgress(); checkSectionCompletion('act');
         }
 
         function selectTestAnswer(qIdx, optIdx) {
             state.testAnswers[qIdx] = optIdx;
-            saveState();
-            calculateProgress();
-            
-            if(Object.keys(state.testAnswers).length === unitData.test.length) {
-                setTimeout(submitTest, 800); 
-            }
+            saveState(); calculateProgress();
+            if(Object.keys(state.testAnswers).length === unitData.test.length) { setTimeout(submitTest, 800); }
         }
 
         function submitTest() {
@@ -685,8 +852,7 @@
                 const correctLbl = document.getElementById(`lbl-t${i}-${q.ans}`);
 
                 if(chosen === q.ans) {
-                    score++;
-                    chosenLbl.classList.add('correct-answer');
+                    score++; chosenLbl.classList.add('correct-answer');
                 } else {
                     chosenLbl.classList.add('wrong-answer');
                     correctLbl.classList.add('missed-correct');
@@ -702,8 +868,7 @@
             
             if(!state.sectionsSent.test) {
                 state.sectionsSent.test = true;
-                saveState();
-                showCenterToast("Sending test score...");
+                saveState(); showCenterToast("Sending test score...");
                 sendTelemetryReport(`Section Completed: OFFICIAL TEST (Score: ${pct}%)`);
                 calculateProgress(); 
             }

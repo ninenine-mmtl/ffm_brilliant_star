@@ -11,7 +11,7 @@
         #splash-screen, #login-screen, #main-app, .modal-overlay, .tab-content { display: none; }
         .myanmar-text { display: none; color: #555; font-size: 0.9em; margin-top: 4px; }
         
-        #splash-screen.active { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: var(--primary); color: white; text-align: center;}
+        #splash-screen.active { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: var(--primary); color: white; text-align: center; padding: 20px;}
         #login-screen.active { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; padding: 20px;}
         #main-app.active { display: block; padding-top: 60px; padding-bottom: 80px;}
         .tab-content.active { display: block; padding: 20px; }
@@ -21,13 +21,13 @@
         .progress-container { flex-grow: 1; margin-right: 15px; background: #eee; height: 10px; border-radius: 5px; overflow: hidden; position: relative;}
         .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
         .submit-btn { background: var(--locked); color: white; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; pointer-events: none; transition: background 0.3s; }
-        .submit-btn.unlocked { background: var(--primary); animation: flash 2s infinite; }
+        .submit-btn.unlocked { background: var(--primary); animation: flash 2s infinite; cursor: pointer; pointer-events: auto; }
         @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
         
-        .header-area { padding: 15px; background: white; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+        .header-area { padding: 15px; background: white; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center;}
         .header-area h2 { margin: 0 0 5px 0; color: var(--primary); }
         .header-area p { margin: 0; font-size: 0.85em; color: #666; }
-        .controls { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;}
+        .controls { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; justify-content: center;}
         button, select, input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; background: white;}
         button { cursor: pointer; background: var(--bg); }
         button:active { transform: scale(0.98); }
@@ -37,17 +37,25 @@
         .tab.active { border-bottom-color: var(--primary); color: var(--primary); }
         
         .card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px;}
-        .card img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; background: #eee;}
         .card-content { flex-grow: 1; }
         .audio-btn, .mic-btn { font-size: 1.2em; border: none; background: none; box-shadow: none; cursor: pointer; padding: 5px; }
-        
-        .flashcard-container { perspective: 1000px; height: 200px; margin-bottom: 20px; cursor: pointer;}
+
+        .img-container { position: relative; width: 90px; height: 90px; flex-shrink: 0; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; background: #eee; }
+        .cycle-btn { position: absolute; bottom: -5px; right: -5px; background: white; border: 1px solid #ddd; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); padding: 0;}
+        .cycle-btn:active { transform: scale(0.9); }
+
+        .flashcard-container { perspective: 1000px; height: 280px; margin-bottom: 20px; cursor: pointer;}
         .flashcard { width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; position: relative; }
         .flashcard.flipped { transform: rotateY(180deg); }
         .front, .back { width: 100%; height: 100%; position: absolute; backface-visibility: hidden; background: white; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 20px; box-sizing: border-box; text-align: center;}
         .back { transform: rotateY(180deg); background: #f9f9f9;}
-        .front img { max-height: 100px; margin-bottom: 15px; border-radius: 8px;}
         
+        .fc-img-container { position: relative; width: 100%; height: 180px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;}
+        .fc-img-container img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; }
+        .fc-cycle-btn { position: absolute; bottom: -10px; right: 10px; background: white; border: 1px solid #ddd; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 10; padding: 0;}
+        .fc-cycle-btn:active { transform: scale(0.9); }
+
         .test-category, .grammar-title { font-size: 0.85em; font-weight: bold; color: var(--primary); letter-spacing: 1px; margin-bottom: 5px; display: block; text-transform: uppercase;}
         .test-q { margin-bottom: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .options label { display: block; padding: 10px; margin: 5px 0; background: #f9f9f9; border-radius: 6px; cursor: pointer; border: 2px solid transparent; }
@@ -71,10 +79,11 @@
 <body>
 
     <div id="splash-screen" class="active">
+        <img src="logo.png" alt="School Logo" style="width: 70px; height: 70px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
         <h1>Fun for Movers</h1>
         <h2>Unit 6: My neck, my shoulders</h2>
         <p>Developed by Nine Nine</p>
-        <p>Brilliant Star Private School, Pakokku</p>
+        <p>Brilliant Star Private School (IPS Pakokku)</p>
     </div>
 
     <div id="login-screen">
@@ -94,6 +103,7 @@
         <div class="header-area">
             <h2>Unit 6: My neck, my shoulders</h2>
             <p>Developed by Nine Nine - Brilliant Star Private School (Pakokku)</p>
+            <img src="logo.png" alt="School Logo" style="width: 70px; height: 70px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-top: 10px;">
             <div class="controls">
                 <span style="padding: 8px; background: #eee; border-radius: 6px; font-weight: bold;">Student: <span id="display-name"></span></span>
                 <select id="accent-select">
@@ -102,9 +112,8 @@
                 </select>
                 <button id="audio-stop">🔇 Stop Audio</button>
                 <button id="reset-btn" style="color: red;">🔄 Reset</button>
-                <select id="unit-nav">
-                    </select>
-                    <button onclick="window.location.href='index.html'" style="background: #2196F3; color: white; font-weight: bold;">🏠 Home</button>
+                <select id="unit-nav"></select>
+                <button onclick="window.location.href='index.html'" style="background: #2196F3; color: white; font-weight: bold;">🏠 Home</button>
             </div>
         </div>
 
@@ -179,38 +188,49 @@
             remove: (k) => { try { localStorage.removeItem(k); } catch(e) {} }
         };
 
+        const PIXABAY_KEY = "55157903-ac6667cf77ed7dd0cb27b5e9f";
+        const PEXELS_KEY = "FsvT8UOtmg706qLKfDWGcBlEVC0LHX9F7Xt7fCkbRZX7LVIeme5FBd4o"; 
+
+        const SAFE_LOADING_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='12' fill='%23555'%3ELoading...%3C/text%3E%3C/svg%3E";
+        const SAFE_NO_IMG_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Crect width='100%25' height='100%25' fill='%23ffcccc'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='12' fill='%23d32f2f'%3ENo Img%3C/text%3E%3C/svg%3E";
+
+        let imageCache = {}; 
+        let usedImageUrls = new Set();
+        let audioCache = {};
+
         const currentUnitDir = "u6";
         const currentUnitNumber = 6;
+        
         const unitData = {
             title: "Unit 6: My neck, my shoulders",
             vocab: [
-                { word: "neck", def: "This is under your head and above your shoulders.", mm: "လည်ပင်း" },
-                { word: "shoulders", def: "These connect your arms to your body.", mm: "ပခုံးများ" },
-                { word: "stomach", def: "After your dinner, your food is inside this.", mm: "အစာအိမ် / ဗိုက်" },
-                { word: "nose", def: "This is between your eyes and your mouth.", mm: "နှာခေါင်း" },
-                { word: "beard", def: "This is hair on a man's face. It's under his mouth.", mm: "မုတ်ဆိတ်မွေး" },
-                { word: "feet", def: "You stand on these. They are at the end of your legs.", mm: "ခြေဖဝါးများ" },
-                { word: "teeth", def: "These are white and you have lots in your mouth.", mm: "သွားများ" },
-                { word: "ears", def: "You have two of these and you listen with them.", mm: "နားရွက်များ" },
-                { word: "eyes", def: "You use these to see the world around you.", mm: "မျက်လုံးများ" },
-                { word: "legs", def: "You use these to walk, run, and jump.", mm: "ခြေထောက်များ" },
-                { word: "hands", def: "These are at the end of your arms. You use them to hold things.", mm: "လက်များ" },
-                { word: "mouths", def: "You use this to eat, smile, and talk.", mm: "ပါးစပ်များ" },
-                { word: "backs", def: "This is the rear part of the human body from the shoulders to the hips.", mm: "ကျောများ" },
-                { word: "wings", def: "Birds and some insects use these to fly.", mm: "အတောင်ပံများ" }
+                { word: "neck", def: "This is under your head and above your shoulders.", mm: "လည်ပင်း", query: "human neck" },
+                { word: "shoulders", def: "These connect your arms to your body.", mm: "ပခုံးများ", query: "human shoulders" },
+                { word: "stomach", def: "After your dinner, your food is inside this.", mm: "အစာအိမ် / ဗိုက်", query: "human stomach anatomy" },
+                { word: "nose", def: "This is between your eyes and your mouth.", mm: "နှာခေါင်း", query: "human nose" },
+                { word: "beard", def: "This is hair on a man's face. It's under his mouth.", mm: "မုတ်ဆိတ်မွေး", query: "man beard face" },
+                { word: "feet", def: "You stand on these. They are at the end of your legs.", mm: "ခြေဖဝါးများ", query: "human feet" },
+                { word: "teeth", def: "These are white and you have lots in your mouth.", mm: "သွားများ", query: "human teeth" },
+                { word: "ears", def: "You have two of these and you listen with them.", mm: "နားရွက်များ", query: "human ear" },
+                { word: "eyes", def: "You use these to see the world around you.", mm: "မျက်လုံးများ", query: "human eye" },
+                { word: "legs", def: "You use these to walk, run, and jump.", mm: "ခြေထောက်များ", query: "human legs" },
+                { word: "hands", def: "These are at the end of your arms. You use them to hold things.", mm: "လက်များ", query: "human hands" },
+                { word: "mouths", def: "You use this to eat, smile, and talk.", mm: "ပါးစပ်များ", query: "human mouth" },
+                { word: "backs", def: "This is the rear part of the human body from the shoulders to the hips.", mm: "ကျောများ", query: "human back body" },
+                { word: "wings", def: "Birds and some insects use these to fly.", mm: "အတောင်ပံများ", query: "bird wings" }
             ],
             reading: [
-                { isGrammar: true, title: "Grammar: Comparatives", text: "We use comparatives to compare differences between two objects or people.\n\n- The monsters' legs are shorter than the children's legs.\n- The children's hair is shorter than the monsters' hair.\n- The monsters' mouths are bigger than the children's mouths.\n- The children's heads are smaller than the monsters' heads.\n- The man is taller and older than everyone!", mm: "အရာဝတ္ထုနှစ်ခု သို့မဟုတ် လူနှစ်ဦးကြားရှိ ကွာခြားချက်များကို နှိုင်းယှဉ်ရန် ကျွန်ုပ်တို့သည် နှိုင်းယှဉ်ချက်များကို သုံးသည်။\n\n- ဘီလူးများ၏ ခြေထောက်များသည် ကလေးများ၏ ခြေထောက်များထက် တိုသည်။\n- ကလေးများ၏ ဆံပင်သည် ဘီလူးများ၏ ဆံပင်ထက် တိုသည်။\n- ဘီလူးများ၏ ပါးစပ်များသည် ကလေးများ၏ ပါးစပ်များထက် ကြီးသည်။\n- ကလေးများ၏ ဦးခေါင်းများသည် ဘီလူးများ၏ ဦးခေါင်းများထက် သေးငယ်သည်။\n- အမျိုးသားသည် လူတိုင်းထက် ပိုရှည်ပြီး ပိုအသက်ကြီးသည်။" },
+                { isGrammar: true, title: "Grammar: Comparatives", text: "We use comparatives to compare differences between two objects or people.\n\n- The monsters' legs are shorter than the children's legs.\n- The children's hair is shorter than the monsters' hair.\n- The monsters' mouths are bigger than the children's mouths.\n- The children's heads are smaller than the monsters' heads.\n- The man is taller and older than everyone!", mm: "အရာဝတ္ထုနှစ်ခု သို့မဟုတ် လူနှစ်ဦးကြားရှိ ကွာခြားချက်များကို နှိုင်းယှဉ်ရန် ကျွန်ုပ်တို့သည် နှိုင်းယှဉ်ချက်များကို သုံးသည်။\n\n- monster များ၏ ခြေထောက်များသည် ကလေးများ၏ ခြေထောက်များထက် တိုသည်။\n- ကလေးများ၏ ဆံပင်သည် monster များ၏ ဆံပင်ထက် တိုသည်။\n- monster များ၏ ပါးစပ်များသည် ကလေးများ၏ ပါးစပ်များထက် ကြီးသည်။\n- ကလေးများ၏ ဦးခေါင်းများသည် monster များ၏ ဦးခေါင်းများထက် သေးငယ်သည်။\n- အမျိုးသားသည် လူတိုင်းထက် ပိုရှည်ပြီး ပိုအသက်ကြီးသည်။" },
                 { isGrammar: false, title: "Activity: The Mystery Word", text: "Look at the word snake carefully. You can find these words hidden inside:\n\nears, feet, teeth, nose, neck, stomach, beard.\n\nIf you cross all those words out, the remaining letters spell the mystery word: SHOULDERS", mm: "စကားလုံး 'snake' ကို ဂရုတစိုက်ကြည့်ပါ။ အထဲမှာ ပုန်းနေတဲ့ စကားလုံးတွေကို တွေ့နိုင်တယ်။\n\nears, feet, teeth, nose, neck, stomach, beard.\n\nထိုစကားလုံးများအားလုံးကို ဖြတ်ပစ်ပါက ကျန်ရှိသော အက္ခရာများမှာ 'SHOULDERS' ဖြစ်သည်။" },
-                { isGrammar: false, title: "Reading: Picture Comprehension", text: "1. The monsters' arms are very short. (No, they are long.)\n2. One of the monsters is holding a cup. (Yes.)\n3. There's a flower on one monster's stomach. (No, it's a star.)\n4. The robot that's outside the house is laughing. (No, it looks angry/sad.)\n5. You can see a monster on the round roof. (Yes.)\n6. The monster next to the door is wearing a pair of shoes. (Yes.)", mm: "၁။ ဘီလူးများ၏ လက်မောင်းများသည် အလွန်တိုသည်။ (မဟုတ်ပါ၊ ရှည်သည်။)\n၂။ ဘီလူးတစ်ကောင်သည် ခွက်တစ်ခွက် ကိုင်ထားသည်။ (ဟုတ်ပါသည်။)\n၃။ ဘီလူးတစ်ကောင်၏ ဗိုက်ပေါ်တွင် ပန်းတစ်ပွင့် ရှိသည်။ (မဟုတ်ပါ၊ ကြယ်ဖြစ်သည်။)\n၄။ အိမ်အပြင်ဘက်ရှိ စက်ရုပ်သည် ရယ်မောနေသည်။ (မဟုတ်ပါ၊ ဒေါသထွက်/ဝမ်းနည်းနေပုံရသည်။)\n၅။ အမိုးဝိုင်းပေါ်တွင် ဘီလူးတစ်ကောင်ကို မြင်နိုင်သည်။ (ဟုတ်ပါသည်။)\n၆။ တံခါးဘေးရှိ ဘီလူးသည် ဖိနပ်တစ်ရန် စီးထားသည်။ (ဟုတ်ပါသည်။)" }
+                { isGrammar: false, title: "Reading: Picture Comprehension", text: "1. The monsters' arms are very short. (No, they are long.)\n2. One of the monsters is holding a cup. (Yes.)\n3. There's a flower on one monster's stomach. (No, it's a star.)\n4. The robot that's outside the house is laughing. (No, it looks angry/sad.)\n5. You can see a monster on the round roof. (Yes.)\n6. The monster next to the door is wearing a pair of shoes. (Yes.)", mm: "၁။ monster များ၏ လက်မောင်းများသည် အလွန်တိုသည်။ (မဟုတ်ပါ၊ ရှည်သည်။)\n၂။ monster တစ်ကောင်သည် ခွက်တစ်ခွက် ကိုင်ထားသည်။ (ဟုတ်ပါသည်။)\n၃။ monster တစ်ကောင်၏ ဗိုက်ပေါ်တွင် ပန်းတစ်ပွင့် ရှိသည်။ (မဟုတ်ပါ၊ ကြယ်ဖြစ်သည်။)\n၄။ အိမ်အပြင်ဘက်ရှိ စက်ရုပ်သည် ရယ်မောနေသည်။ (မဟုတ်ပါ၊ ဒေါသထွက်/ဝမ်းနည်းနေပုံရသည်။)\n၅။ အမိုးဝိုင်းပေါ်တွင် monster တစ်ကောင်ကို မြင်နိုင်သည်။ (ဟုတ်ပါသည်။)\n၆။ တံခါးဘေးရှိ monster သည် ဖိနပ်တစ်ရန် စီးထားသည်။ (ဟုတ်ပါသည်။)" }
             ],
             activities: [
-                { cat: "TRUE OR FALSE", q: "Look at the picture. The monsters' arms are very short.", mm: "ပုံကို ကြည့်ပါ။ ဘီလူးများ၏ လက်မောင်းများသည် အလွန်တိုသည်။", options: ["True", "False"], ans: 1 },
-                { cat: "TRUE OR FALSE", q: "Look at the picture. One of the monsters is holding a cup.", mm: "ပုံကို ကြည့်ပါ။ ဘီလူးတစ်ကောင်သည် ခွက်တစ်ခွက် ကိုင်ထားသည်။", options: ["True", "False"], ans: 0 },
-                { cat: "TRUE OR FALSE", q: "Look at the picture. There's a flower on one monster's stomach.", mm: "ပုံကို ကြည့်ပါ။ ဘီလူးတစ်ကောင်၏ ဗိုက်ပေါ်တွင် ပန်းတစ်ပွင့် ရှိသည်။", options: ["True", "False"], ans: 1 },
+                { cat: "TRUE OR FALSE", q: "Look at the picture. The monsters' arms are very short.", mm: "ပုံကို ကြည့်ပါ။ monster များ၏ လက်မောင်းများသည် အလွန်တိုသည်။", options: ["True", "False"], ans: 1 },
+                { cat: "TRUE OR FALSE", q: "Look at the picture. One of the monsters is holding a cup.", mm: "ပုံကို ကြည့်ပါ။ monster တစ်ကောင်သည် ခွက်တစ်ခွက် ကိုင်ထားသည်။", options: ["True", "False"], ans: 0 },
+                { cat: "TRUE OR FALSE", q: "Look at the picture. There's a flower on one monster's stomach.", mm: "ပုံကို ကြည့်ပါ။ monster တစ်ကောင်၏ ဗိုက်ပေါ်တွင် ပန်းတစ်ပွင့် ရှိသည်။", options: ["True", "False"], ans: 1 },
                 { cat: "TRUE OR FALSE", q: "Look at the picture. The robot that's outside the house is laughing.", mm: "ပုံကို ကြည့်ပါ။ အိမ်အပြင်ဘက်ရှိ စက်ရုပ်သည် ရယ်မောနေသည်။", options: ["True", "False"], ans: 1 },
-                { cat: "TRUE OR FALSE", q: "Look at the picture. You can see a monster on the round roof.", mm: "ပုံကို ကြည့်ပါ။ အမိုးဝိုင်းပေါ်တွင် ဘီလူးတစ်ကောင်ကို မြင်နိုင်သည်။", options: ["True", "False"], ans: 0 },
-                { cat: "TRUE OR FALSE", q: "Look at the picture. The monster next to the door is wearing a pair of shoes.", mm: "ပုံကို ကြည့်ပါ။ တံခါးဘေးရှိ ဘီလူးသည် ဖိနပ်တစ်ရန် စီးထားသည်။", options: ["True", "False"], ans: 0 }
+                { cat: "TRUE OR FALSE", q: "Look at the picture. You can see a monster on the round roof.", mm: "ပုံကို ကြည့်ပါ။ အမိုးဝိုင်းပေါ်တွင် monster တစ်ကောင်ကို မြင်နိုင်သည်။", options: ["True", "False"], ans: 0 },
+                { cat: "TRUE OR FALSE", q: "Look at the picture. The monster next to the door is wearing a pair of shoes.", mm: "ပုံကို ကြည့်ပါ။ တံခါးဘေးရှိ monster သည် ဖိနပ်တစ်ရန် စီးထားသည်။", options: ["True", "False"], ans: 0 }
             ],
             test: [
                 { cat: "DEFINITIONS", q: "This is between your eyes and your mouth.", mm: "၎င်းသည် သင့်မျက်လုံးများနှင့် ပါးစပ်ကြားတွင် ရှိသည်။", options: ["Nose", "Neck", "Ears"], ans: 0 },
@@ -223,10 +243,10 @@
                 { cat: "DEFINITIONS", q: "Birds and some insects use these to fly.", mm: "ငှက်များနှင့် အချို့သော အင်းဆက်များသည် ပျံသန်းရန် ၎င်းတို့ကို အသုံးပြုကြသည်။", options: ["Legs", "Wings", "Ears"], ans: 1 },
                 { cat: "DEFINITIONS", q: "These are at the end of your arms. You use them to hold things.", mm: "၎င်းတို့သည် သင့်လက်မောင်းများ၏ အဆုံးတွင် ရှိသည်။ အရာဝတ္ထုများကို ကိုင်ထားရန် ၎င်းတို့ကို သင်အသုံးပြုသည်။", options: ["Feet", "Hands", "Shoulders"], ans: 1 },
                 { cat: "DEFINITIONS", q: "You use this to eat, smile, and talk.", mm: "စားရန်၊ ပြုံးရန်နှင့် စကားပြောရန် ၎င်းကို သင်အသုံးပြုသည်။", options: ["Nose", "Mouth", "Eye"], ans: 1 },
-                { cat: "COMPARATIVES", q: "The monsters' legs are _ _ _ _ than the children's legs.", mm: "ဘီလူးများ၏ ခြေထောက်များသည် ကလေးများ၏ ခြေထောက်များထက် _ _ _ _ ။", options: ["longer", "shorter", "biggest"], ans: 1 },
-                { cat: "COMPARATIVES", q: "The children's hair is _ _ _ _ than the monsters' hair.", mm: "ကလေးများ၏ ဆံပင်သည် ဘီလူးများ၏ ဆံပင်ထက် _ _ _ _ ။", options: ["longer", "shorter", "longest"], ans: 1 },
-                { cat: "COMPARATIVES", q: "The monsters' mouths are _ _ _ _ than the children's mouths.", mm: "ဘီလူးများ၏ ပါးစပ်များသည် ကလေးများ၏ ပါးစပ်များထက် _ _ _ _ ။", options: ["bigger", "smaller", "big"], ans: 0 },
-                { cat: "COMPARATIVES", q: "The children's heads are _ _ _ _ than the monsters' heads.", mm: "ကလေးများ၏ ဦးခေါင်းများသည် ဘီလူးများ၏ ဦးခေါင်းများထက် _ _ _ _ ။", options: ["bigger", "smaller", "small"], ans: 1 },
+                { cat: "COMPARATIVES", q: "The monsters' legs are _ _ _ _ than the children's legs.", mm: "monster များ၏ ခြေထောက်များသည် ကလေးများ၏ ခြေထောက်များထက် _ _ _ _ ။", options: ["longer", "shorter", "biggest"], ans: 1 },
+                { cat: "COMPARATIVES", q: "The children's hair is _ _ _ _ than the monsters' hair.", mm: "ကလေးများ၏ ဆံပင်သည် monster များ၏ ဆံပင်ထက် _ _ _ _ ။", options: ["longer", "shorter", "longest"], ans: 1 },
+                { cat: "COMPARATIVES", q: "The monsters' mouths are _ _ _ _ than the children's mouths.", mm: "monster များ၏ ပါးစပ်များသည် ကလေးများ၏ ပါးစပ်များထက် _ _ _ _ ။", options: ["bigger", "smaller", "big"], ans: 0 },
+                { cat: "COMPARATIVES", q: "The children's heads are _ _ _ _ than the monsters' heads.", mm: "ကလေးများ၏ ဦးခေါင်းများသည် monster များ၏ ဦးခေါင်းများထက် _ _ _ _ ။", options: ["bigger", "smaller", "small"], ans: 1 },
                 { cat: "COMPARATIVES", q: "The man is _ _ _ _ and _ _ _ _ than everyone!", mm: "ထိုအမျိုးသားသည် လူတိုင်းထက် _ _ _ _ နှင့် _ _ _ _ ဖြစ်သည်။", options: ["shorter / younger", "taller / older", "tall / old"], ans: 1 }
             ]
         };
@@ -235,10 +255,11 @@
             studentName: "", progress: 0, secretActive: false, testAnswers: {}, actAnswers: {}, micScores: {}, cardsFlipped: 0,
             grammarUnderstood: false,
             sectionProgress: { vocab: [], read: [], flash: [] },
-            sectionsSent: { vocab: false, read: false, flash: false, act: false, grammar: false, test: false, fullReport: false }
+            sectionsSent: { vocab: false, read: false, flash: false, act: false, grammar: false, test: false, fullReport: false },
+            imgPrefs: {}
         };
         
-        const unitKey = `ffm_unit6`;
+        const unitKey = `ffm_unit${currentUnitNumber}`;
         let synth = window.speechSynthesis;
         let voices = [];
         window.speechUtteranceChunk = null; 
@@ -252,13 +273,12 @@
                 if(synth && synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
 
                 document.addEventListener('pointerdown', (e) => {
-                    const tags = ['BUTTON', 'DIV', 'LABEL', 'SELECT'];
+                    const tags = ['BUTTON', 'DIV', 'LABEL', 'SELECT', 'INPUT'];
                     if(tags.includes(e.target.tagName) || e.target.closest('.card')) {
                         if (navigator.vibrate) navigator.vibrate(40);
                     }
                 });
 
-                // Populate 45 Units Dynamically
                 const unitNav = document.getElementById('unit-nav');
                 unitNav.innerHTML = '';
                 for (let i = 1; i <= 45; i++) {
@@ -278,6 +298,8 @@
                 setTimeout(() => {
                     document.getElementById('splash-screen').classList.remove('active');
                     checkLogin();
+                    fetchImages();
+                    preloadAudio();
                 }, 2500);
             } catch (err) {
                 console.error(err);
@@ -297,6 +319,7 @@
                 if(!state.sectionProgress) state.sectionProgress = { vocab: [], read: [], flash: [] };
                 if(!state.sectionsSent) state.sectionsSent = { vocab: false, read: false, flash: false, act: false, grammar: false, test: false, fullReport: false };
                 if(!state.actAnswers) state.actAnswers = {};
+                if(!state.imgPrefs) state.imgPrefs = {};
                 
                 if(state.secretActive) toggleSecret(true);
                 
@@ -318,6 +341,148 @@
             }
         }
 
+        async function preloadAudio() {
+            for (let v of unitData.vocab) {
+                let cleanWord = v.word.replace(/^(a |an |the )/i, '').replace(/<[^>]*>?/gm, '').trim().toLowerCase();
+                if (!audioCache[cleanWord]) {
+                    try {
+                        let res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`);
+                        let data = await res.json();
+                        let audioUrl = data[0]?.phonetics.find(p => p.audio !== "")?.audio;
+                        if (audioUrl) {
+                            audioCache[cleanWord] = audioUrl;
+                            const preloader = new Audio();
+                            preloader.src = audioUrl;
+                            preloader.preload = "auto";
+                        }
+                    } catch(e) {}
+                }
+            }
+        }
+
+        // --- BULLETPROOF IMAGE ENGINE ---
+        async function fetchImages() {
+            let cachedData = storage.get(`ffm_img_cache_${currentUnitNumber}`);
+            if(cachedData) {
+                try {
+                    imageCache = JSON.parse(cachedData);
+                    Object.values(imageCache).forEach(arr => arr.forEach(url => usedImageUrls.add(url)));
+                    updateAllImages();
+                    return; 
+                } catch(e){}
+            }
+
+            for (let v of unitData.vocab) {
+                if(imageCache[v.word]) continue; 
+                try {
+                    let preciseQuery = v.query || v.word.replace(/^(a |an |the )/i, '');
+                    let broadQuery = v.word.replace(/^(a |an |the )/i, '');
+                    let validHits = [];
+
+                    let pixRes = await fetch(`https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${encodeURIComponent(preciseQuery)}&image_type=illustration&per_page=30&safesearch=true`);
+                    if(pixRes.ok) {
+                        let pData = await pixRes.json();
+                        if(pData.hits && pData.hits.length > 0) {
+                            validHits = pData.hits.map(h => h.webformatURL).filter(url => !usedImageUrls.has(url));
+                        }
+                    }
+
+                    if(validHits.length < 3) {
+                        let pixPhotoRes = await fetch(`https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${encodeURIComponent(broadQuery)}&image_type=photo&per_page=20&safesearch=true`);
+                        if(pixPhotoRes.ok) {
+                            let pData2 = await pixPhotoRes.json();
+                            if(pData2.hits && pData2.hits.length > 0) {
+                                let fallbackHits = pData2.hits.map(h => h.webformatURL).filter(url => !usedImageUrls.has(url));
+                                validHits = [...validHits, ...fallbackHits];
+                            }
+                        }
+                    }
+
+                    if(validHits.length < 3) {
+                        let pexRes = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(broadQuery)}&per_page=20`, {
+                            headers: { Authorization: PEXELS_KEY }
+                        });
+                        if(pexRes.ok) {
+                            let pexData = await pexRes.json();
+                            if(pexData.photos && pexData.photos.length > 0) {
+                                let fallbackHits = pexData.photos.map(p => p.src.medium).filter(url => !usedImageUrls.has(url));
+                                validHits = [...validHits, ...fallbackHits];
+                            }
+                        }
+                    }
+
+                    let strippedWord = v.word.replace(/^(a |an |the )/i, '').replace(/\s/g, '').toLowerCase();
+                    let localImgUrl = `images/${currentUnitDir}/${strippedWord}.jpg`;
+                    
+                    if(validHits.length > 0) {
+                        let finalImages = validHits.slice(0, 10);
+                        imageCache[v.word] = [localImgUrl, ...finalImages];
+                        finalImages.forEach(url => usedImageUrls.add(url));
+                    } else {
+                        imageCache[v.word] = [localImgUrl, SAFE_NO_IMG_SVG];
+                    }
+                } catch(e) {
+                    let strippedWord = v.word.replace(/^(a |an |the )/i, '').replace(/\s/g, '').toLowerCase();
+                    let localImgUrl = `images/${currentUnitDir}/${strippedWord}.jpg`;
+                    imageCache[v.word] = [localImgUrl, SAFE_NO_IMG_SVG];
+                }
+                updateAllImages();
+            }
+            storage.set(`ffm_img_cache_${currentUnitNumber}`, JSON.stringify(imageCache));
+        }
+
+        // --- SAFE BROKEN LINK DELETER ---
+        window.handleImageError = function(word, imgEl) {
+            imgEl.onerror = null; // Instantly kill the listener to prevent infinite loops
+            
+            let currentPref = (state.imgPrefs && state.imgPrefs[word]) || 0;
+            if (imageCache[word] && imageCache[word].length > 1) {
+                imageCache[word].splice(currentPref, 1);
+                storage.set(`ffm_img_cache_${currentUnitNumber}`, JSON.stringify(imageCache));
+                
+                if (currentPref >= imageCache[word].length) {
+                    state.imgPrefs[word] = 0;
+                    saveState();
+                }
+                
+                let nextSrc = imageCache[word][state.imgPrefs[word] || 0];
+                imgEl.dataset.currentSrc = nextSrc;
+                imgEl.src = nextSrc;
+            } else {
+                imgEl.src = SAFE_NO_IMG_SVG;
+            }
+        };
+
+        function cycleImage(word, event) {
+            if(event) event.stopPropagation();
+            if(!state.imgPrefs) state.imgPrefs = {};
+            if(!imageCache[word] || imageCache[word].length <= 1) return;
+            
+            state.imgPrefs[word] = ((state.imgPrefs[word] || 0) + 1) % imageCache[word].length;
+            saveState();
+            updateAllImages();
+        }
+
+        function updateAllImages() {
+            unitData.vocab.forEach((v, i) => {
+                let imgEl = document.getElementById(`img-vocab-${i}`);
+                if(imgEl && imageCache[v.word]) {
+                    let pref = (state.imgPrefs && state.imgPrefs[v.word]) || 0;
+                    if(pref >= imageCache[v.word].length) pref = 0;
+                    
+                    let targetSrc = imageCache[v.word][pref];
+                    if (imgEl.dataset.currentSrc !== targetSrc) {
+                        imgEl.dataset.currentSrc = targetSrc;
+                        imgEl.onerror = function() { window.handleImageError(v.word, this); };
+                        imgEl.src = targetSrc;
+                    }
+                }
+            });
+            if(document.getElementById('tab-flash').classList.contains('active')) {
+                updateFlashcard();
+            }
+        }
+
         function calculateProgress() {
             let vPct = state.sectionProgress.vocab.length / unitData.vocab.length;
             let rPct = state.sectionProgress.read.length / unitData.reading.length;
@@ -334,7 +499,24 @@
             if(state.progress === 100 && !state.sectionsSent.fullReport) {
                 state.sectionsSent.fullReport = true;
                 saveState();
-                sendTelemetryReport(`🏆 100% COURSE COMPLETED! Full Application Report.`);
+                
+                let totalProg = 0; let unitsStarted = 0; let unitsCompleted = 0; let vocabCount = 0;
+                for(let i=1; i<=45; i++) {
+                    let s = localStorage.getItem(`ffm_unit${i}`) || localStorage.getItem(`ffm_u${i}`);
+                    if(s) {
+                        try {
+                            let p = JSON.parse(s);
+                            totalProg += (p.progress || 0);
+                            if(p.progress > 0) unitsStarted++;
+                            if(p.progress === 100) unitsCompleted++;
+                            if(p.sectionProgress && p.sectionProgress.vocab) vocabCount += p.sectionProgress.vocab.length;
+                        } catch(e){}
+                    }
+                }
+                let overallPct = Math.round(totalProg / 45);
+                let syncCode = `FFM_SYNC||${state.studentName}||${overallPct}||${unitsStarted}||${unitsCompleted}||${vocabCount}`;
+                
+                sendTelemetryReport(`🏆 100% COURSE COMPLETED!\\n*Sync Code:*\\n\`${syncCode}\``);
             }
         }
 
@@ -343,26 +525,17 @@
             document.getElementById('progress-text').innerText = state.progress + "%";
             
             const submitBtn = document.getElementById('submit-btn');
-            
-            if(state.progress >= 50) {
-                submitBtn.style.pointerEvents = 'auto';
-            } else {
-                submitBtn.style.pointerEvents = 'none';
-            }
+            if(state.progress >= 50) submitBtn.style.pointerEvents = 'auto';
+            else submitBtn.style.pointerEvents = 'none';
 
-            if(state.progress >= 100 && Object.keys(state.testAnswers).length === unitData.test.length) {
-                submitBtn.classList.add('unlocked');
-            } else {
-                submitBtn.classList.remove('unlocked');
-            }
+            if(state.progress >= 100 && Object.keys(state.testAnswers).length === unitData.test.length) submitBtn.classList.add('unlocked');
+            else submitBtn.classList.remove('unlocked');
         }
 
         function markItemDone(section, idx) {
             if(!state.sectionProgress[section].includes(idx)) {
                 state.sectionProgress[section].push(idx);
-                saveState();
-                calculateProgress();
-                checkSectionCompletion(section);
+                saveState(); calculateProgress(); checkSectionCompletion(section);
             }
         }
 
@@ -370,19 +543,15 @@
             state.grammarUnderstood = true;
             document.getElementById('grammar-understand-btn').style.display = 'none';
             document.getElementById('grammar-understood-msg').style.display = 'block';
-            
             if(!state.sectionsSent.grammar) {
                 state.sectionsSent.grammar = true;
-                saveState();
-                calculateProgress();
-                showCenterToast("Grammar Complete!");
+                saveState(); calculateProgress(); showCenterToast("Grammar Complete!");
                 sendTelemetryReport(`Section Completed: GRAMMAR UNDERSTOOD`);
             }
         }
 
         function checkSectionCompletion(section) {
             if(state.sectionsSent[section]) return;
-            
             let isComplete = false;
             if(section === 'vocab' && state.sectionProgress.vocab.length >= unitData.vocab.length) isComplete = true;
             if(section === 'read' && state.sectionProgress.read.length >= unitData.reading.length) isComplete = true;
@@ -391,8 +560,7 @@
             
             if(isComplete) {
                 state.sectionsSent[section] = true;
-                saveState();
-                showCenterToast(`${section.toUpperCase()} Complete! Sending to teacher...`);
+                saveState(); showCenterToast(`${section.toUpperCase()} Complete! Sending to teacher...`);
                 sendTelemetryReport(`Section Completed: ${section.toUpperCase()}`);
             }
         }
@@ -400,11 +568,9 @@
         function checkLogin() {
             const globalName = storage.get('ffm_global_name');
             if(globalName) {
-                state.studentName = globalName;
-                document.getElementById('display-name').innerText = globalName;
+                state.studentName = globalName; document.getElementById('display-name').innerText = globalName;
                 document.getElementById('login-screen').classList.remove('active'); 
-                document.getElementById('main-app').classList.add('active');
-                loadState();
+                document.getElementById('main-app').classList.add('active'); loadState();
             } else {
                 document.getElementById('login-screen').classList.add('active');
                 document.getElementById('main-app').classList.remove('active');
@@ -413,8 +579,7 @@
 
         function showToast(msg) {
             const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.style.opacity = 1;
+            t.innerText = msg; t.style.opacity = 1;
             setTimeout(() => t.style.opacity = 0, 3000);
         }
 
@@ -425,23 +590,44 @@
             setTimeout(() => t.classList.remove('active'), 3500);
         }
 
-        function loadVoices() {
-            if (synth) voices = synth.getVoices().filter(v => v.lang.includes('en'));
-        }
+        function loadVoices() { if (synth) voices = synth.getVoices().filter(v => v.lang.includes('en')); }
 
-        function playTTS(text) {
+        async function playTTS(text) {
             if(!synth) return showToast("Audio not supported.");
             if(synth.speaking) synth.cancel();
             
-            let cleanText = text.replace(/<[^>]*>?/gm, ''); 
-            cleanText = cleanText.replace(/([_]\s*)+/g, " blank ").replace(/[!()"\n]/g, " ");
+            let cleanText = text.replace(/<[^>]*>?/gm, '').replace(/([_]\s*)+/g, " blank ").replace(/[!()"\n]/g, " ").trim();
             
+            if (!cleanText.includes(" ") || cleanText.split(" ").length <= 3) {
+                try {
+                    let fetchKey = cleanText.replace(/^(a |an |the )/i, '').trim().toLowerCase();
+                    if (audioCache[fetchKey]) { 
+                        new Audio(audioCache[fetchKey]).play(); 
+                        return; 
+                    }
+                    
+                    showToast("⏳ Downloading audio...");
+                    let response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${fetchKey}`);
+                    let data = await response.json();
+                    let audioUrl = data[0].phonetics.find(p => p.audio !== "")?.audio;
+                    if (audioUrl) { 
+                        audioCache[fetchKey] = audioUrl; 
+                        new Audio(audioUrl).play(); 
+                        return; 
+                    }
+                } catch (e) {} 
+            }
+
             const u = new SpeechSynthesisUtterance(cleanText);
             u.rate = 0.75;
-            
             const accent = document.getElementById('accent-select').value;
             const voice = voices.find(v => v.lang === accent && (v.name.includes("Premium") || v.name.includes("Google"))) || voices.find(v => v.lang === accent) || voices[0];
             if(voice) u.voice = voice;
+            
+            let watchdog = setTimeout(() => { 
+                if (!synth.speaking) showToast("⚠️ System Voice failed. Please install 'Speech Services by Google'."); 
+            }, 500);
+            u.onstart = () => clearTimeout(watchdog);
             
             window.speechUtteranceChunk = u; 
             synth.speak(u);
@@ -449,7 +635,7 @@
 
         function startDictation(targetWord, idx) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if(!SpeechRecognition) return showToast("Microphone not supported on this browser.");
+            if(!SpeechRecognition) return showToast("⚠️ Mic blocked! Use Chrome or host on a server.");
             
             const recognition = new SpeechRecognition();
             recognition.lang = document.getElementById('accent-select').value;
@@ -462,7 +648,7 @@
 
             recognition.onresult = (event) => {
                 const spoken = event.results[0][0].transcript.toLowerCase().replace(/[.,!?]/g, "").trim();
-                const target = targetWord.toLowerCase().trim();
+                const target = targetWord.toLowerCase().replace(/^(a |an |the )/i, "").replace(/[.,!?]/g, "").trim();
                 let score = 0;
                 
                 if(spoken === target) score = 100;
@@ -472,22 +658,28 @@
                 
                 overlay.classList.remove('active');
                 showToast(`Heard: "${spoken}" | Score: ${score}%`);
-                
                 markItemDone('vocab', idx); 
             };
 
-            recognition.onerror = () => overlay.classList.remove('active');
+            recognition.onerror = (e) => {
+                overlay.classList.remove('active');
+                if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+                     showToast("⚠️ Microphone access denied. Check your browser permissions.");
+                }
+            };
             recognition.onend = () => overlay.classList.remove('active');
         }
 
         function buildUI() {
             const vTab = document.getElementById('tab-vocab');
             unitData.vocab.forEach((v, i) => {
-                const imgPath = `images/${currentUnitDir}/${v.word.replace(/\s/g, '').toLowerCase()}.jpg`;
                 const div = document.createElement('div');
                 div.className = 'card';
                 div.innerHTML = `
-                    <img src="${imgPath}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23ddd\\'/></svg>'">
+                    <div class="img-container">
+                        <img id="img-vocab-${i}" src="${SAFE_LOADING_SVG}">
+                        <button class="cycle-btn" onclick="cycleImage('${v.word.replace(/'/g, "\\'")}', event)">🔄</button>
+                    </div>
                     <div class="card-content">
                         <div style="font-weight:bold; font-size:1.2em;">${v.word}</div>
                         <div style="font-size:0.95em; color:#444; margin-top:4px;">${v.def}</div>
@@ -578,11 +770,25 @@
 
         function updateFlashcard() {
             const v = unitData.vocab[currentCardIdx];
+            
+            let imgSrc = SAFE_LOADING_SVG;
+            if(imageCache[v.word]) {
+                let pref = (state.imgPrefs && state.imgPrefs[v.word]) || 0;
+                if(pref >= imageCache[v.word].length) pref = 0;
+                imgSrc = imageCache[v.word][pref];
+            }
+
             document.getElementById('fc-progress').innerText = `Card ${currentCardIdx + 1} of ${unitData.vocab.length}`;
-            document.getElementById('fc-front').innerHTML = `<img src="images/${currentUnitDir}/${v.word.replace(/\s/g, '').toLowerCase()}.jpg" onerror="this.style.display='none'"><br><strong style="font-size:1.5em;">${v.word}</strong>`;
+            document.getElementById('fc-front').innerHTML = `
+                <div class="fc-img-container">
+                    <img id="fc-img-${currentCardIdx}" data-current-src="${imgSrc}" src="${imgSrc}" onerror="window.handleImageError('${v.word.replace(/'/g, "\\'")}', this)">
+                    <button class="fc-cycle-btn" onclick="cycleImage('${v.word.replace(/'/g, "\\'")}', event)">🔄</button>
+                </div>
+                <strong style="font-size:1.8em;">${v.word}</strong>`;
             document.getElementById('fc-back').innerHTML = `<strong style="font-size:1.5em;">${v.word}</strong><br><br><span style="font-size:1.1em; color:#444;">${v.def}</span><br><br><span class="myanmar-text" style="${state.secretActive?'display:block;':''} font-size:1.2em;">${v.mm}</span>`;
             document.getElementById('fc-inner').classList.remove('flipped');
         }
+        
         function flipCard() { 
             document.getElementById('fc-inner').classList.toggle('flipped'); 
             markItemDone('flash', currentCardIdx);
@@ -604,6 +810,7 @@
                     document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
                     e.currentTarget.classList.add('active');
                     document.getElementById(e.currentTarget.dataset.target).classList.add('active');
+                    if(e.currentTarget.dataset.target === 'tab-flash') updateFlashcard(); 
                 });
             });
 
@@ -618,6 +825,7 @@
             document.getElementById('translate-btn').addEventListener('click', () => {
                 if(state.secretActive) return toggleSecret(false);
                 translateTaps++;
+                let translateTimeout;
                 clearTimeout(translateTimeout);
                 if(translateTaps < 5) {
                     showToast("Try to understand the context in English first! Keep tapping if you really need the translation. 🧠");
@@ -625,7 +833,7 @@
                 } else {
                     toggleSecret(true);
                     translateTaps = 0;
-                    playTTS("Secret translation unlocked. But remember, try your best to think in English first.");
+                    playTTS("Secret translation unlocked.");
                     showToast("Translation Unlocked 🔓");
                 }
             });
@@ -660,19 +868,13 @@
 
         function selectActivityAnswer(qIdx, optIdx) {
             state.actAnswers[qIdx] = optIdx;
-            saveState();
-            calculateProgress();
-            checkSectionCompletion('act');
+            saveState(); calculateProgress(); checkSectionCompletion('act');
         }
 
         function selectTestAnswer(qIdx, optIdx) {
             state.testAnswers[qIdx] = optIdx;
-            saveState();
-            calculateProgress();
-            
-            if(Object.keys(state.testAnswers).length === unitData.test.length) {
-                setTimeout(submitTest, 800); 
-            }
+            saveState(); calculateProgress();
+            if(Object.keys(state.testAnswers).length === unitData.test.length) { setTimeout(submitTest, 800); }
         }
 
         function submitTest() {
@@ -687,8 +889,7 @@
                 const correctLbl = document.getElementById(`lbl-t${i}-${q.ans}`);
 
                 if(chosen === q.ans) {
-                    score++;
-                    chosenLbl.classList.add('correct-answer');
+                    score++; chosenLbl.classList.add('correct-answer');
                 } else {
                     chosenLbl.classList.add('wrong-answer');
                     correctLbl.classList.add('missed-correct');
@@ -704,8 +905,7 @@
             
             if(!state.sectionsSent.test) {
                 state.sectionsSent.test = true;
-                saveState();
-                showCenterToast("Sending test score...");
+                saveState(); showCenterToast("Sending test score...");
                 sendTelemetryReport(`Section Completed: OFFICIAL TEST (Score: ${pct}%)`);
                 calculateProgress(); 
             }

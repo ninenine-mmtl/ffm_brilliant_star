@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>U10: People in our street</title>
+    <title>U3: Fun at the farm</title>
     <style>
         :root { --primary: #4CAF50; --secondary: #FFC107; --bg: #f4f4f9; --text: #333; --locked: #ccc; }
         body, html { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: var(--text); overscroll-behavior: none; }
@@ -81,7 +81,7 @@
     <div id="splash-screen" class="active">
         <img src="logo.png" alt="School Logo" style="width: 70px; height: 70px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
         <h1>Fun for Movers</h1>
-        <h2>Unit 10: People in our street</h2>
+        <h2>Unit 3: Fun at the farm</h2>
         <p>Developed by Nine Nine</p>
         <p>Brilliant Star Private School (IPS Pakokku)</p>
     </div>
@@ -101,7 +101,7 @@
         </div>
 
         <div class="header-area">
-            <h2>Unit 10: People in our street</h2>
+            <h2>Unit 3: Fun at the farm</h2>
             <p>Developed by Nine Nine - Brilliant Star Private School (Pakokku)</p>
             <img src="logo.png" alt="School Logo" style="width: 70px; height: 70px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-top: 10px;">
             <div class="controls">
@@ -198,55 +198,51 @@
         let usedImageUrls = new Set();
         let audioCache = {};
 
-        const currentUnitDir = "u10";
-        const currentUnitNumber = 10;
-        
+        const currentUnitNumber = 3;
         const unitData = {
-            title: "Unit 10: People in our street",
+            title: "Unit 3: Fun at the farm",
             vocab: [
-                { word: "balcony", def: "A platform built on the upstairs outside wall of a building.", mm: "လသာဆောင်", query: "apartment balcony" },
-                { word: "stairs", def: "A set of steps leading from one floor of a building to another.", mm: "လှေကား", query: "stairs steps" },
-                { word: "huge", def: "Very, very big.", mm: "ဧရာမ", query: "huge giant big" },
-                { word: "straight", def: "Not curving, curling, or bending.", mm: "ဖြောင့်သော", query: "straight line" },
-                { word: "curly", def: "Having curls or a curved shape.", mm: "ကောက်သော", query: "curly hair" },
-                { word: "blonde", def: "Pale yellow or golden hair color.", mm: "ရွှေရောင်", query: "blonde hair" },
-                { word: "tablet", def: "A small, flat computer controlled by touching the screen.", mm: "တက်ဘလက်", query: "tablet computer screen" },
-                { word: "pet", def: "An animal kept for pleasure and companionship.", mm: "အိမ်မွေးတိရစ္ဆာန်", query: "cute pet animal" },
-                { word: "moustache", def: "Hair that grows above a man's upper lip.", mm: "နှုတ်ခမ်းမွေး", query: "man moustache face" },
-                { word: "beard", def: "Hair that grows on the chin and cheeks of a man's face.", mm: "မုတ်ဆိတ်မွေး", query: "man beard face" },
-                { word: "chocolate", def: "A sweet brown food made from roasted cacao seeds.", mm: "ချောကလက်", query: "chocolate bar sweet" },
-                { word: "glasses", def: "Two small pieces of glass worn to help you see better.", mm: "မျက်မှန်", query: "reading glasses spectacles" }
+                { word: "cloud", def: "A white or grey mass in the sky made of water drops.", mm: "တိမ်", query: "cloud illustration" },
+                { word: "field", def: "An area of land on a farm used for growing crops or keeping animals.", mm: "လယ်ကွင်း", query: "farm field illustration" },
+                { word: "truck", def: "A large, heavy road vehicle used for carrying goods.", mm: "ကုန်တင်ကား", query: "truck illustration" },
+                { word: "roof", def: "The covering that forms the top of a building or vehicle.", mm: "ခေါင်မိုး", query: "house roof illustration" },
+                { word: "chicken", def: "A bird kept on a farm for its eggs and meat.", mm: "ကြက်", query: "chicken farm illustration" },
+                { word: "rabbit", def: "A small animal with long ears and soft fur.", mm: "ယုန်", query: "rabbit illustration" },
+                { word: "duck", def: "A water bird with short legs and a wide beak.", mm: "ဘဲ", query: "duck bird illustration" },
+                { word: "kitten", def: "A young cat.", mm: "ကြောင်ကလေး", query: "kitten illustration" },
+                { word: "tractor", def: "A strong farm vehicle used for pulling machinery.", mm: "ထွန်စက်", query: "tractor illustration" },
+                { word: "potato", def: "A round vegetable that grows underground.", mm: "အာလူး", query: "potato illustration" },
+                { word: "puppy", def: "A young dog.", mm: "ခွေးကလေး", query: "puppy illustration" },
+                { word: "sheep", def: "A farm animal with a thick woolly coat.", mm: "သိုး", query: "sheep farm illustration" },
+                { word: "cow", def: "A large farm animal kept for milk or meat.", mm: "နွား", query: "cow farm illustration" }
             ],
             reading: [
-                { isGrammar: false, title: "Reading: Bus Stop", text: "My son, my brother, my mother and my uncle are waiting in Upunder Road for the number one bus.", mm: "ကျွန်တော့်သား၊ ကျွန်တော့်အစ်ကို၊ ကျွန်တော့်အမေနဲ့ ကျွန်တော့်ဦးလေးတို့ဟာ နံပါတ်တစ် ဘတ်စ်ကားအတွက် အပ်အန်ဒါလမ်းမှာ စောင့်နေကြပါတယ်။" },
-                { isGrammar: false, title: "Reading: Comparisons", text: "Dan's got brown eyes, but Lily's and Sally's eyes are blue and bigger than Dan's. Sally's hair is black. It's shorter than Lily's hair but it's longer than Dan's hair!", mm: "ဒန်တွင် အညိုရောင် မျက်လုံးများရှိသော်လည်း လီလီနှင့် ဆယ်လီတို့၏ မျက်လုံးများမှာ အပြာရောင်ဖြစ်ပြီး ဒန်ထက် ပိုကြီးသည်။ ဆယ်လီ၏ဆံပင်သည် အနက်ရောင်ဖြစ်သည်။ လီလီရဲ့ဆံပင်ထက် ပိုတိုပေမယ့် ဒန်ရဲ့ဆံပင်ထက်တော့ ပိုရှည်ပါတယ်။" },
-                { isGrammar: true, title: "Grammar: Possessive 's", text: "We use 's to show that something belongs to someone.\nExample: Dan's eyes are brown. (The eyes belong to Dan).\nExample: Lily's hair is long. (The hair belongs to Lily).", mm: "ပိုင်ဆိုင်မှုကို ပြသရန် 's ကို အသုံးပြုပါသည်။ ဥပမာ- ဒန်၏မျက်လုံးများသည် အညိုရောင်ဖြစ်သည်။ လီလီ၏ဆံပင်သည် ရှည်သည်။" },
-                { isGrammar: true, title: "Grammar: Have got / Has got", text: "We use 'have got' or 'has got' to describe physical features or possessions.\nExample: She has got (She's got) blue eyes.\nExample: He has not got (hasn't got) a moustache.", mm: "ရုပ်ရည်သွင်ပြင် သို့မဟုတ် ပိုင်ဆိုင်မှုများကို ဖော်ပြရန် 'have got' သို့မဟုတ် 'has got' ကို အသုံးပြုပါသည်။ ဥပမာ- သူမတွင် အပြာရောင်မျက်လုံးများရှိသည်။ သူ၏ နှုတ်ခမ်းမွေးမရှိပါ။" },
-                { isGrammar: true, title: "Grammar: Comparatives", text: "We use adjectives with '-er + than' to compare two things or people.\nRule 1: Add -er (short -> shorter than).\nRule 2: Double the consonant and add -er (big -> bigger than).\nExample: Sally's hair is shorter than Lily's hair.", mm: "အရာနှစ်ခု သို့မဟုတ် လူနှစ်ဦးကို နှိုင်းယှဉ်ရန် 'နာမဝိသေသန + -er + than' ကို အသုံးပြုပါသည်။ ဥပမာ- ဆယ်လီ၏ဆံပင်သည် လီလီ၏ဆံပင်ထက် ပိုတိုသည်။" }
+                { isGrammar: false, title: "Reading: Let's go to Mrs Plant's farm!", text: "On Saturday afternoons, the children go to help Mrs Plant on her farm. They carry potatoes and feed all the different animals. The children ride there on their bikes because it is near their home. Mrs Plant has two new animals on the farm now! She's got a kitten called Sunny and a puppy called Sausage! They're both really sweet.", mm: "စနေနေ့ မွန်းလွဲပိုင်းများတွင် ကလေးများသည် မစ္စက်ပလန့်ကို သူမ၏ခြံတွင် ကူညီရန် သွားကြသည်။ ၎င်းတို့သည် အာလူးများကို သယ်ဆောင်ပြီး တိရစ္ဆာန်အမျိုးမျိုးကို အစာကျွေးကြသည်။ ခြံသည် ၎င်းတို့၏အိမ်နှင့် နီးသောကြောင့် ကလေးများသည် စက်ဘီးစီး၍ သွားကြသည်။ ယခုအခါ မစ္စက်ပလန့်၏ ခြံထဲတွင် တိရစ္ဆာန်အသစ် နှစ်ကောင်ရှိနေပြီ! သူမတွင် ဆန်နီ ဟုခေါ်သော ကြောင်ကလေးတစ်ကောင်နှင့် ဆော့ဆေ့ချ် ဟုခေါ်သော ခွေးကလေးတစ်ကောင် ရှိသည်။ ၎င်းတို့နှစ်ကောင်စလုံး အလွန်ချစ်စရာကောင်းကြသည်။" },
+                { isGrammar: true, title: "Grammar: Sounding the same! (Homophones)", text: "Words like 'there', 'they're', and 'their' sound exactly the same, but they have different meanings and spellings.\n• 'There' is a place (Look over there!).\n• 'They're' means 'they are' (They're riding bikes).\n• 'Their' means it belongs to them (It is their food).", mm: "'there', 'they're' နှင့် 'their' ကဲ့သို့သော စကားလုံးများသည် အသံထွက် လုံးဝတူညီသော်လည်း အဓိပ္ပာယ်နှင့် စာလုံးပေါင်း ကွာခြားသည်။\n• 'There' သည် နေရာတစ်ခုကို ဆိုလိုသည် (ဟိုနားကို ကြည့်ပါ!)။\n• 'They're' သည် 'they are' (သူတို့သည်) ကို ဆိုလိုသည် (သူတို့ စက်ဘီးစီးနေသည်)။\n• 'Their' သည် 'သူတို့၏' ကို ဆိုလိုသည် (၎င်းသည် သူတို့၏ အစာဖြစ်သည်)။" }
             ],
             activities: [
-                { cat: "CONVERSATION PRACTICE", q: "What's she like?", mm: "သူမက ဘယ်လိုပုံစံလဲ။", options: ["She likes chocolate.", "It's her new tablet.", "She's really nice."], ans: 2 },
-                { cat: "CONVERSATION PRACTICE", q: "Has she got any brothers?", mm: "သူမမှာ အစ်ကိုတွေရှိလား။", options: ["Only one, I think.", "She never does that.", "No, it's Charlie."], ans: 0 },
-                { cat: "CONVERSATION PRACTICE", q: "What's her phone number?", mm: "သူမရဲ့ ဖုန်းနံပါတ်က ဘာလဲ။", options: ["Yes, she's in class 13.", "Her phone's really great.", "I don't know, but I can ask her."], ans: 2 },
-                { cat: "TRUE OR FALSE", q: "Mr Fish likes cooking on his stairs.", mm: "မစ္စတာဖစ်ရှ်က လှေကားပေါ်မှာ ဟင်းချက်ရတာကို နှစ်သက်တယ်။", options: ["True", "False"], ans: 1 },
-                { cat: "TRUE OR FALSE", q: "Dan, Lily, and Sally live in Easy Street.", mm: "ဒန်၊ လီလီနှင့် ဆယ်လီတို့သည် အီဇီလမ်းတွင် နေထိုင်ကြသည်။", options: ["True", "False"], ans: 0 }
+                { cat: "COMPREHENSION", q: "The children go to the farm every ________ afternoon.", mm: "ကလေးများသည် အပတ်စဉ် ________ မွန်းလွဲပိုင်းတွင် ခြံသို့ သွားကြသည်။", options: ["Sunday", "Saturday", "Friday"], ans: 1 },
+                { cat: "COMPREHENSION", q: "Mrs Plant's kitten is called ________.", mm: "မစ္စက်ပလန့်၏ ကြောင်ကလေးကို ________ ဟုခေါ်သည်။", options: ["Sausage", "Sunny", "Sweet"], ans: 1 },
+                { cat: "CATEGORIZATION", q: "Which picture is different? (lion, panda, dog, bat)", mm: "မည်သည့်ရုပ်ပုံက ကွဲပြားနေသနည်း။ (ခြင်္သေ့၊ ပန်ဒါ၊ ခွေး၊ လင်းနို့)", options: ["lion", "panda", "bat"], ans: 2 },
+                { cat: "CATEGORIZATION", q: "Which picture is different? (rabbit, shark, whale, dolphin)", mm: "မည်သည့်ရုပ်ပုံက ကွဲပြားနေသနည်း။ (ယုန်၊ ငါးမန်း၊ ဝေလငါး၊ လင်းပိုင်)", options: ["whale", "rabbit", "dolphin"], ans: 1 },
+                { cat: "CATEGORIZATION", q: "Which picture is different? (door, truck, window, roof)", mm: "မည်သည့်ရုပ်ပုံက ကွဲပြားနေသနည်း။ (တံခါး၊ ကုန်တင်ကား၊ ပြတင်းပေါက်၊ ခေါင်မိုး)", options: ["roof", "door", "truck"], ans: 2 }
             ],
             test: [
-                { cat: "VOCABULARY", q: "A platform built on the upstairs outside wall of a building is a _ _ _ _ .", mm: "အဆောက်အဦး၏ အပေါ်ထပ် အပြင်ဘက်နံရံတွင် ဆောက်လုပ်ထားသော လသာဆောင်ကို _ _ _ _ ဟုခေါ်သည်။", options: ["balcony", "stairs", "tablet"], ans: 0 },
-                { cat: "VOCABULARY", q: "Hair that grows above a man's upper lip is a _ _ _ _ .", mm: "အမျိုးသားတစ်ဦး၏ အပေါ်နှုတ်ခမ်းအထက်တွင် ပေါက်နေသော အမွေးကို _ _ _ _ ဟုခေါ်သည်။", options: ["beard", "blonde", "moustache"], ans: 2 },
-                { cat: "VOCABULARY", q: "Another word for very, very big is _ _ _ _ .", mm: "အလွန်ကြီးမားသော ကို နောက်တစ်နည်းဖြင့် _ _ _ _ ဟုခေါ်သည်။", options: ["straight", "huge", "curly"], ans: 1 },
-                { cat: "VOCABULARY", q: "Pale yellow or golden hair color is called _ _ _ _ .", mm: "အဝါနုရောင် သို့မဟုတ် ရွှေရောင်ဆံပင်ကို _ _ _ _ ဟုခေါ်သည်။", options: ["blonde", "straight", "chocolate"], ans: 0 },
-                { cat: "VOCABULARY", q: "Two small pieces of glass worn to help you see better are _ _ _ _ .", mm: "ပိုမိုကောင်းမွန်စွာ မြင်နိုင်ရန် တပ်ဆင်ရသော မျက်မှန်ကို _ _ _ _ ဟုခေါ်သည်။", options: ["tablets", "glasses", "stairs"], ans: 1 },
-                { cat: "GRAMMAR: POSSESSIVES", q: "Look at those blue eyes! They are _ _ _ _ eyes.", mm: "ထိုအပြာရောင်မျက်လုံးများကို ကြည့်ပါ! ၎င်းတို့သည် _ _ _ _ ၏ မျက်လုံးများဖြစ်သည်။", options: ["Lilys", "Lily's", "Lily"], ans: 1 },
-                { cat: "GRAMMAR: COMPARATIVES", q: "Sally's hair is black. It's shorter _ _ _ Lily's hair.", mm: "ဆယ်လီ၏ဆံပင်သည် အနက်ရောင်ဖြစ်သည်။ လီလီရဲ့ဆံပင် _ _ _ ပိုတိုပါတယ်။", options: ["then", "that", "than"], ans: 2 },
-                { cat: "GRAMMAR: COMPARATIVES", q: "An elephant is _ _ _ _ than a mouse.", mm: "ဆင်သည် ကြွက်ထက် _ _ _ _ ဖြစ်သည်။", options: ["big", "bigger", "biggest"], ans: 1 },
-                { cat: "GRAMMAR: HAS GOT", q: "My brother _ _ _ _ brown hair and green eyes.", mm: "ကျွန်တော့်အစ်ကိုမှာ အညိုရောင်ဆံပင်နှင့် အစိမ်းရောင်မျက်လုံးများ _ _ _ _ ။", options: ["is got", "have got", "has got"], ans: 2 },
-                { cat: "GRAMMAR: HAS GOT", q: "I _ _ _ _ a new tablet.", mm: "ကျွန်တော့်မှာ တက်ဘလက်အသစ်တစ်လုံး _ _ _ _ ။", options: ["has got", "have got", "am got"], ans: 1 },
-                { cat: "READING COMPREHENSION", q: "Where is Mr Fish cooking?", mm: "မစ္စတာဖစ်ရှ်က ဘယ်မှာ ဟင်းချက်နေတာလဲ။", options: ["On the stairs", "In Easy Street", "On his balcony"], ans: 2 },
-                { cat: "READING COMPREHENSION", q: "Where do Dan and Lily live?", mm: "ဒန်နှင့် လီလီ ဘယ်မှာနေသလဲ။", options: ["Upunder Road", "Easy Street", "Fish Street"], ans: 1 },
-                { cat: "READING COMPREHENSION", q: "Who is waiting for the number one bus?", mm: "နံပါတ်တစ် ဘတ်စ်ကားကို ဘယ်သူစောင့်နေတာလဲ။", options: ["Dan and Lily", "Mr Fish", "My son, brother, mother, and uncle"], ans: 2 },
-                { cat: "READING COMPREHENSION", q: "Whose hair is the shortest?", mm: "ဘယ်သူ့ဆံပင်က အတိုဆုံးလဲ။", options: ["Dan's", "Lily's", "Sally's"], ans: 0 },
-                { cat: "READING COMPREHENSION", q: "Whose eyes are bigger than Dan's?", mm: "ဘယ်သူ့မျက်လုံးက ဒန်ထက် ပိုကြီးသလဲ။", options: ["Lily's and Sally's", "Mr Fish's", "My uncle's"], ans: 0 }
+                { cat: "READING COMPREHENSION", q: "Where do the children go on Saturday afternoons?", mm: "စနေနေ့ မွန်းလွဲပိုင်းများတွင် ကလေးများသည် မည်သည့်နေရာသို့ သွားကြသနည်း။", options: ["To Mrs Plant's farm", "To the beach", "To school"], ans: 0 },
+                { cat: "READING COMPREHENSION", q: "How do the children go to the farm?", mm: "ကလေးများသည် ခြံသို့ မည်သို့သွားကြသနည်း။", options: ["By bus", "On their bikes", "In a truck"], ans: 1 },
+                { cat: "READING COMPREHENSION", q: "What do the children carry for Mrs Plant?", mm: "ကလေးများသည် မစ္စက်ပလန့်အတွက် မည်သည့်အရာကို သယ်ဆောင်ပေးသနည်း။", options: ["Apples", "Tomatoes", "Potatoes"], ans: 2 },
+                { cat: "READING COMPREHENSION", q: "What is the name of the new puppy?", mm: "ခွေးကလေးအသစ်၏ နာမည်မှာ မည်သို့ခေါ်သနည်း။", options: ["Sunny", "Sausage", "Plant"], ans: 1 },
+                { cat: "READING COMPREHENSION", q: "What do the children give the animals?", mm: "ကလေးများသည် တိရစ္ဆာန်များကို မည်သည့်အရာ ပေးသနည်း။", options: ["Toys", "Water", "Food"], ans: 2 },
+                { cat: "VOCABULARY", q: "A bird that gives us eggs and meat.", mm: "ကျွန်ုပ်တို့အား ဥနှင့် အသားပေးသော ငှက် (ကြက်/ဘဲ)။", options: ["Duck", "Chicken", "Bat"], ans: 1 },
+                { cat: "VOCABULARY", q: "A farm vehicle used to pull things.", mm: "ပစ္စည်းများ ဆွဲရန်အသုံးပြုသော လယ်ယာသုံး ယာဉ်။", options: ["Truck", "Tractor", "Car"], ans: 1 },
+                { cat: "VOCABULARY", q: "The top covering of a house.", mm: "အိမ်၏ အပေါ်ဘက် ဖုံးအုပ်ထားသော အရာ။", options: ["Roof", "Window", "Door"], ans: 0 },
+                { cat: "GRAMMAR", q: "Which word sounds the same as 'there' and 'their'?", mm: "'there' နှင့် 'their' ကဲ့သို့ အသံထွက်တူညီသော စကားလုံးမှာ အဘယ်နည်း။", options: ["Three", "They're", "Then"], ans: 1 },
+                { cat: "GRAMMAR", q: "Fill in the blank: Look over _ _ _ _ _ _ _ !", mm: "ကွက်လပ်ဖြည့်ပါ: ဟိုနားကို ကြည့်ပါ!", options: ["there", "their", "they're"], ans: 0 },
+                { cat: "GRAMMAR", q: "Fill in the blank: _ _ _ _ _ _ _ riding their bikes.", mm: "ကွက်လပ်ဖြည့်ပါ: ၎င်းတို့သည် စက်ဘီးစီးနေကြသည်။", options: ["there", "their", "They're"], ans: 2 },
+                { cat: "GRAMMAR", q: "Fill in the blank: It is _ _ _ _ _ _ _ farm.", mm: "ကွက်လပ်ဖြည့်ပါ: ၎င်းသည် သူတို့၏ ခြံဖြစ်သည်။", options: ["there", "their", "they're"], ans: 1 },
+                { cat: "CATEGORIZATION", q: "Which animal does NOT belong in the sea?", mm: "ပင်လယ်ထဲတွင် မနေထိုင်သော တိရစ္ဆာန်မှာ မည်သည့်အရာဖြစ်သနည်း။", options: ["Shark", "Whale", "Rabbit"], ans: 2 },
+                { cat: "CATEGORIZATION", q: "Which animal can fly?", mm: "ပျံသန်းနိုင်သော တိရစ္ဆာန်မှာ မည်သည့်အရာဖြစ်သနည်း။", options: ["Lion", "Bat", "Panda"], ans: 1 },
+                { cat: "CATEGORIZATION", q: "Which is a farm animal with a thick woolly coat?", mm: "အမွေးထူသော လယ်ယာသုံး တိရစ္ဆာန်မှာ မည်သည့်အရာဖြစ်သနည်း။", options: ["Cow", "Rabbit", "Sheep"], ans: 2 }
             ]
         };
 
@@ -264,7 +260,6 @@
         window.speechUtteranceChunk = null; 
         let currentCardIdx = 0;
         let translateTaps = 0;
-        let translateTimeout;
 
         document.addEventListener("DOMContentLoaded", () => {
             try {
@@ -342,7 +337,7 @@
 
         async function preloadAudio() {
             for (let v of unitData.vocab) {
-                let cleanWord = v.word.replace(/^(a |an |the )/i, '').replace(/<[^>]*>?/gm, '').trim().toLowerCase();
+                let cleanWord = v.word.replace(/<[^>]*>?/gm, '').replace(/([_]\s*)+/g, " blank ").replace(/[!()"\n]/g, " ").trim().toLowerCase();
                 if (!audioCache[cleanWord]) {
                     try {
                         let res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`);
@@ -359,7 +354,6 @@
             }
         }
 
-        // --- 3-STAGE HYBRID IMAGE ENGINE ---
         async function fetchImages() {
             let cachedData = storage.get(`ffm_img_cache_${currentUnitNumber}`);
             if(cachedData) {
@@ -374,12 +368,10 @@
             for (let v of unitData.vocab) {
                 if(imageCache[v.word]) continue; 
                 try {
-                    let preciseQuery = v.query || v.word.replace(/^(a |an |the )/i, '');
-                    let broadQuery = v.word.replace(/^(a |an |the )/i, '');
+                    let baseQuery = v.query || v.word;
                     let validHits = [];
 
-                    // STAGE 1: Pixabay Illustration
-                    let pixRes = await fetch(`https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${encodeURIComponent(preciseQuery)}&image_type=illustration&per_page=30&safesearch=true`);
+                    let pixRes = await fetch(`https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${encodeURIComponent(baseQuery)}&image_type=illustration&per_page=30&safesearch=true`);
                     if(pixRes.ok) {
                         let pData = await pixRes.json();
                         if(pData.hits && pData.hits.length > 0) {
@@ -387,21 +379,8 @@
                         }
                     }
 
-                    // STAGE 2: Pixabay Real Photos
                     if(validHits.length < 3) {
-                        let pixPhotoRes = await fetch(`https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${encodeURIComponent(broadQuery)}&image_type=photo&per_page=20&safesearch=true`);
-                        if(pixPhotoRes.ok) {
-                            let pData2 = await pixPhotoRes.json();
-                            if(pData2.hits && pData2.hits.length > 0) {
-                                let fallbackHits = pData2.hits.map(h => h.webformatURL).filter(url => !usedImageUrls.has(url));
-                                validHits = [...validHits, ...fallbackHits];
-                            }
-                        }
-                    }
-
-                    // STAGE 3: Pexels Real Photos
-                    if(validHits.length < 3) {
-                        let pexRes = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(broadQuery)}&per_page=20`, {
+                        let pexRes = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(baseQuery)}&per_page=30`, {
                             headers: { Authorization: PEXELS_KEY }
                         });
                         if(pexRes.ok) {
@@ -413,64 +392,21 @@
                         }
                     }
 
-                    // RESOLUTION & LOCAL INJECTION
-                    let strippedWord = v.word.replace(/^(a |an |the )/i, '').replace(/\s/g, '').toLowerCase();
-                    let localImgUrl = `images/${currentUnitDir}/${strippedWord}.jpg`;
-                    
                     if(validHits.length > 0) {
                         let finalImages = validHits.slice(0, 10);
-                        // Inject Local Image as Index 0
-                        imageCache[v.word] = [localImgUrl, ...finalImages];
+                        imageCache[v.word] = finalImages;
                         finalImages.forEach(url => usedImageUrls.add(url));
+                        finalImages.forEach(url => { const preloadImg = new Image(); preloadImg.src = url; });
                     } else {
-                        imageCache[v.word] = [localImgUrl, SAFE_NO_IMG_SVG];
+                        imageCache[v.word] = [SAFE_NO_IMG_SVG];
                     }
                 } catch(e) {
-                    let strippedWord = v.word.replace(/^(a |an |the )/i, '').replace(/\s/g, '').toLowerCase();
-                    let localImgUrl = `images/${currentUnitDir}/${strippedWord}.jpg`;
-                    imageCache[v.word] = [localImgUrl, SAFE_NO_IMG_SVG];
+                    imageCache[v.word] = [SAFE_NO_IMG_SVG];
                 }
                 updateAllImages();
             }
             storage.set(`ffm_img_cache_${currentUnitNumber}`, JSON.stringify(imageCache));
         }
-
-        // --- SAFE BROKEN LINK DELETER ---
-        window.handleImageError = function(word, imgEl) {
-            imgEl.onerror = null; // Instantly kill the listener to prevent infinite loops
-            
-            let currentPref = (state.imgPrefs && state.imgPrefs[word]) || 0;
-            if (imageCache[word] && imageCache[word].length > 1) {
-                // Delete the broken link from memory safely
-                imageCache[word].splice(currentPref, 1);
-                storage.set(`ffm_img_cache_${currentUnitNumber}`, JSON.stringify(imageCache));
-                
-                if (currentPref >= imageCache[word].length) {
-                    state.imgPrefs[word] = 0;
-                    saveState();
-                }
-                
-                // Directly update just this image's src without triggering a global re-render
-                let nextSrc = imageCache[word][state.imgPrefs[word] || 0];
-                imgEl.dataset.currentSrc = nextSrc;
-                imgEl.src = nextSrc;
-                
-                // Update flashcard safely if it is actively showing this word
-                if (document.getElementById('tab-flash').classList.contains('active')) {
-                    const v = unitData.vocab[currentCardIdx];
-                    if (v && v.word === word) {
-                        const fcImg = document.getElementById(`fc-img-${currentCardIdx}`);
-                        if (fcImg && fcImg !== imgEl) {
-                            fcImg.dataset.currentSrc = nextSrc;
-                            fcImg.src = nextSrc;
-                        }
-                    }
-                }
-            } else {
-                // Stop any further infinite loops and fallback to safe SVG
-                imgEl.src = SAFE_NO_IMG_SVG;
-            }
-        };
 
         function cycleImage(word, event) {
             if(event) event.stopPropagation();
@@ -488,15 +424,7 @@
                 if(imgEl && imageCache[v.word]) {
                     let pref = (state.imgPrefs && state.imgPrefs[v.word]) || 0;
                     if(pref >= imageCache[v.word].length) pref = 0;
-                    
-                    let targetSrc = imageCache[v.word][pref];
-                    
-                    // Only update if it's different to prevent unnecessary reloading
-                    if (imgEl.dataset.currentSrc !== targetSrc) {
-                        imgEl.dataset.currentSrc = targetSrc;
-                        imgEl.onerror = function() { window.handleImageError(v.word, this); };
-                        imgEl.src = targetSrc;
-                    }
+                    imgEl.src = imageCache[v.word][pref];
                 }
             });
             if(document.getElementById('tab-flash').classList.contains('active')) {
@@ -619,9 +547,9 @@
             
             let cleanText = text.replace(/<[^>]*>?/gm, '').replace(/([_]\s*)+/g, " blank ").replace(/[!()"\n]/g, " ").trim();
             
-            if (!cleanText.includes(" ") || cleanText.split(" ").length <= 3) {
+            if (!cleanText.includes(" ")) {
                 try {
-                    let fetchKey = cleanText.replace(/^(a |an |the )/i, '').trim().toLowerCase();
+                    let fetchKey = cleanText.toLowerCase();
                     if (audioCache[fetchKey]) { 
                         new Audio(audioCache[fetchKey]).play(); 
                         return; 
@@ -699,7 +627,7 @@
                 div.innerHTML = `
                     <div class="img-container">
                         <img id="img-vocab-${i}" src="${SAFE_LOADING_SVG}">
-                        <button class="cycle-btn" onclick="cycleImage('${v.word.replace(/'/g, "\\'")}', event)">🔄</button>
+                        <button class="cycle-btn" onclick="cycleImage('${v.word}', event)">🔄</button>
                     </div>
                     <div class="card-content">
                         <div style="font-weight:bold; font-size:1.2em;">${v.word}</div>
@@ -802,8 +730,8 @@
             document.getElementById('fc-progress').innerText = `Card ${currentCardIdx + 1} of ${unitData.vocab.length}`;
             document.getElementById('fc-front').innerHTML = `
                 <div class="fc-img-container">
-                    <img id="fc-img-${currentCardIdx}" data-current-src="${imgSrc}" src="${imgSrc}" onerror="window.handleImageError('${v.word.replace(/'/g, "\\'")}', this)">
-                    <button class="fc-cycle-btn" onclick="cycleImage('${v.word.replace(/'/g, "\\'")}', event)">🔄</button>
+                    <img src="${imgSrc}">
+                    <button class="fc-cycle-btn" onclick="cycleImage('${v.word}', event)">🔄</button>
                 </div>
                 <strong style="font-size:1.8em;">${v.word}</strong>`;
             document.getElementById('fc-back').innerHTML = `<strong style="font-size:1.5em;">${v.word}</strong><br><br><span style="font-size:1.1em; color:#444;">${v.def}</span><br><br><span class="myanmar-text" style="${state.secretActive?'display:block;':''} font-size:1.2em;">${v.mm}</span>`;

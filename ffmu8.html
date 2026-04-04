@@ -11,7 +11,7 @@
         #splash-screen, #login-screen, #main-app, .modal-overlay, .tab-content { display: none; }
         .myanmar-text { display: none; color: #555; font-size: 0.9em; margin-top: 4px; }
         
-        #splash-screen.active { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: var(--primary); color: white; text-align: center;}
+        #splash-screen.active { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: var(--primary); color: white; text-align: center; padding: 20px;}
         #login-screen.active { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; padding: 20px;}
         #main-app.active { display: block; padding-top: 60px; padding-bottom: 80px;}
         .tab-content.active { display: block; padding: 20px; }
@@ -21,13 +21,13 @@
         .progress-container { flex-grow: 1; margin-right: 15px; background: #eee; height: 10px; border-radius: 5px; overflow: hidden; position: relative;}
         .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
         .submit-btn { background: var(--locked); color: white; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; pointer-events: none; transition: background 0.3s; }
-        .submit-btn.unlocked { background: var(--primary); animation: flash 2s infinite; }
+        .submit-btn.unlocked { background: var(--primary); animation: flash 2s infinite; cursor: pointer; pointer-events: auto; }
         @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
         
-        .header-area { padding: 15px; background: white; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+        .header-area { padding: 15px; background: white; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center;}
         .header-area h2 { margin: 0 0 5px 0; color: var(--primary); }
         .header-area p { margin: 0; font-size: 0.85em; color: #666; }
-        .controls { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;}
+        .controls { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; justify-content: center;}
         button, select, input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; background: white;}
         button { cursor: pointer; background: var(--bg); }
         button:active { transform: scale(0.98); }
@@ -37,17 +37,25 @@
         .tab.active { border-bottom-color: var(--primary); color: var(--primary); }
         
         .card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px;}
-        .card img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; background: #eee;}
         .card-content { flex-grow: 1; }
         .audio-btn, .mic-btn { font-size: 1.2em; border: none; background: none; box-shadow: none; cursor: pointer; padding: 5px; }
-        
-        .flashcard-container { perspective: 1000px; height: 200px; margin-bottom: 20px; cursor: pointer;}
+
+        .img-container { position: relative; width: 90px; height: 90px; flex-shrink: 0; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; background: #eee; }
+        .cycle-btn { position: absolute; bottom: -5px; right: -5px; background: white; border: 1px solid #ddd; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); padding: 0;}
+        .cycle-btn:active { transform: scale(0.9); }
+
+        .flashcard-container { perspective: 1000px; height: 280px; margin-bottom: 20px; cursor: pointer;}
         .flashcard { width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; position: relative; }
         .flashcard.flipped { transform: rotateY(180deg); }
         .front, .back { width: 100%; height: 100%; position: absolute; backface-visibility: hidden; background: white; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 20px; box-sizing: border-box; text-align: center;}
         .back { transform: rotateY(180deg); background: #f9f9f9;}
-        .front img { max-height: 100px; margin-bottom: 15px; border-radius: 8px;}
         
+        .fc-img-container { position: relative; width: 100%; height: 180px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;}
+        .fc-img-container img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; }
+        .fc-cycle-btn { position: absolute; bottom: -10px; right: 10px; background: white; border: 1px solid #ddd; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 10; padding: 0;}
+        .fc-cycle-btn:active { transform: scale(0.9); }
+
         .test-category, .grammar-title { font-size: 0.85em; font-weight: bold; color: var(--primary); letter-spacing: 1px; margin-bottom: 5px; display: block; text-transform: uppercase;}
         .test-q { margin-bottom: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .options label { display: block; padding: 10px; margin: 5px 0; background: #f9f9f9; border-radius: 6px; cursor: pointer; border: 2px solid transparent; }
@@ -71,10 +79,11 @@
 <body>
 
     <div id="splash-screen" class="active">
+        <img src="logo.png" alt="School Logo" style="width: 70px; height: 70px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
         <h1>Fun for Movers</h1>
         <h2>Unit 8: The hottest and coldest places</h2>
         <p>Developed by Nine Nine</p>
-        <p>Brilliant Star Private School, Pakokku</p>
+        <p>Brilliant Star Private School (IPS Pakokku)</p>
     </div>
 
     <div id="login-screen">
@@ -94,6 +103,7 @@
         <div class="header-area">
             <h2>Unit 8: The hottest and coldest places</h2>
             <p>Developed by Nine Nine - Brilliant Star Private School (Pakokku)</p>
+            <img src="logo.png" alt="School Logo" style="width: 70px; height: 70px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-top: 10px;">
             <div class="controls">
                 <span style="padding: 8px; background: #eee; border-radius: 6px; font-weight: bold;">Student: <span id="display-name"></span></span>
                 <select id="accent-select">
@@ -102,9 +112,8 @@
                 </select>
                 <button id="audio-stop">🔇 Stop Audio</button>
                 <button id="reset-btn" style="color: red;">🔄 Reset</button>
-                <select id="unit-nav">
-                    </select>
-                    <button onclick="window.location.href='index.html'" style="background: #2196F3; color: white; font-weight: bold;">🏠 Home</button>
+                <select id="unit-nav"></select>
+                <button onclick="window.location.href='index.html'" style="background: #2196F3; color: white; font-weight: bold;">🏠 Home</button>
             </div>
         </div>
 
@@ -179,56 +188,67 @@
             remove: (k) => { try { localStorage.removeItem(k); } catch(e) {} }
         };
 
+        const PIXABAY_KEY = "55157903-ac6667cf77ed7dd0cb27b5e9f";
+        const PEXELS_KEY = "FsvT8UOtmg706qLKfDWGcBlEVC0LHX9F7Xt7fCkbRZX7LVIeme5FBd4o"; 
+
+        const SAFE_LOADING_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='12' fill='%23555'%3ELoading...%3C/text%3E%3C/svg%3E";
+        const SAFE_NO_IMG_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Crect width='100%25' height='100%25' fill='%23ffcccc'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='12' fill='%23d32f2f'%3ENo Img%3C/text%3E%3C/svg%3E";
+
+        let imageCache = {}; 
+        let usedImageUrls = new Set();
+        let audioCache = {};
+
         const currentUnitDir = "u8";
         const currentUnitNumber = 8;
+        
         const unitData = {
             title: "Unit 8: The hottest and coldest places",
             vocab: [
-                { word: "Rain", mm: "မိုး", def: "Water that falls from the clouds in drops." },
-                { word: "Snow", mm: "နှင်း", def: "Soft, white pieces of frozen water that fall from the sky." },
-                { word: "Wind", mm: "လေ", def: "Air that moves." },
-                { word: "Rainbow", mm: "သက်တံ့", def: "An arch of colors seen in the sky when rain and sun come together." },
-                { word: "Sun", mm: "နေ", def: "The big hot star our Earth goes around." },
-                { word: "Moon", mm: "လ", def: "The object that shines in the sky at night." },
-                { word: "Driest", mm: "အခြောက်သွေ့ဆုံး", def: "Having the least amount of water or rain." },
-                { word: "Coldest", mm: "အအေးဆုံး", def: "Having the lowest temperature." },
-                { word: "Sunniest", mm: "နေသာဆုံး", def: "Having the most sunshine." },
-                { word: "Wettest", mm: "အစိုစွတ်ဆုံး", def: "Having the most water or rain." },
-                { word: "Windiest", mm: "လေတိုက်ဆုံး", def: "Having the most wind." },
-                { word: "Hottest", mm: "အပူဆုံး", def: "Having the highest temperature." },
-                { word: "Tallest", mm: "အမြင့်ဆုံး", def: "Measuring a great distance from bottom to top." },
-                { word: "Strongest", mm: "အသန်မာဆုံး", def: "Having powerful muscles or influence." },
-                { word: "Cleverest", mm: "အလိမ္မာဆုံး", def: "Showing intelligence or ingenuity." },
-                { word: "Grey", mm: "မီးခိုးရောင်", def: "A color between black and white." },
-                { word: "Dry", mm: "ခြောက်သွေ့သော", def: "Not wet." },
-                { word: "Wet", mm: "စိုစွတ်သော", def: "Not dry." },
-                { word: "Hot", mm: "ပူသော", def: "Not cold." },
-                { word: "Cold", mm: "အေးသော", def: "Not hot." },
-                { word: "Sunny", mm: "နေသာသော", def: "A state of having much sun." },
-                { word: "Cloudy", mm: "တိမ်ထူသော", def: "A state of having many clouds." },
-                { word: "Windy", mm: "လေတိုက်သော", def: "A state of having much wind." },
-                { word: "Strong", mm: "သန်မာသော", def: "A state of having much power." },
-                { word: "Fly", mm: "ပျံသန်းသည်", def: "To move through the air." },
-                { word: "Sailing", mm: "ရွက်လွှင့်ခြင်း", def: "The action of moving in a boat with sails." },
-                { word: "Fall", mm: "ပြုတ်ကျသည်", def: "To move down quickly." },
-                { word: "Come", mm: "လာသည်", def: "To arrive at a place." },
-                { word: "Sleep", mm: "အိပ်စက်သည်", def: "To rest with eyes closed." },
-                { word: "Eat", mm: "စားသည်", def: "To put food into the mouth and swallow." },
-                { word: "Wake up", mm: "နိုးထသည်", def: "To stop sleeping." },
-                { word: "Change", mm: "ပြောင်းလဲသည်", def: "To make different." },
-                { word: "Is raining", mm: "မိုးရွာနေသည်", def: "Continuous state of rain falling now." },
-                { word: "Is snowing", mm: "နှင်းကျနေသည်", def: "Continuous state of snow falling now." },
-                { word: "Rained", mm: "မိုးရွာခဲ့သည်", def: "Action of rain falling yesterday." },
-                { word: "Snowed", mm: "နှင်းကျခဲ့သည်", def: "Action of snow falling yesterday." },
-                { word: "Bears", mm: "ဝက်ဝံများ", def: "Large powerful mammals." },
-                { word: "Birds", mm: "ငှက်များ", def: "Feathered animals." },
-                { word: "Snowshoe rabbits", mm: "နှင်းခဲယုန်များ", def: "Rabbits that live in snow and change color." },
-                { word: "Penguins", mm: "ပင်ဂွင်းငှက်များ", def: "Flightless sea birds." },
-                { word: "Polar bears", mm: "ဝင်ရိုးစွန်း ဝက်ဝံများ", def: "Bears living in extremely cold northern places." },
-                { word: "Elephants", mm: "ဆင်များ", def: "Large mammals with a trunk." },
-                { word: "Hippos", mm: "ရေမြင်းများ", def: "Large river mammals." },
-                { word: "Snakes", mm: "မြွေများ", def: "Limbless reptiles." },
-                { word: "Giraffes", mm: "သစ်ကုလားအုတ်များ", def: "Tall mammals with a long neck." }
+                { word: "Rain", mm: "မိုး", def: "Water that falls from the clouds in drops.", query: "rain weather" },
+                { word: "Snow", mm: "နှင်း", def: "Soft, white pieces of frozen water that fall from the sky.", query: "snow winter" },
+                { word: "Wind", mm: "လေ", def: "Air that moves.", query: "wind blowing" },
+                { word: "Rainbow", mm: "သက်တံ့", def: "An arch of colors seen in the sky when rain and sun come together.", query: "rainbow sky" },
+                { word: "Sun", mm: "နေ", def: "The big hot star our Earth goes around.", query: "sun shining sky" },
+                { word: "Moon", mm: "လ", def: "The object that shines in the sky at night.", query: "moon night" },
+                { word: "Driest", mm: "အခြောက်သွေ့ဆုံး", def: "Having the least amount of water or rain.", query: "dry desert cracked earth" },
+                { word: "Coldest", mm: "အအေးဆုံး", def: "Having the lowest temperature.", query: "cold ice freezing" },
+                { word: "Sunniest", mm: "နေသာဆုံး", def: "Having the most sunshine.", query: "sunny hot bright" },
+                { word: "Wettest", mm: "အစိုစွတ်ဆုံး", def: "Having the most water or rain.", query: "wet rain flooding" },
+                { word: "Windiest", mm: "လေတိုက်ဆုံး", def: "Having the most wind.", query: "wind storm blowing" },
+                { word: "Hottest", mm: "အပူဆုံး", def: "Having the highest temperature.", query: "hot weather summer sun" },
+                { word: "Tallest", mm: "အမြင့်ဆုံး", def: "Measuring a great distance from bottom to top.", query: "tallest giraffe" },
+                { word: "Strongest", mm: "အသန်မာဆုံး", def: "Having powerful muscles or influence.", query: "strong muscles" },
+                { word: "Cleverest", mm: "အလိမ္မာဆုံး", def: "Showing intelligence or ingenuity.", query: "clever smart brain" },
+                { word: "Grey", mm: "မီးခိုးရောင်", def: "A color between black and white.", query: "grey color" },
+                { word: "Dry", mm: "ခြောက်သွေ့သော", def: "Not wet.", query: "dry ground" },
+                { word: "Wet", mm: "စိုစွတ်သော", def: "Not dry.", query: "wet water" },
+                { word: "Hot", mm: "ပူသော", def: "Not cold.", query: "hot fire" },
+                { word: "Cold", mm: "အေးသော", def: "Not hot.", query: "cold ice" },
+                { word: "Sunny", mm: "နေသာသော", def: "A state of having much sun.", query: "sunny day" },
+                { word: "Cloudy", mm: "တိမ်ထူသော", def: "A state of having many clouds.", query: "cloudy sky" },
+                { word: "Windy", mm: "လေတိုက်သော", def: "A state of having much wind.", query: "windy weather" },
+                { word: "Strong", mm: "သန်မာသော", def: "A state of having much power.", query: "strong lifting" },
+                { word: "Fly", mm: "ပျံသန်းသည်", def: "To move through the air.", query: "bird flying" },
+                { word: "Sailing", mm: "ရွက်လွှင့်ခြင်း", def: "The action of moving in a boat with sails.", query: "sailing boat" },
+                { word: "Fall", mm: "ပြုတ်ကျသည်", def: "To move down quickly.", query: "falling down" },
+                { word: "Come", mm: "လာသည်", def: "To arrive at a place.", query: "walking towards" },
+                { word: "Sleep", mm: "အိပ်စက်သည်", def: "To rest with eyes closed.", query: "sleeping" },
+                { word: "Eat", mm: "စားသည်", def: "To put food into the mouth and swallow.", query: "eating food" },
+                { word: "Wake up", mm: "နိုးထသည်", def: "To stop sleeping.", query: "waking up" },
+                { word: "Change", mm: "ပြောင်းလဲသည်", def: "To make different.", query: "change transform" },
+                { word: "Is raining", mm: "မိုးရွာနေသည်", def: "Continuous state of rain falling now.", query: "raining umbrella" },
+                { word: "Is snowing", mm: "နှင်းကျနေသည်", def: "Continuous state of snow falling now.", query: "snowing" },
+                { word: "Rained", mm: "မိုးရွာခဲ့သည်", def: "Action of rain falling yesterday.", query: "rained puddle" },
+                { word: "Snowed", mm: "နှင်းကျခဲ့သည်", def: "Action of snow falling yesterday.", query: "snow covered" },
+                { word: "Bears", mm: "ဝက်ဝံများ", def: "Large powerful mammals.", query: "bears animal" },
+                { word: "Birds", mm: "ငှက်များ", def: "Feathered animals.", query: "birds flying" },
+                { word: "Snowshoe rabbits", mm: "နှင်းခဲယုန်များ", def: "Rabbits that live in snow and change color.", query: "snowshoe rabbit" },
+                { word: "Penguins", mm: "ပင်ဂွင်းငှက်များ", def: "Flightless sea birds.", query: "penguins animal" },
+                { word: "Polar bears", mm: "ဝင်ရိုးစွန်း ဝက်ဝံများ", def: "Bears living in extremely cold northern places.", query: "polar bear animal" },
+                { word: "Elephants", mm: "ဆင်များ", def: "Large mammals with a trunk.", query: "elephants animal" },
+                { word: "Hippos", mm: "ရေမြင်းများ", def: "Large river mammals.", query: "hippos animal" },
+                { word: "Snakes", mm: "မြွေများ", def: "Limbless reptiles.", query: "snakes animal" },
+                { word: "Giraffes", mm: "သစ်ကုလားအုတ်များ", def: "Tall mammals with a long neck.", query: "giraffes animal" }
             ],
             reading: [
                 { isGrammar: true, title: "Grammar: Superlatives & Weather", text: "Superlatives: hot ➔ hottest, cold ➔ coldest, wet ➔ wettest, dry ➔ driest.\n\nPresent State: It is sunny / cloudy / windy / hot / cold today.\nPast State: It was sunny / cloudy / windy / hot / cold yesterday.\n\nAction (Present): It is raining / snowing today.\nAction (Past): It rained / snowed yesterday.", mm: "အသာလွန်ဆုံးပြ စကားလုံးများ - ပူသော ➔ အပူဆုံး၊ အေးသော ➔ အအေးဆုံး၊ စိုစွတ်သော ➔ အစိုစွတ်ဆုံး၊ ခြောက်သွေ့သော ➔ အခြောက်သွေ့ဆုံး\n\nယနေ့ နေသာသည် / တိမ်ထူသည် / လေတိုက်သည် / ပူသည် / အေးသည်။\nမနေ့က နေသာခဲ့သည် / တိမ်ထူခဲ့သည် / လေတိုက်ခဲ့သည် / ပူခဲ့သည် / အေးခဲ့သည်။\n\nယနေ့ မိုးရွာနေသည် / နှင်းကျနေသည်။\nမနေ့က မိုးရွာခဲ့သည် / နှင်းကျခဲ့သည်။" },
@@ -270,10 +290,11 @@
             studentName: "", progress: 0, secretActive: false, testAnswers: {}, actAnswers: {}, micScores: {}, cardsFlipped: 0,
             grammarUnderstood: false,
             sectionProgress: { vocab: [], read: [], flash: [] },
-            sectionsSent: { vocab: false, read: false, flash: false, act: false, grammar: false, test: false, fullReport: false }
+            sectionsSent: { vocab: false, read: false, flash: false, act: false, grammar: false, test: false, fullReport: false },
+            imgPrefs: {}
         };
         
-        const unitKey = `ffm_unit8`;
+        const unitKey = `ffm_unit${currentUnitNumber}`;
         let synth = window.speechSynthesis;
         let voices = [];
         window.speechUtteranceChunk = null; 
@@ -287,7 +308,7 @@
                 if(synth && synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
 
                 document.addEventListener('pointerdown', (e) => {
-                    const tags = ['BUTTON', 'DIV', 'LABEL', 'SELECT'];
+                    const tags = ['BUTTON', 'DIV', 'LABEL', 'SELECT', 'INPUT'];
                     if(tags.includes(e.target.tagName) || e.target.closest('.card')) {
                         if (navigator.vibrate) navigator.vibrate(40);
                     }
@@ -312,6 +333,8 @@
                 setTimeout(() => {
                     document.getElementById('splash-screen').classList.remove('active');
                     checkLogin();
+                    fetchImages();
+                    preloadAudio();
                 }, 2500);
             } catch (err) {
                 console.error(err);
@@ -331,6 +354,7 @@
                 if(!state.sectionProgress) state.sectionProgress = { vocab: [], read: [], flash: [] };
                 if(!state.sectionsSent) state.sectionsSent = { vocab: false, read: false, flash: false, act: false, grammar: false, test: false, fullReport: false };
                 if(!state.actAnswers) state.actAnswers = {};
+                if(!state.imgPrefs) state.imgPrefs = {};
                 
                 if(state.secretActive) toggleSecret(true);
                 
@@ -352,6 +376,148 @@
             }
         }
 
+        async function preloadAudio() {
+            for (let v of unitData.vocab) {
+                let cleanWord = v.word.replace(/^(a |an |the )/i, '').replace(/<[^>]*>?/gm, '').trim().toLowerCase();
+                if (!audioCache[cleanWord]) {
+                    try {
+                        let res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`);
+                        let data = await res.json();
+                        let audioUrl = data[0]?.phonetics.find(p => p.audio !== "")?.audio;
+                        if (audioUrl) {
+                            audioCache[cleanWord] = audioUrl;
+                            const preloader = new Audio();
+                            preloader.src = audioUrl;
+                            preloader.preload = "auto";
+                        }
+                    } catch(e) {}
+                }
+            }
+        }
+
+        // --- BULLETPROOF IMAGE ENGINE ---
+        async function fetchImages() {
+            let cachedData = storage.get(`ffm_img_cache_${currentUnitNumber}`);
+            if(cachedData) {
+                try {
+                    imageCache = JSON.parse(cachedData);
+                    Object.values(imageCache).forEach(arr => arr.forEach(url => usedImageUrls.add(url)));
+                    updateAllImages();
+                    return; 
+                } catch(e){}
+            }
+
+            for (let v of unitData.vocab) {
+                if(imageCache[v.word]) continue; 
+                try {
+                    let preciseQuery = v.query || v.word.replace(/^(a |an |the )/i, '');
+                    let broadQuery = v.word.replace(/^(a |an |the )/i, '');
+                    let validHits = [];
+
+                    let pixRes = await fetch(`https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${encodeURIComponent(preciseQuery)}&image_type=illustration&per_page=30&safesearch=true`);
+                    if(pixRes.ok) {
+                        let pData = await pixRes.json();
+                        if(pData.hits && pData.hits.length > 0) {
+                            validHits = pData.hits.map(h => h.webformatURL).filter(url => !usedImageUrls.has(url));
+                        }
+                    }
+
+                    if(validHits.length < 3) {
+                        let pixPhotoRes = await fetch(`https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${encodeURIComponent(broadQuery)}&image_type=photo&per_page=20&safesearch=true`);
+                        if(pixPhotoRes.ok) {
+                            let pData2 = await pixPhotoRes.json();
+                            if(pData2.hits && pData2.hits.length > 0) {
+                                let fallbackHits = pData2.hits.map(h => h.webformatURL).filter(url => !usedImageUrls.has(url));
+                                validHits = [...validHits, ...fallbackHits];
+                            }
+                        }
+                    }
+
+                    if(validHits.length < 3) {
+                        let pexRes = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(broadQuery)}&per_page=20`, {
+                            headers: { Authorization: PEXELS_KEY }
+                        });
+                        if(pexRes.ok) {
+                            let pexData = await pexRes.json();
+                            if(pexData.photos && pexData.photos.length > 0) {
+                                let fallbackHits = pexData.photos.map(p => p.src.medium).filter(url => !usedImageUrls.has(url));
+                                validHits = [...validHits, ...fallbackHits];
+                            }
+                        }
+                    }
+
+                    let strippedWord = v.word.replace(/^(a |an |the )/i, '').replace(/\s/g, '').toLowerCase();
+                    let localImgUrl = `images/${currentUnitDir}/${strippedWord}.jpg`;
+                    
+                    if(validHits.length > 0) {
+                        let finalImages = validHits.slice(0, 10);
+                        imageCache[v.word] = [localImgUrl, ...finalImages];
+                        finalImages.forEach(url => usedImageUrls.add(url));
+                    } else {
+                        imageCache[v.word] = [localImgUrl, SAFE_NO_IMG_SVG];
+                    }
+                } catch(e) {
+                    let strippedWord = v.word.replace(/^(a |an |the )/i, '').replace(/\s/g, '').toLowerCase();
+                    let localImgUrl = `images/${currentUnitDir}/${strippedWord}.jpg`;
+                    imageCache[v.word] = [localImgUrl, SAFE_NO_IMG_SVG];
+                }
+                updateAllImages();
+            }
+            storage.set(`ffm_img_cache_${currentUnitNumber}`, JSON.stringify(imageCache));
+        }
+
+        // --- SAFE BROKEN LINK DELETER ---
+        window.handleImageError = function(word, imgEl) {
+            imgEl.onerror = null; // Instantly kill the listener to prevent infinite loops
+            
+            let currentPref = (state.imgPrefs && state.imgPrefs[word]) || 0;
+            if (imageCache[word] && imageCache[word].length > 1) {
+                imageCache[word].splice(currentPref, 1);
+                storage.set(`ffm_img_cache_${currentUnitNumber}`, JSON.stringify(imageCache));
+                
+                if (currentPref >= imageCache[word].length) {
+                    state.imgPrefs[word] = 0;
+                    saveState();
+                }
+                
+                let nextSrc = imageCache[word][state.imgPrefs[word] || 0];
+                imgEl.dataset.currentSrc = nextSrc;
+                imgEl.src = nextSrc;
+            } else {
+                imgEl.src = SAFE_NO_IMG_SVG;
+            }
+        };
+
+        function cycleImage(word, event) {
+            if(event) event.stopPropagation();
+            if(!state.imgPrefs) state.imgPrefs = {};
+            if(!imageCache[word] || imageCache[word].length <= 1) return;
+            
+            state.imgPrefs[word] = ((state.imgPrefs[word] || 0) + 1) % imageCache[word].length;
+            saveState();
+            updateAllImages();
+        }
+
+        function updateAllImages() {
+            unitData.vocab.forEach((v, i) => {
+                let imgEl = document.getElementById(`img-vocab-${i}`);
+                if(imgEl && imageCache[v.word]) {
+                    let pref = (state.imgPrefs && state.imgPrefs[v.word]) || 0;
+                    if(pref >= imageCache[v.word].length) pref = 0;
+                    
+                    let targetSrc = imageCache[v.word][pref];
+                    if (imgEl.dataset.currentSrc !== targetSrc) {
+                        imgEl.dataset.currentSrc = targetSrc;
+                        imgEl.onerror = function() { window.handleImageError(v.word, this); };
+                        imgEl.src = targetSrc;
+                    }
+                }
+            });
+            if(document.getElementById('tab-flash').classList.contains('active')) {
+                updateFlashcard();
+            }
+        }
+
         function calculateProgress() {
             let vPct = state.sectionProgress.vocab.length / unitData.vocab.length;
             let rPct = state.sectionProgress.read.length / unitData.reading.length;
@@ -368,7 +534,24 @@
             if(state.progress === 100 && !state.sectionsSent.fullReport) {
                 state.sectionsSent.fullReport = true;
                 saveState();
-                sendTelemetryReport(`🏆 100% COURSE COMPLETED! Full Application Report.`);
+                
+                let totalProg = 0; let unitsStarted = 0; let unitsCompleted = 0; let vocabCount = 0;
+                for(let i=1; i<=45; i++) {
+                    let s = localStorage.getItem(`ffm_unit${i}`) || localStorage.getItem(`ffm_u${i}`);
+                    if(s) {
+                        try {
+                            let p = JSON.parse(s);
+                            totalProg += (p.progress || 0);
+                            if(p.progress > 0) unitsStarted++;
+                            if(p.progress === 100) unitsCompleted++;
+                            if(p.sectionProgress && p.sectionProgress.vocab) vocabCount += p.sectionProgress.vocab.length;
+                        } catch(e){}
+                    }
+                }
+                let overallPct = Math.round(totalProg / 45);
+                let syncCode = `FFM_SYNC||${state.studentName}||${overallPct}||${unitsStarted}||${unitsCompleted}||${vocabCount}`;
+                
+                sendTelemetryReport(`🏆 100% COURSE COMPLETED!\\n*Sync Code:*\\n\`${syncCode}\``);
             }
         }
 
@@ -377,26 +560,17 @@
             document.getElementById('progress-text').innerText = state.progress + "%";
             
             const submitBtn = document.getElementById('submit-btn');
-            
-            if(state.progress >= 50) {
-                submitBtn.style.pointerEvents = 'auto';
-            } else {
-                submitBtn.style.pointerEvents = 'none';
-            }
+            if(state.progress >= 50) submitBtn.style.pointerEvents = 'auto';
+            else submitBtn.style.pointerEvents = 'none';
 
-            if(state.progress >= 100 && Object.keys(state.testAnswers).length === unitData.test.length) {
-                submitBtn.classList.add('unlocked');
-            } else {
-                submitBtn.classList.remove('unlocked');
-            }
+            if(state.progress >= 100 && Object.keys(state.testAnswers).length === unitData.test.length) submitBtn.classList.add('unlocked');
+            else submitBtn.classList.remove('unlocked');
         }
 
         function markItemDone(section, idx) {
             if(!state.sectionProgress[section].includes(idx)) {
                 state.sectionProgress[section].push(idx);
-                saveState();
-                calculateProgress();
-                checkSectionCompletion(section);
+                saveState(); calculateProgress(); checkSectionCompletion(section);
             }
         }
 
@@ -404,19 +578,15 @@
             state.grammarUnderstood = true;
             document.getElementById('grammar-understand-btn').style.display = 'none';
             document.getElementById('grammar-understood-msg').style.display = 'block';
-            
             if(!state.sectionsSent.grammar) {
                 state.sectionsSent.grammar = true;
-                saveState();
-                calculateProgress();
-                showCenterToast("Grammar Complete!");
+                saveState(); calculateProgress(); showCenterToast("Grammar Complete!");
                 sendTelemetryReport(`Section Completed: GRAMMAR UNDERSTOOD`);
             }
         }
 
         function checkSectionCompletion(section) {
             if(state.sectionsSent[section]) return;
-            
             let isComplete = false;
             if(section === 'vocab' && state.sectionProgress.vocab.length >= unitData.vocab.length) isComplete = true;
             if(section === 'read' && state.sectionProgress.read.length >= unitData.reading.length) isComplete = true;
@@ -425,8 +595,7 @@
             
             if(isComplete) {
                 state.sectionsSent[section] = true;
-                saveState();
-                showCenterToast(`${section.toUpperCase()} Complete! Sending to teacher...`);
+                saveState(); showCenterToast(`${section.toUpperCase()} Complete! Sending to teacher...`);
                 sendTelemetryReport(`Section Completed: ${section.toUpperCase()}`);
             }
         }
@@ -434,11 +603,9 @@
         function checkLogin() {
             const globalName = storage.get('ffm_global_name');
             if(globalName) {
-                state.studentName = globalName;
-                document.getElementById('display-name').innerText = globalName;
+                state.studentName = globalName; document.getElementById('display-name').innerText = globalName;
                 document.getElementById('login-screen').classList.remove('active'); 
-                document.getElementById('main-app').classList.add('active');
-                loadState();
+                document.getElementById('main-app').classList.add('active'); loadState();
             } else {
                 document.getElementById('login-screen').classList.add('active');
                 document.getElementById('main-app').classList.remove('active');
@@ -447,8 +614,7 @@
 
         function showToast(msg) {
             const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.style.opacity = 1;
+            t.innerText = msg; t.style.opacity = 1;
             setTimeout(() => t.style.opacity = 0, 3000);
         }
 
@@ -459,23 +625,44 @@
             setTimeout(() => t.classList.remove('active'), 3500);
         }
 
-        function loadVoices() {
-            if (synth) voices = synth.getVoices().filter(v => v.lang.includes('en'));
-        }
+        function loadVoices() { if (synth) voices = synth.getVoices().filter(v => v.lang.includes('en')); }
 
-        function playTTS(text) {
+        async function playTTS(text) {
             if(!synth) return showToast("Audio not supported.");
             if(synth.speaking) synth.cancel();
             
-            let cleanText = text.replace(/<[^>]*>?/gm, ''); 
-            cleanText = cleanText.replace(/([_]\s*)+/g, " blank ").replace(/[!()"\n]/g, " ");
+            let cleanText = text.replace(/<[^>]*>?/gm, '').replace(/([_]\s*)+/g, " blank ").replace(/[!()"\n]/g, " ").trim();
             
+            if (!cleanText.includes(" ") || cleanText.split(" ").length <= 3) {
+                try {
+                    let fetchKey = cleanText.replace(/^(a |an |the )/i, '').trim().toLowerCase();
+                    if (audioCache[fetchKey]) { 
+                        new Audio(audioCache[fetchKey]).play(); 
+                        return; 
+                    }
+                    
+                    showToast("⏳ Downloading audio...");
+                    let response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${fetchKey}`);
+                    let data = await response.json();
+                    let audioUrl = data[0].phonetics.find(p => p.audio !== "")?.audio;
+                    if (audioUrl) { 
+                        audioCache[fetchKey] = audioUrl; 
+                        new Audio(audioUrl).play(); 
+                        return; 
+                    }
+                } catch (e) {} 
+            }
+
             const u = new SpeechSynthesisUtterance(cleanText);
             u.rate = 0.75;
-            
             const accent = document.getElementById('accent-select').value;
             const voice = voices.find(v => v.lang === accent && (v.name.includes("Premium") || v.name.includes("Google"))) || voices.find(v => v.lang === accent) || voices[0];
             if(voice) u.voice = voice;
+            
+            let watchdog = setTimeout(() => { 
+                if (!synth.speaking) showToast("⚠️ System Voice failed. Please install 'Speech Services by Google'."); 
+            }, 500);
+            u.onstart = () => clearTimeout(watchdog);
             
             window.speechUtteranceChunk = u; 
             synth.speak(u);
@@ -483,7 +670,7 @@
 
         function startDictation(targetWord, idx) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if(!SpeechRecognition) return showToast("Microphone not supported on this browser.");
+            if(!SpeechRecognition) return showToast("⚠️ Mic blocked! Use Chrome or host on a server.");
             
             const recognition = new SpeechRecognition();
             recognition.lang = document.getElementById('accent-select').value;
@@ -496,7 +683,7 @@
 
             recognition.onresult = (event) => {
                 const spoken = event.results[0][0].transcript.toLowerCase().replace(/[.,!?]/g, "").trim();
-                let target = targetWord.toLowerCase().replace(/^(a |an |the )/i, "").replace(/[.,!?]/g, "").trim();
+                const target = targetWord.toLowerCase().replace(/^(a |an |the )/i, "").replace(/[.,!?]/g, "").trim();
                 let score = 0;
                 
                 if(spoken === target) score = 100;
@@ -506,23 +693,28 @@
                 
                 overlay.classList.remove('active');
                 showToast(`Heard: "${spoken}" | Score: ${score}%`);
-                
                 markItemDone('vocab', idx); 
             };
 
-            recognition.onerror = () => overlay.classList.remove('active');
+            recognition.onerror = (e) => {
+                overlay.classList.remove('active');
+                if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+                     showToast("⚠️ Microphone access denied. Check your browser permissions.");
+                }
+            };
             recognition.onend = () => overlay.classList.remove('active');
         }
 
         function buildUI() {
             const vTab = document.getElementById('tab-vocab');
             unitData.vocab.forEach((v, i) => {
-                const imgName = v.word.replace(/^(a |an |the )/i, '').replace(/ /g, '').toLowerCase() + '.jpg';
-                const imgPath = `images/${currentUnitDir}/${imgName}`;
                 const div = document.createElement('div');
                 div.className = 'card';
                 div.innerHTML = `
-                    <img src="${imgPath}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23ddd\\'/></svg>'">
+                    <div class="img-container">
+                        <img id="img-vocab-${i}" src="${SAFE_LOADING_SVG}">
+                        <button class="cycle-btn" onclick="cycleImage('${v.word.replace(/'/g, "\\'")}', event)">🔄</button>
+                    </div>
                     <div class="card-content">
                         <div style="font-weight:bold; font-size:1.2em;">${v.word}</div>
                         <div style="font-size:0.95em; color:#444; margin-top:4px;">${v.def}</div>
@@ -613,12 +805,25 @@
 
         function updateFlashcard() {
             const v = unitData.vocab[currentCardIdx];
-            const imgName = v.word.replace(/^(a |an |the )/i, '').replace(/ /g, '').toLowerCase() + '.jpg';
+            
+            let imgSrc = SAFE_LOADING_SVG;
+            if(imageCache[v.word]) {
+                let pref = (state.imgPrefs && state.imgPrefs[v.word]) || 0;
+                if(pref >= imageCache[v.word].length) pref = 0;
+                imgSrc = imageCache[v.word][pref];
+            }
+
             document.getElementById('fc-progress').innerText = `Card ${currentCardIdx + 1} of ${unitData.vocab.length}`;
-            document.getElementById('fc-front').innerHTML = `<img src="images/${currentUnitDir}/${imgName}" onerror="this.style.display='none'"><br><strong style="font-size:1.5em;">${v.word}</strong>`;
+            document.getElementById('fc-front').innerHTML = `
+                <div class="fc-img-container">
+                    <img id="fc-img-${currentCardIdx}" data-current-src="${imgSrc}" src="${imgSrc}" onerror="window.handleImageError('${v.word.replace(/'/g, "\\'")}', this)">
+                    <button class="fc-cycle-btn" onclick="cycleImage('${v.word.replace(/'/g, "\\'")}', event)">🔄</button>
+                </div>
+                <strong style="font-size:1.8em;">${v.word}</strong>`;
             document.getElementById('fc-back').innerHTML = `<strong style="font-size:1.5em;">${v.word}</strong><br><br><span style="font-size:1.1em; color:#444;">${v.def}</span><br><br><span class="myanmar-text" style="${state.secretActive?'display:block;':''} font-size:1.2em;">${v.mm}</span>`;
             document.getElementById('fc-inner').classList.remove('flipped');
         }
+        
         function flipCard() { 
             document.getElementById('fc-inner').classList.toggle('flipped'); 
             markItemDone('flash', currentCardIdx);
@@ -640,6 +845,7 @@
                     document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
                     e.currentTarget.classList.add('active');
                     document.getElementById(e.currentTarget.dataset.target).classList.add('active');
+                    if(e.currentTarget.dataset.target === 'tab-flash') updateFlashcard(); 
                 });
             });
 
@@ -654,6 +860,7 @@
             document.getElementById('translate-btn').addEventListener('click', () => {
                 if(state.secretActive) return toggleSecret(false);
                 translateTaps++;
+                let translateTimeout;
                 clearTimeout(translateTimeout);
                 if(translateTaps < 5) {
                     showToast("Try to understand the context in English first! Keep tapping if you really need the translation. 🧠");
@@ -661,7 +868,7 @@
                 } else {
                     toggleSecret(true);
                     translateTaps = 0;
-                    playTTS("Secret translation unlocked. But remember, try your best to think in English first.");
+                    playTTS("Secret translation unlocked.");
                     showToast("Translation Unlocked 🔓");
                 }
             });
@@ -696,19 +903,13 @@
 
         function selectActivityAnswer(qIdx, optIdx) {
             state.actAnswers[qIdx] = optIdx;
-            saveState();
-            calculateProgress();
-            checkSectionCompletion('act');
+            saveState(); calculateProgress(); checkSectionCompletion('act');
         }
 
         function selectTestAnswer(qIdx, optIdx) {
             state.testAnswers[qIdx] = optIdx;
-            saveState();
-            calculateProgress();
-            
-            if(Object.keys(state.testAnswers).length === unitData.test.length) {
-                setTimeout(submitTest, 800); 
-            }
+            saveState(); calculateProgress();
+            if(Object.keys(state.testAnswers).length === unitData.test.length) { setTimeout(submitTest, 800); }
         }
 
         function submitTest() {
@@ -723,8 +924,7 @@
                 const correctLbl = document.getElementById(`lbl-t${i}-${q.ans}`);
 
                 if(chosen === q.ans) {
-                    score++;
-                    chosenLbl.classList.add('correct-answer');
+                    score++; chosenLbl.classList.add('correct-answer');
                 } else {
                     chosenLbl.classList.add('wrong-answer');
                     correctLbl.classList.add('missed-correct');
@@ -740,8 +940,7 @@
             
             if(!state.sectionsSent.test) {
                 state.sectionsSent.test = true;
-                saveState();
-                showCenterToast("Sending test score...");
+                saveState(); showCenterToast("Sending test score...");
                 sendTelemetryReport(`Section Completed: OFFICIAL TEST (Score: ${pct}%)`);
                 calculateProgress(); 
             }
